@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:student/ui/navigator/home.dart';
 import 'package:student/ui/navigator/school.dart';
 import 'package:student/ui/navigator/student.dart';
@@ -77,34 +78,49 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: colorScheme.background,
       body: PopScope(
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();
         },
         child: _defaultRoutes[_selectedTab] ?? mapRoute(_selectedTab),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedTab,
-        onDestinationSelected: _onItemTapped,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: "Home",
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          labelTextStyle: MaterialStateProperty.resolveWith(
+            (Set<MaterialState> states) => GoogleFonts.comfortaa(
+              fontSize: 12.5,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSecondaryContainer.withOpacity(
+                states.contains(MaterialState.selected) ? 1 : 0.5,
+              ),
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month),
-            label: "Time table",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.school),
-            label: "School",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person),
-            label: "Student",
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _selectedTab,
+          onDestinationSelected: _onItemTapped,
+          destinations: const <NavigationDestination>[
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month),
+              label: "Time table",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.school),
+              label: "School",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person),
+              label: "Student",
+            ),
+          ],
+        ),
       ),
     );
   }

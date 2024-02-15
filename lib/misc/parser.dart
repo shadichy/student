@@ -1,14 +1,14 @@
 import 'package:student/core/presets.dart';
 import 'package:student/core/functions.dart';
 
-class SubjectList {
+class TimetableData {
   late final List<Subject> timetable;
   late final Map<String, SubjectClass> _classesLT;
   late final Map<String, String> _teacherByIds;
   final RegExp _ltMatch = RegExp(r"/_LT$/");
   final RegExp _btMatch = RegExp(r"/\.[0-9]_BT$/");
   final dynamic input;
-  SubjectList.from2dList(this.input) {
+  TimetableData.from2dList(this.input) {
     if (input is! List) {
       throw Exception("input source is not 2d array");
     }
@@ -40,6 +40,9 @@ class SubjectList {
         classID: classID,
         teacherID: teacherID,
         room: classRoom,
+        classType: onlineClass.contains(classRoom)
+            ? ClassType.online
+            : ClassType.offline,
       );
 
       if (_ltMatch.hasMatch(classID)) {
@@ -73,8 +76,8 @@ class SubjectList {
       tmpTkb[subjectID]?["classes"]?[classID].add(stamp);
     }
 
-    tmpTkbLT.forEach((subjectID, classes) =>
-        classes.forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
+    tmpTkbLT.forEach((subjectID, classes) => classes
+        .forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
               subjectID: subjectID,
               classID: classID,
               timestamp: timestamp,
@@ -93,7 +96,7 @@ class SubjectList {
           classes: _mapToClass(subjectID, subjectInfo["classes"]),
         )));
   }
-  SubjectList.fromObject(this.input) {
+  TimetableData.fromObject(this.input) {
     if (input is! Map<String, dynamic>) {
       throw Exception("input source is not JSON object");
     }
@@ -121,6 +124,9 @@ class SubjectList {
                   classID: classID,
                   teacherID: stamp['teacherID'],
                   room: stamp["room"],
+                  classType: onlineClass.contains(stamp["room"])
+                      ? ClassType.online
+                      : ClassType.offline,
                 ))
             .toList();
         if (_ltMatch.hasMatch(classID)) {
@@ -147,8 +153,8 @@ class SubjectList {
       });
     });
 
-    tmpTkbLT.forEach((subjectID, classes) =>
-        classes.forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
+    tmpTkbLT.forEach((subjectID, classes) => classes
+        .forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
               subjectID: subjectID,
               classID: classID,
               timestamp: timestamp,

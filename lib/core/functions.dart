@@ -1,45 +1,54 @@
-import 'package:student/core/presets.dart';
+
+
+enum ClassType { offline, online }
 
 class ClassTimeStamp {
-  final int intMatrix;
-  late int startStamp;
-  late final int startStampUnix;
-  late int endStamp;
-  late final int endStampUnix;
+  late final int intMatrix;
+  // late int startStamp;
+  // late final int startStampUnix;
+  // late int endStamp;
+  // late final int endStampUnix;
   final int dayOfWeek;
-  late final String day;
+  // late final String day;
   final String classID;
   final String teacherID;
   final String room;
+  final ClassType classType;
   ClassTimeStamp({
     required this.intMatrix,
     required this.dayOfWeek,
     required this.classID,
     required this.teacherID,
     required this.room,
+    required this.classType,
   }) {
-    startStamp = 0;
-    if (onlineClass.contains(room)) {
-      endStamp = 0;
-      startStampUnix = 0;
-      endStampUnix = 0;
-      day = "";
-      return;
+    if (classType == ClassType.online) {
+      intMatrix = 0;
     }
-    endStamp = 13;
-    int tmpDint = intMatrix;
-    while (tmpDint != 0) {
-      if ((intMatrix & 1) == 0) {
-        endStamp--;
-      } else {
-        startStamp++;
-      }
-      tmpDint >>= 1;
-    }
-    startStampUnix = classTimeStamps[startStamp][0];
-    endStampUnix = classTimeStamps[endStamp][1];
-    day = dates[dayOfWeek];
   }
+  //  {
+  //   startStamp = 0;
+  //   if (onlineClass.contains(room)) {
+  //     endStamp = 0;
+  //     // startStampUnix = 0;
+  //     // endStampUnix = 0;
+  //     // day = "";
+  //     return;
+  //   }
+  //   endStamp = 13;
+  //   int tmpDint = intMatrix;
+  //   while (tmpDint != 0) {
+  //     if ((intMatrix & 1) == 0) {
+  //       endStamp--;
+  //     } else {
+  //       startStamp++;
+  //     }
+  //     tmpDint >>= 1;
+  //  }
+  // startStampUnix = classTimeStamps[startStamp][0];
+  // endStampUnix = classTimeStamps[endStamp][1];
+  // day = dates[dayOfWeek];
+  // }
 }
 
 class SubjectClass {
@@ -59,9 +68,9 @@ class SubjectClass {
     length = timestamp.length;
     teachers = timestamp.map((m) => m.teacherID).toList();
     rooms = timestamp.map((m) => m.room).toList();
-    if (onlineClass.contains(timestamp[0].room)) {
-      return;
-    }
+    // if (onlineClass.contains(timestamp[0].room)) {
+    //   return;
+    // }
     for (ClassTimeStamp stamp in timestamp) {
       intMatrix[stamp.dayOfWeek] |= stamp.intMatrix;
     }
@@ -136,7 +145,7 @@ class Subject {
   });
 
   Subject filter(SubjectFilter filterLayer) {
-    if (onlineClass.contains(classes[0].rooms[0]) || filterLayer.isEmpty) {
+    if (filterLayer.isEmpty) {
       return this;
     }
     List<SubjectClass> result = [];

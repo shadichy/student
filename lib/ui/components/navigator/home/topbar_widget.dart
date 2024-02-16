@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:student/ui/components/options.dart';
+import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/quick_option.dart';
 
-class TopBar extends StatefulWidget {
-  const TopBar({super.key});
+class HomeTopBar extends StatefulWidget {
+  const HomeTopBar({super.key});
 
   @override
-  State<TopBar> createState() => _TopBarState();
+  State<HomeTopBar> createState() => _HomeTopBarState();
 }
 
-class _TopBarState extends State<TopBar> {
+class _HomeTopBarState extends State<HomeTopBar> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -22,14 +21,11 @@ class _TopBarState extends State<TopBar> {
         mainAxisSize: MainAxisSize.max,
         children: [
           IconOption(
-            Option(
-              Icons.menu,
-              Scaffold.of(context).openDrawer,
-            ),
+            Option(Icons.menu, "", Scaffold.of(context).openDrawer),
             padding: const EdgeInsets.all(4),
             iconSize: 28,
             iconColor: colorScheme.onSecondaryContainer,
-            iconBackground: colorScheme.background,
+            backgroundColor: colorScheme.background,
           ),
           Expanded(
             flex: 1,
@@ -50,7 +46,7 @@ class _TopBarState extends State<TopBar> {
                 children: [
                   Text(
                     "Search",
-                    style: GoogleFonts.comfortaa(
+                    style: TextStyle(
                       color: colorScheme.onSecondaryContainer,
                       fontSize: 16,
                     ),
@@ -69,7 +65,7 @@ class _TopBarState extends State<TopBar> {
             padding: const EdgeInsets.all(4),
             iconSize: 28,
             iconColor: colorScheme.onSecondaryContainer,
-            iconBackground: colorScheme.background,
+            backgroundColor: colorScheme.background,
           ),
         ],
       ),
@@ -86,7 +82,7 @@ class _TopBarState extends State<TopBar> {
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //   crossAxisAlignment: CrossAxisAlignment.center,
             //   mainAxisSize: MainAxisSize.max,
-            //   children: [Text("Search", style: GoogleFonts.comfortaa(color: colorScheme.onSecondaryContainer,fontSize: 14,),),],
+            //   children: [Text("Search", style: TextStyle(color: colorScheme.onSecondaryContainer,fontSize: 14,),),],
             // )
             //       ),
             // TextField(
@@ -94,7 +90,7 @@ class _TopBarState extends State<TopBar> {
             //   obscureText: false,
             //   textAlign: TextAlign.start,
             //   maxLines: 1,
-            //   style: GoogleFonts.comfortaa(
+            //   style: TextStyle(
             //     fontWeight: FontWeight.w400,
             //     fontSize: 14,
             //     color: colorScheme.onSecondaryContainer,

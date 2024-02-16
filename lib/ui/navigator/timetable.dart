@@ -1,56 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:student/misc/parser.dart';
+import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
+import 'package:student/ui/components/navigator/timetable/nextup_class_widget.dart';
+import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
+import 'package:student/ui/components/option.dart';
+import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/section_label.dart';
 
 class Timetable extends StatelessWidget {
   const Timetable({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Expanded(
-                  flex: 1,
-                  child: Text(
-                    "Thời khoá biểu",
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.normal,
-                      fontSize: 20,
-                      color: Color(0xff000000),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(0),
-                  padding: const EdgeInsets.all(0),
-                  decoration: const BoxDecoration(
-                    color: Color(0x1f000000),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.search,
-                      color: Color(0xff212435),
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const TimetableTopBar(),
+          TimetableNextupClassWidget(TimetableData.from2dList([])),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             child: Row(
@@ -110,7 +80,8 @@ class Timetable extends StatelessWidget {
                       color: const Color(0x00000000),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(16.0),
-                      border: Border.all(color: const Color(0x21000030), width: 1),
+                      border:
+                          Border.all(color: const Color(0x21000030), width: 1),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -170,7 +141,8 @@ class Timetable extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -223,7 +195,8 @@ class Timetable extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -276,7 +249,8 @@ class Timetable extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -329,7 +303,8 @@ class Timetable extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -402,7 +377,8 @@ class Timetable extends StatelessWidget {
                     color: const Color(0x1f000000),
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.zero,
-                    border: Border.all(color: const Color(0x4d9e9e9e), width: 1),
+                    border:
+                        Border.all(color: const Color(0x4d9e9e9e), width: 1),
                   ),
                 ),
               ],
@@ -504,8 +480,8 @@ class Timetable extends StatelessWidget {
                           color: const Color(0x1f000000),
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.zero,
-                          border:
-                              Border.all(color: const Color(0x4d9e9e9e), width: 1),
+                          border: Border.all(
+                              color: const Color(0x4d9e9e9e), width: 1),
                         ),
                       ),
                       Container(

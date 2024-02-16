@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NotifExpandable extends StatefulWidget {
-  const NotifExpandable({super.key});
+  final List notifications;
+  const NotifExpandable(this.notifications, {super.key});
 
   @override
   State<NotifExpandable> createState() => _NotifExpandableState();

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/home/nextup_class.dart';
+import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/section_label.dart';
 
-class HomeNextupClassWidget extends StatefulWidget {
+class TimetableNextupClassWidget extends StatefulWidget {
   final TimetableData timetableData;
-  const HomeNextupClassWidget(this.timetableData, {super.key});
+  const TimetableNextupClassWidget(this.timetableData, {super.key});
 
   @override
-  State<HomeNextupClassWidget> createState() => _HomeNextupClassWidgetState();
+  State<TimetableNextupClassWidget> createState() =>
+      _TimetableNextupClassWidgetState();
 }
 
-class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
+class _TimetableNextupClassWidgetState
+    extends State<TimetableNextupClassWidget> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    List<Widget> classStamps = [
-      HomeNextupClassCard(
+    List<TimetableNextupClassCard> classStamps = [
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -25,7 +27,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -33,7 +35,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -41,7 +43,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -49,7 +51,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -57,7 +59,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -65,7 +67,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -73,7 +75,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -81,7 +83,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
@@ -89,21 +91,13 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         endTime: DateTime.now(),
         room: 'A709',
       ),
-      HomeNextupClassCard(
+      TimetableNextupClassCard(
         classId: 'NNLAPTRINH.8.1',
         classDesc: 'Ngôn ngữ lập trình',
         teacher: 'Nguyễn Huyền Châu',
         startTime: DateTime.now(),
         endTime: DateTime.now(),
         room: 'A709',
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Icon(
-          Icons.done,
-          color: colorScheme.onBackground,
-          size: 32,
-        ),
       ),
     ];
     return Column(
@@ -112,23 +106,54 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       mainAxisSize: MainAxisSize.max,
       children: [
         SectionLabel(
-          "Next-up classes",
+          "Môn học tiếp theo",
           Option(Icons.arrow_forward, "", () {}),
-          fontWeight: FontWeight.w900,
-          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: colorScheme.onTertiaryContainer,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: classStamps,
-            ),
+        classStamps[0],
+        Padding(
+          padding: const EdgeInsets.only(top: 8,bottom: 32,left: 8, right: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconOption(
+                Option(Icons.keyboard_double_arrow_left, "", () {}),
+                iconSize: 28,
+                padding: const EdgeInsets.all(4),
+                backgroundColor: colorScheme.tertiaryContainer,
+                iconColor: colorScheme.onTertiaryContainer,
+              ),
+              IconOption(
+                Option(Icons.keyboard_arrow_left, "", () {}),
+                iconSize: 28,
+                padding: const EdgeInsets.all(4),
+                backgroundColor: colorScheme.tertiaryContainer,
+                iconColor: colorScheme.onTertiaryContainer,
+              ),
+              Text(
+                "1${classStamps.length -1} classes left",
+                style: TextStyle(color: colorScheme.onTertiaryContainer),
+              ),
+              IconOption(
+                Option(Icons.keyboard_arrow_right, "", () {}),
+                iconSize: 28,
+                padding: const EdgeInsets.all(4),
+                backgroundColor: colorScheme.tertiaryContainer,
+                iconColor: colorScheme.onTertiaryContainer,
+              ),
+              IconOption(
+                Option(Icons.keyboard_double_arrow_right, "", () {}),
+                iconSize: 28,
+                padding: const EdgeInsets.all(4),
+                backgroundColor: colorScheme.tertiaryContainer,
+                iconColor: colorScheme.onTertiaryContainer,
+              ),
+            ],
           ),
         ),
+        // const SizedBox(height: 32),
       ],
     );
   }

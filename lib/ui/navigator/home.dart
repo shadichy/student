@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
 import 'package:student/ui/components/navigator/home/nextup_class_widget.dart';
@@ -11,6 +10,8 @@ import 'package:student/ui/components/quick_option.dart';
 class Home extends StatelessWidget {
   const Home({super.key});
 
+  final bool hasNotif = false;
+
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -21,7 +22,7 @@ class Home extends StatelessWidget {
             textAlign: TextAlign.start,
             maxLines: 2,
             overflow: TextOverflow.clip,
-            style: GoogleFonts.comfortaa(
+            style: TextStyle(
               color: colorScheme.onBackground,
             ),
           ),
@@ -54,8 +55,8 @@ class Home extends StatelessWidget {
                     Options.help,
                     Options.search,
                   ]),
-                  NotifExpandable(),
-                  HomeNextupClassCards(TimetableData.from2dList([])),
+                  if (hasNotif) const NotifExpandable([]),
+                  HomeNextupClassWidget(TimetableData.from2dList([])),
                   OptionLabelWidgets([
                     Options.settings,
                     Options.study_program,
@@ -75,7 +76,7 @@ class Home extends StatelessWidget {
               ),
             ),
           ),
-          const TopBar(),
+          const HomeTopBar(),
         ],
       ),
     );

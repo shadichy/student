@@ -7,15 +7,25 @@ import 'package:student/ui/navigator/timetable.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
+  ThemeData _buildTheme() {
+    ThemeData baseTheme = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.deepPurple,
+        brightness: Brightness.light,
+      ),
+      useMaterial3: true,
+    );
+
+    return baseTheme.copyWith(
+      textTheme: GoogleFonts.getTextTheme("Varela Round", baseTheme.textTheme),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: _buildTheme(),
       home: const Main(),
     );
   }
@@ -31,7 +41,8 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   int _selectedTab = 0;
   final List<int> _visitedTabs = [];
-  final Map<int, Widget> _defaultRoutes = {0: const Home()};
+  // final Map<int, Widget> _defaultRoutes = {0: const Home()};
+  final Map<int, Widget> _defaultRoutes = {0: const Timetable()};
 
   void callbackAdd(int page) {
     setState(() => _visitedTabs.add(page));
@@ -87,40 +98,27 @@ class _MainState extends State<Main> {
         },
         child: _defaultRoutes[_selectedTab] ?? mapRoute(_selectedTab),
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: MaterialStateProperty.resolveWith(
-            (Set<MaterialState> states) => GoogleFonts.comfortaa(
-              fontSize: 12.5,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSecondaryContainer.withOpacity(
-                states.contains(MaterialState.selected) ? 1 : 0.5,
-              ),
-            ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedTab,
+        onDestinationSelected: _onItemTapped,
+        destinations: const <NavigationDestination>[
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
-        ),
-        child: NavigationBar(
-          selectedIndex: _selectedTab,
-          onDestinationSelected: _onItemTapped,
-          destinations: const <NavigationDestination>[
-            NavigationDestination(
-              icon: Icon(Icons.home),
-              label: "Home",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.calendar_month),
-              label: "Time table",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.school),
-              label: "School",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person),
-              label: "Student",
-            ),
-          ],
-        ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month),
+            label: "Time table",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.school),
+            label: "School",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person),
+            label: "Student",
+          ),
+        ],
       ),
     );
   }

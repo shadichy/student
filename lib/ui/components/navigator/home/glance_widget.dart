@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Glance extends StatefulWidget {
   final Image image;
@@ -55,16 +54,16 @@ class _GlanceState extends State<Glance> {
             child: ListTile(
               title: Text(
                 "Welcome back,",
-                style: GoogleFonts.comfortaa(
+                style: TextStyle(
                   fontSize: 24,
                   color: colorScheme.onTertiaryContainer,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
                 widget.name,
-                style: GoogleFonts.comfortaa(
+                style: TextStyle(
                   fontSize: 18,
                   color: colorScheme.onTertiaryContainer.withOpacity(.95),
                 ),

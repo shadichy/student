@@ -1,10 +1,10 @@
 import 'package:student/core/functions.dart';
 
-class SampleTimetable {
+class BaseTimetable {
   final List<SubjectClass> classes;
   late final List<int> intMatrix;
   late final int length;
-  SampleTimetable({required this.classes}) {
+  BaseTimetable({required this.classes}) {
     length = classes.length;
     intMatrix = [0, 0, 0, 0, 0, 0, 0];
     for (SubjectClass c in classes) {
@@ -18,7 +18,7 @@ class SampleTimetable {
 class GenTimetable {
   final List<Subject> _tkb;
   late final Map<String, SubjectFilter> _input;
-  late List<SampleTimetable> output = [];
+  late List<BaseTimetable> output = [];
   late List<int> intMatrix = [0, 0, 0, 0, 0, 0, 0];
   late int length = 0;
   GenTimetable(this._tkb, this._input) {
@@ -30,17 +30,17 @@ class GenTimetable {
         _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
     if (output.isEmpty) {
       output
-          .addAll(filteredSubject.classes.map((c) => SampleTimetable(classes: [c])));
+          .addAll(filteredSubject.classes.map((c) => BaseTimetable(classes: [c])));
     } else {
-      List<SampleTimetable> newOutput = [];
-      for (SampleTimetable sample in output) {
+      List<BaseTimetable> newOutput = [];
+      for (BaseTimetable sample in output) {
         for (SubjectClass target in filteredSubject.classes) {
           List<int> tmpDint = [0, 0, 0, 0, 0, 0, 0];
           for (int i = 0; i < 7; i++) {
             tmpDint[i] = sample.intMatrix[i] & target.intMatrix[i];
           }
           if (tmpDint.fold(0, (a, b) => a + b) == 0) {
-            newOutput.add(SampleTimetable(classes: sample.classes + [target]));
+            newOutput.add(BaseTimetable(classes: sample.classes + [target]));
           }
         }
       }
@@ -63,7 +63,7 @@ class GenTimetable {
     return value;
   }
 
-  bool unsave(SampleTimetable sample) => output.remove(sample);
+  bool unsave(BaseTimetable sample) => output.remove(sample);
 
   GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
   SubjectFilter? operator -(String key) => remove(key);

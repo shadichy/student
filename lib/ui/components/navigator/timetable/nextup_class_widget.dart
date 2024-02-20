@@ -116,7 +116,7 @@ class _TimetableNextupClassWidgetState
         Padding(
           padding: const EdgeInsets.only(top: 8,bottom: 32,left: 8, right: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconOption(
                 Option(Icons.keyboard_double_arrow_left, "", () {}),
@@ -132,9 +132,12 @@ class _TimetableNextupClassWidgetState
                 backgroundColor: colorScheme.tertiaryContainer,
                 iconColor: colorScheme.onTertiaryContainer,
               ),
-              Text(
-                "1${classStamps.length -1} classes left",
-                style: TextStyle(color: colorScheme.onTertiaryContainer),
+              Expanded(
+                child: Text(
+                  "1${classStamps.length -1} classes left",
+                  style: TextStyle(color: colorScheme.onTertiaryContainer),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               IconOption(
                 Option(Icons.keyboard_arrow_right, "", () {}),

@@ -7,8 +7,8 @@ import 'package:student/ui/components/navigator/home/option_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
 import 'package:student/ui/components/quick_option.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   final bool hasNotif = false;
 

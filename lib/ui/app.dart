@@ -42,7 +42,13 @@ class _MainState extends State<Main> {
   int _selectedTab = 0;
   final List<int> _visitedTabs = [];
   // final Map<int, Widget> _defaultRoutes = {0: const Home()};
-  final Map<int, Widget> _defaultRoutes = {0: const Timetable()};
+  // final Map<int, Widget> _defaultRoutes = {0: const Timetable()};
+  final List<Widget> _defaultRoutes = const [
+    HomePage(),
+    TimetablePage(),
+    SchoolPage(),
+    StudentPage(),
+  ];
 
   void callbackAdd(int page) {
     setState(() => _visitedTabs.add(page));
@@ -71,15 +77,16 @@ class _MainState extends State<Main> {
     });
   }
 
+  @deprecated
   Widget mapRoute(int index) {
     _defaultRoutes[index] = () {
       switch (index) {
         case 1:
-          return const Timetable();
+          return const TimetablePage();
         case 2:
-          return const School();
+          return const SchoolPage();
         case 3:
-          return const Student();
+          return const StudentPage();
         default:
           return _defaultRoutes[0]!;
       }
@@ -96,7 +103,7 @@ class _MainState extends State<Main> {
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();
         },
-        child: _defaultRoutes[_selectedTab] ?? mapRoute(_selectedTab),
+        child: _defaultRoutes[_selectedTab],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedTab,

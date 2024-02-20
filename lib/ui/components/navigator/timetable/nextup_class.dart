@@ -72,15 +72,18 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 color: colorScheme.onTertiaryContainer,
               ),
             ),
-            Text(
-              value,
-              // textAlign: TextAlign.start,
-              // overflow: TextOverflow.clip,
-              style: TextStyle(
-                // fontWeight: FontWeight.w600,
-                // fontStyle: FontStyle.normal,
-                fontSize: 16,
-                color: colorScheme.onTertiaryContainer,
+            Expanded(
+              child: Text(
+                value,
+                // textAlign: TextAlign.start,
+                // overflow: TextOverflow.clip,
+                style: TextStyle(
+                  // fontWeight: FontWeight.w600,
+                  // fontStyle: FontStyle.normal,
+                  fontSize: 16,
+                  color: colorScheme.onTertiaryContainer,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -125,6 +128,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
               child: Text(
                 widget.classId,
                 textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
@@ -132,7 +136,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 ),
               ),
             ),
-            Padding(
+            Container(
               padding: const EdgeInsets.only(
                   top: 8, left: 16, bottom: 16, right: 16),
               child: Column(

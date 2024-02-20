@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student/ui/components/navigator/school/glance_widget.dart';
+import 'package:student/ui/components/navigator/school/topbar_widget.dart';
 
 class School extends StatelessWidget {
   const School({super.key});
@@ -9,59 +11,61 @@ class School extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(0),
-                  padding: const EdgeInsets.all(0),
-                  decoration: const BoxDecoration(
-                    color: Color(0x1f000000),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.sort,
-                      color: Color(0xff212435),
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(0),
-            padding: const EdgeInsets.all(0),
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            decoration: const BoxDecoration(
-              color: Color(0x00000000),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-              child:
+          const SchoolTopBar(),
+          const SchoolGlance(AssetImage("assets/images/thanglonguni.png")),
+          // Padding(
+          //   padding: const EdgeInsets.all(16),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     mainAxisSize: MainAxisSize.max,
+          //     children: [
+          //       Container(
+          //         margin: const EdgeInsets.all(0),
+          //         padding: const EdgeInsets.all(0),
+          //         decoration: const BoxDecoration(
+          //           color: Color(0x1f000000),
+          //           shape: BoxShape.circle,
+          //         ),
+          //         child: const Padding(
+          //           padding: EdgeInsets.all(8),
+          //           child: Icon(
+          //             Icons.sort,
+          //             color: Color(0xff212435),
+          //             size: 24,
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   margin: const EdgeInsets.all(0),
+          //   padding: const EdgeInsets.all(0),
+          //   width: MediaQuery.of(context).size.width,
+          //   height: 100,
+          //   decoration: const BoxDecoration(
+          //     color: Color(0x00000000),
+          //     shape: BoxShape.rectangle,
+          //     borderRadius: BorderRadius.zero,
+          //   ),
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+          //     child:
 
-                  ///***If you have exported images you must have to copy those images in assets/images directory.
-                  Image(
-                image: const AssetImage("assets/images/thanglonguni.png"),
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
+          //         ///***If you have exported images you must have to copy those images in assets/images directory.
+          //         Image(
+          //       image: const AssetImage("assets/images/thanglonguni.png"),
+          //       height: MediaQuery.of(context).size.height,
+          //       width: MediaQuery.of(context).size.width,
+          //       fit: BoxFit.contain,
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

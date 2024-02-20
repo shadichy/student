@@ -42,7 +42,7 @@ class _MainState extends State<Main> {
   int _selectedTab = 0;
   final List<int> _visitedTabs = [];
   // final Map<int, Widget> _defaultRoutes = {0: const Home()};
-  final Map<int, Widget> _defaultRoutes = {0: const Timetable()};
+  final Map<int, Widget> _defaultRoutes = {0: const Home()};
 
   void callbackAdd(int page) {
     setState(() => _visitedTabs.add(page));

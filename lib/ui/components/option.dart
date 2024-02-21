@@ -123,19 +123,16 @@ class _IconOptionState extends State<IconOption> {
     Widget optionWidget = ElevatedButton(
       onPressed: widget.id.target,
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(8),
+        padding: widget.padding,
         shape: const CircleBorder(),
         backgroundColor: widget.backgroundColor,
         elevation: 0,
         // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      child: Padding(
-        padding: widget.padding ?? EdgeInsets.zero,
-        child: Icon(
-          widget.id.icon,
-          color: widget.iconColor,
-          size: widget.iconSize,
-        ),
+      child: Icon(
+        widget.id.icon,
+        color: widget.iconColor,
+        size: widget.iconSize,
       ),
     );
     // Widget optionWidget =

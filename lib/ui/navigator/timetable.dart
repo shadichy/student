@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class_widget.dart';
+import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class Timetable extends StatelessWidget {
@@ -21,6 +22,7 @@ class Timetable extends StatelessWidget {
         children: [
           const TimetableTopBar(),
           TimetableNextupClassWidget(TimetableData.from2dList([])),
+          TimetableWidget(TimetableData.from2dList([])),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             child: Row(

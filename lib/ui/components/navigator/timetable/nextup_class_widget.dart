@@ -15,91 +15,102 @@ class TimetableNextupClassWidget extends StatefulWidget {
 
 class _TimetableNextupClassWidgetState
     extends State<TimetableNextupClassWidget> {
+  List<TimetableNextupClassCard> classStamps = [
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.1',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.2',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.3',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.4',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.5',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.6',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.7',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.8',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.9',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+    TimetableNextupClassCard(
+      classId: 'NNLAPTRINH.8.10',
+      classDesc: 'Ngôn ngữ lập trình',
+      teacher: 'Nguyễn Huyền Châu',
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      room: 'A709',
+    ),
+  ];
+
+  int index = 0;
+
+  void changeClass(int nextClass) {
+    if (nextClass < 0) nextClass = 0;
+    if (nextClass >= classStamps.length) nextClass = classStamps.length - 1;
+    setState(() {
+      index = nextClass;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    List<TimetableNextupClassCard> classStamps = [
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-      TimetableNextupClassCard(
-        classId: 'NNLAPTRINH.8.1',
-        classDesc: 'Ngôn ngữ lập trình',
-        teacher: 'Nguyễn Huyền Châu',
-        startTime: DateTime.now(),
-        endTime: DateTime.now(),
-        room: 'A709',
-      ),
-    ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,39 +123,58 @@ class _TimetableNextupClassWidgetState
           fontSize: 16,
           color: colorScheme.onTertiaryContainer,
         ),
-        classStamps[0],
+        classStamps[index],
         Padding(
-          padding: const EdgeInsets.only(top: 8,bottom: 32,left: 8, right: 8),
+          padding: const EdgeInsets.only(top: 8, bottom: 32, left: 8, right: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconOption(
-                Option(Icons.keyboard_double_arrow_left, "", () {}),
+                Option(
+                  Icons.keyboard_double_arrow_left,
+                  "",
+                  () => changeClass(0),
+                ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.tertiaryContainer,
                 iconColor: colorScheme.onTertiaryContainer,
               ),
               IconOption(
-                Option(Icons.keyboard_arrow_left, "", () {}),
+                Option(
+                  Icons.keyboard_arrow_left,
+                  "",
+                  () => changeClass(index - 1),
+                ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.tertiaryContainer,
                 iconColor: colorScheme.onTertiaryContainer,
               ),
-              Text(
-                "1${classStamps.length -1} classes left",
-                style: TextStyle(color: colorScheme.onTertiaryContainer),
+              Expanded(
+                child: Text(
+                  "${classStamps.length - 1 - index} classes left",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: colorScheme.onTertiaryContainer),
+                ),
               ),
               IconOption(
-                Option(Icons.keyboard_arrow_right, "", () {}),
+                Option(
+                  Icons.keyboard_arrow_right,
+                  "",
+                  () => changeClass(index + 1),
+                ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.tertiaryContainer,
                 iconColor: colorScheme.onTertiaryContainer,
               ),
               IconOption(
-                Option(Icons.keyboard_double_arrow_right, "", () {}),
+                Option(
+                  Icons.keyboard_double_arrow_right,
+                  "",
+                  () => changeClass(classStamps.length - 1),
+                ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.tertiaryContainer,

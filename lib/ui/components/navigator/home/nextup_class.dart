@@ -69,7 +69,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            backgroundColor: colorScheme.primary.withOpacity(0.05),
+            backgroundColor: colorScheme.primary.withAlpha(20),
             shape: RoundedRectangleBorder(
               // borderRadius: BorderRadius.zero,
               borderRadius: BorderRadius.circular(8.0),

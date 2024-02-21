@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/options.dart';
 
 class HomeTopBar extends StatefulWidget {
   const HomeTopBar({super.key});
@@ -30,7 +30,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
           Expanded(
             flex: 1,
             child: ElevatedButton(
-              onPressed: () => {},
+              onPressed: Options.search.target,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(12),
                 shape: RoundedRectangleBorder(

@@ -72,15 +72,18 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 color: colorScheme.onTertiaryContainer,
               ),
             ),
-            Text(
-              value,
-              // textAlign: TextAlign.start,
-              // overflow: TextOverflow.clip,
-              style: TextStyle(
-                // fontWeight: FontWeight.w600,
-                // fontStyle: FontStyle.normal,
-                fontSize: 16,
-                color: colorScheme.onTertiaryContainer,
+            Expanded(
+              child: Text(
+                value,
+                // textAlign: TextAlign.start,
+                // overflow: TextOverflow.clip,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  // fontWeight: FontWeight.w600,
+                  // fontStyle: FontStyle.normal,
+                  fontSize: 16,
+                  color: colorScheme.onTertiaryContainer,
+                ),
               ),
             ),
           ],

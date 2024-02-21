@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/options.dart';
 
 class TimetableTopBar extends StatefulWidget {
   const TimetableTopBar({ super.key });

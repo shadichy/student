@@ -5,7 +5,8 @@ import 'package:student/ui/components/navigator/home/nextup_class_widget.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/option_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
-import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/options.dart';
+import 'package:student/ui/components/quick_navigations.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

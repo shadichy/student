@@ -97,9 +97,10 @@ class _TextOptionState extends State<TextOption> {
 
 class IconOption extends StatefulWidget {
   final Option id;
+  final double iconSize;
+  final double? splashRadius;
   final Color? iconColor;
   final Color? backgroundColor;
-  final double iconSize;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry? padding;
 
@@ -111,6 +112,7 @@ class IconOption extends StatefulWidget {
     this.iconSize = 32,
     this.margin = EdgeInsets.zero,
     this.padding,
+    this.splashRadius,
   });
 
   @override
@@ -120,20 +122,22 @@ class IconOption extends StatefulWidget {
 class _IconOptionState extends State<IconOption> {
   @override
   Widget build(BuildContext context) {
-    Widget optionWidget = ElevatedButton(
+    Widget optionWidget = IconButton(
+      iconSize: widget.iconSize,
       onPressed: widget.id.target,
-      style: ElevatedButton.styleFrom(
-        padding: widget.padding,
-        shape: const CircleBorder(),
+      padding: widget.padding,
+      // color: widget.backgroundColor
+      style: IconButton.styleFrom(
         backgroundColor: widget.backgroundColor,
-        elevation: 0,
+        // shape: const CircleBorder(),
+        // elevation: 0,
         // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      child: Icon(
+      icon: Icon(
         widget.id.icon,
         color: widget.iconColor,
-        size: widget.iconSize,
       ),
+      splashRadius: widget.splashRadius,
     );
     // Widget optionWidget =
     return (widget.margin == EdgeInsets.zero)

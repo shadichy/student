@@ -14,56 +14,57 @@ class _HomeTopBarState extends State<HomeTopBar> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          IconOption(
-            Option(Icons.menu, "", Scaffold.of(context).openDrawer),
-            padding: const EdgeInsets.all(4),
-            iconSize: 28,
-            iconColor: colorScheme.onSurface,
-            backgroundColor: colorScheme.surface,
-          ),
           Expanded(
             flex: 1,
-            child: ElevatedButton(
-              onPressed: Options.search.target,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                backgroundColor: colorScheme.surfaceVariant,
-                elevation: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: colorScheme.surfaceVariant,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    "Search",
-                    style: TextStyle(
-                      color: colorScheme.onSurfaceVariant,
-                      fontSize: 16,
-                    ),
+              child: InkWell(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(30),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        color: colorScheme.onSurfaceVariant,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Search",
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                  Icon(
-                    Icons.search,
-                    color: colorScheme.onSurfaceVariant,
-                    size: 24,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
           IconOption(
             Options.notifications,
-            padding: const EdgeInsets.all(4),
-            iconSize: 28,
+            margin: const EdgeInsets.only(left: 4),
+            iconSize: 20,
+            iconColor: colorScheme.onSurface,
+            backgroundColor: colorScheme.surface,
+          ),
+          IconOption(
+            Options.user,
+            margin: const EdgeInsets.only(left: 4),
+            iconSize: 20,
             iconColor: colorScheme.onSurface,
             backgroundColor: colorScheme.surface,
           ),

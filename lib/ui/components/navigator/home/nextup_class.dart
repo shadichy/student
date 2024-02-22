@@ -49,14 +49,15 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
       child: Card.filled(
         elevation: 0,
         // color: colorScheme.primaryContainer,
-        color: Colors.transparent,
+        color: colorScheme.secondaryContainer,
+        // color: Colors.transparent,
         margin: const EdgeInsets.only(left: 16),
         shape: RoundedRectangleBorder(
           // borderRadius: BorderRadius.zero,
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: ElevatedButton(
-          onPressed: () {
+        child: InkWell(
+          onTap: () {
             showBottomSheet(
               context: context,
               builder: ((BuildContext context) {
@@ -64,61 +65,56 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
               }),
             );
           },
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
+          borderRadius: BorderRadius.circular(8.0),
+          child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            backgroundColor: colorScheme.secondaryContainer,
-            shape: RoundedRectangleBorder(
-              // borderRadius: BorderRadius.zero,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  textTile(
-                    "${widget.nextupClass.room} - ",
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  Icon(
-                    Icons.alarm,
-                    color: colorScheme.onSecondaryContainer,
-                    size: 18,
-                  ),
-                  textTile(
-                    timeLeft(
-                      widget.nextupClass.startTime,
-                      widget.nextupClass.endTime,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    textTile(
+                      "${widget.nextupClass.room} - ",
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ],
-              ),
-              textTile(
-                widget.nextupClass.classId,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
-              ),
-              textTile(
-                widget.nextupClass.classDesc,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-              textTile(
-                "Time: ${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
-                fontSize: 14,
-              ),
-              textTile(
-                "Teacher: ${widget.nextupClass.teacher}",
-                fontSize: 14,
-              ),
-            ],
+                    Icon(
+                      Icons.alarm,
+                      color: colorScheme.onSecondaryContainer,
+                      size: 18,
+                    ),
+                    textTile(
+                      timeLeft(
+                        widget.nextupClass.startTime,
+                        widget.nextupClass.endTime,
+                      ),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
+                textTile(
+                  widget.nextupClass.classId,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                ),
+                textTile(
+                  widget.nextupClass.classDesc,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                textTile(
+                  "Time: ${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
+                  fontSize: 14,
+                ),
+                textTile(
+                  "Teacher: ${widget.nextupClass.teacher}",
+                  fontSize: 14,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -21,6 +21,7 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
           .map(
             (Option e) => IconOption(
               e,
+              margin: const EdgeInsets.only(right: 16),
               padding: const EdgeInsets.all(8),
               iconColor: colorScheme.onPrimaryContainer,
               backgroundColor: colorScheme.primaryContainer,
@@ -40,7 +41,7 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

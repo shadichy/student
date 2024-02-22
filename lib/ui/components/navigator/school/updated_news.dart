@@ -26,6 +26,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
           Option(Icons.arrow_forward, "", () {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
+          color: colorScheme.onSurface,
         ),
         Container(
           width: MediaQuery.of(context).size.width,
@@ -36,7 +37,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
             child: Row(
               children: [
                 Card(
-                  color: colorScheme.primary.withAlpha(20),
+                  color: colorScheme.onSurfaceVariant,
                 )
               ],
             ),

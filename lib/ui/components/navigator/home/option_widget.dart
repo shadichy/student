@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 
@@ -15,14 +16,27 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    List<IconOption> configIconOptions = widget.options
-        .map((Option e) => IconOption(
+    List<Widget> content = Interpolator([
+      widget.options
+          .map(
+            (Option e) => IconOption(
               e,
               padding: const EdgeInsets.all(8),
-              iconColor: colorScheme.onTertiaryContainer,
-              backgroundColor: colorScheme.tertiaryContainer,
-            ))
-        .toList();
+              iconColor: colorScheme.onPrimaryContainer,
+              backgroundColor: colorScheme.primaryContainer,
+            ),
+          )
+          .toList(),
+      [
+        IconOption(
+          Options.add("", () {}),
+          padding: const EdgeInsets.all(8),
+          iconColor: colorScheme.onPrimaryContainer,
+          backgroundColor: colorScheme.surface,
+        )
+      ]
+    ]).output;
+  
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -31,15 +45,7 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          children: configIconOptions +
-              [
-                IconOption(
-                  Options.add("", () {}),
-                  padding: const EdgeInsets.all(8),
-                  iconColor: colorScheme.onTertiaryContainer,
-                  backgroundColor: colorScheme.background,
-                )
-              ],
+          children: content,
         ),
       ),
     );

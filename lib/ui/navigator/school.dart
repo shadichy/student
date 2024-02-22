@@ -5,7 +5,7 @@ import 'package:student/ui/components/navigator/school/topbar_widget.dart';
 import 'package:student/ui/components/navigator/school/updated_news.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
-import 'package:student/ui/components/quick_navigations.dart';
+import 'package:student/ui/components/navigator/quick_navigations.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class School extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 
 class TimetableNextupClassCard extends StatefulWidget {
   final NextupClassView nextupClass;
@@ -40,13 +41,13 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: 18,
-                color: colorScheme.onTertiaryContainer,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             Text(
@@ -57,7 +58,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 fontWeight: FontWeight.w600,
                 // fontStyle: FontStyle.normal,
                 fontSize: 15,
-                color: colorScheme.onTertiaryContainer,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             Expanded(
@@ -70,7 +71,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                   // fontWeight: FontWeight.w600,
                   // fontStyle: FontStyle.normal,
                   fontSize: 16,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -86,16 +87,23 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          showBottomSheet(
+            context: context,
+            builder: ((BuildContext context) {
+              return NextupClassSheet(widget.nextupClass);
+            }),
+          );
+        },
         style: ElevatedButton.styleFrom(
           elevation: 0,
           padding: EdgeInsets.zero,
-          backgroundColor: colorScheme.background,
+          backgroundColor: colorScheme.surface,
           shape: RoundedRectangleBorder(
               // borderRadius: BorderRadius.zero,
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.primaryContainer,
                 width: 1,
               )),
         ),
@@ -107,7 +115,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.primaryContainer,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
@@ -119,7 +127,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -135,7 +143,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
-                      color: colorScheme.onTertiaryContainer,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                   ),
                   textTile(

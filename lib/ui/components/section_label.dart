@@ -22,8 +22,8 @@ class SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    Color fColor = color ?? colorScheme.onBackground;
-    Color fBackgroundColor = backgroundColor ?? colorScheme.background;
+    Color fColor = color ?? colorScheme.onSurface;
+    Color fBackgroundColor = backgroundColor ?? colorScheme.surface;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,

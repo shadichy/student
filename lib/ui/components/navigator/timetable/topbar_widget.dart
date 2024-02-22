@@ -22,6 +22,7 @@ class _TimetableTopBarState extends State<TimetableTopBar> {
           fontSize: 20,
           color: colorScheme.onSecondaryContainer,
         ),
+        textAlign: TextAlign.center,
       ),
       leading: IconOption(
         Option(Icons.menu, "", Scaffold.of(context).openDrawer),
@@ -36,7 +37,7 @@ class _TimetableTopBarState extends State<TimetableTopBar> {
         backgroundColor: colorScheme.secondaryContainer,
         padding: const EdgeInsets.all(8),
       ),
-      tileColor: colorScheme.background,
+      tileColor: colorScheme.surface,
     );
   }
 }

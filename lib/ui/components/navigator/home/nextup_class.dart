@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:student/ui/components/navigator/home/nextup_class_preview_widget.dart';
+import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 
 class HomeNextupClassCard extends StatefulWidget {
@@ -32,16 +32,18 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
       double? fontSize,
       FontWeight? fontWeight,
       TextOverflow? overflow,
-    }) =>
-        Text(
-          text,
-          overflow: overflow,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: colorScheme.onBackground,
-            fontWeight: fontWeight,
-          ),
-        );
+    }) {
+      return Text(
+        text,
+        overflow: overflow,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: colorScheme.onSecondaryContainer,
+          fontWeight: fontWeight,
+        ),
+      );
+    }
+
     return SizedBox(
       width: 280,
       child: Card.filled(
@@ -58,14 +60,14 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
             showBottomSheet(
               context: context,
               builder: ((BuildContext context) {
-                return HomeNextupClassSheet(widget.nextupClass);
+                return NextupClassSheet(widget.nextupClass);
               }),
             );
           },
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            backgroundColor: colorScheme.primary.withAlpha(20),
+            backgroundColor: colorScheme.secondaryContainer,
             shape: RoundedRectangleBorder(
               // borderRadius: BorderRadius.zero,
               borderRadius: BorderRadius.circular(8.0),
@@ -83,7 +85,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   ),
                   Icon(
                     Icons.alarm,
-                    color: colorScheme.onBackground,
+                    color: colorScheme.onSecondaryContainer,
                     size: 18,
                   ),
                   textTile(

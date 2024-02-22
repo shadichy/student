@@ -122,13 +122,13 @@ class _TimetableNextupClassWidgetState
           Option(Icons.arrow_forward, "", () {}),
           fontWeight: FontWeight.bold,
           fontSize: 16,
-          color: colorScheme.onTertiaryContainer,
+          color: colorScheme.onSurface,
         ),
         TimetableNextupClassCard(classStamps[index]),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 32, left: 8, right: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconOption(
                 Option(
@@ -138,8 +138,8 @@ class _TimetableNextupClassWidgetState
                 ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
-                backgroundColor: colorScheme.tertiaryContainer,
-                iconColor: colorScheme.onTertiaryContainer,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
               ),
               IconOption(
                 Option(
@@ -149,14 +149,16 @@ class _TimetableNextupClassWidgetState
                 ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
-                backgroundColor: colorScheme.tertiaryContainer,
-                iconColor: colorScheme.onTertiaryContainer,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
               ),
               Expanded(
-                child: Text(
-                  "${classStamps.length - 1 - index} classes left",
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: colorScheme.onTertiaryContainer),
+                child: Center(
+                  child: Text(
+                    "${classStamps.length - 1 - index} classes left",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: colorScheme.onPrimaryContainer),
+                  ),
                 ),
               ),
               IconOption(
@@ -167,8 +169,8 @@ class _TimetableNextupClassWidgetState
                 ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
-                backgroundColor: colorScheme.tertiaryContainer,
-                iconColor: colorScheme.onTertiaryContainer,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
               ),
               IconOption(
                 Option(
@@ -178,8 +180,8 @@ class _TimetableNextupClassWidgetState
                 ),
                 iconSize: 28,
                 padding: const EdgeInsets.all(4),
-                backgroundColor: colorScheme.tertiaryContainer,
-                iconColor: colorScheme.onTertiaryContainer,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
               ),
             ],
           ),

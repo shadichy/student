@@ -31,14 +31,14 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                backgroundColor: colorScheme.tertiaryContainer,
+                backgroundColor: colorScheme.primaryContainer,
                 elevation: 0,
               ),
               child: Text(
                 "Search Documents...",
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                   fontSize: 16,
                 ),
               ),
@@ -48,8 +48,8 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
             Options.search,
             padding: const EdgeInsets.all(8),
             iconSize: 28,
-            iconColor: colorScheme.onTertiaryContainer,
-            backgroundColor: colorScheme.tertiaryContainer,
+            iconColor: colorScheme.onPrimaryContainer,
+            backgroundColor: colorScheme.primaryContainer,
           ),
         ],
       ),

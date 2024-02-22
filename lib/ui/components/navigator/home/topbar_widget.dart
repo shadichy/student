@@ -24,8 +24,8 @@ class _HomeTopBarState extends State<HomeTopBar> {
             Option(Icons.menu, "", Scaffold.of(context).openDrawer),
             padding: const EdgeInsets.all(4),
             iconSize: 28,
-            iconColor: colorScheme.onSecondaryContainer,
-            backgroundColor: colorScheme.background,
+            iconColor: colorScheme.onSurface,
+            backgroundColor: colorScheme.surface,
           ),
           Expanded(
             flex: 1,
@@ -36,7 +36,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                backgroundColor: colorScheme.secondaryContainer.withAlpha(50),
+                backgroundColor: colorScheme.surfaceVariant,
                 elevation: 0,
               ),
               child: Row(
@@ -47,13 +47,13 @@ class _HomeTopBarState extends State<HomeTopBar> {
                   Text(
                     "Search",
                     style: TextStyle(
-                      color: colorScheme.onSecondaryContainer,
+                      color: colorScheme.onSurfaceVariant,
                       fontSize: 16,
                     ),
                   ),
                   Icon(
                     Icons.search,
-                    color: colorScheme.onSecondaryContainer,
+                    color: colorScheme.onSurfaceVariant,
                     size: 24,
                   ),
                 ],
@@ -64,8 +64,8 @@ class _HomeTopBarState extends State<HomeTopBar> {
             Options.notifications,
             padding: const EdgeInsets.all(4),
             iconSize: 28,
-            iconColor: colorScheme.onSecondaryContainer,
-            backgroundColor: colorScheme.background,
+            iconColor: colorScheme.onSurface,
+            backgroundColor: colorScheme.surface,
           ),
         ],
       ),

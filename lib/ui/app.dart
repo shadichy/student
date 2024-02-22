@@ -98,7 +98,7 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: PopScope(
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();

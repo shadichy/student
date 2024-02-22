@@ -67,7 +67,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
                         ),
                       ),
                     ),
-                    Text(""),
+                    const Text(""),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -117,7 +117,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(16),
-                  child: Text(" lmao"),
+                  child: const Text(" lmao"),
                 )
               ]),
             ),

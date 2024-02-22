@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   ThemeData _buildTheme() {
     ThemeData baseTheme = ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepPurple,
+        seedColor: Colors.lightBlueAccent,
         brightness: Brightness.light,
       ),
       useMaterial3: true,
@@ -88,10 +88,10 @@ class _MainState extends State<Main> {
         case 3:
           return const Student();
         default:
-          return _defaultRoutes[0]!;
+          return _defaultRoutes[0];
       }
     }();
-    return _defaultRoutes[index]!;
+    return _defaultRoutes[index];
   }
 
   @override

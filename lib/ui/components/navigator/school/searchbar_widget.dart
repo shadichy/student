@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 
 class SchoolSearchBar extends StatefulWidget {
@@ -14,44 +13,26 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        top: 16,
-        bottom: 16,
-        right: 8
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              onPressed: Options.search.target,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                backgroundColor: colorScheme.primaryContainer,
-                elevation: 0,
-              ),
-              child: Text(
-                "Search Documents...",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: colorScheme.onPrimaryContainer,
-                  fontSize: 16,
-                ),
-              ),
-            ),
+      padding: const EdgeInsets.all(16),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        onTap: Options.search.target,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        tileColor: colorScheme.primary.withOpacity(0.1),
+        leading: Icon(
+          Icons.search,
+          color: colorScheme.onPrimaryContainer,
+          size: 20,
+        ),
+        title: Text(
+          "Search Documents...",
+          style: TextStyle(
+            color: colorScheme.onPrimaryContainer,
+            fontSize: 16,
           ),
-          IconOption(
-            Options.search,
-            padding: const EdgeInsets.all(8),
-            iconSize: 28,
-            iconColor: colorScheme.onPrimaryContainer,
-            backgroundColor: colorScheme.primaryContainer,
-          ),
-        ],
+        ),
       ),
     );
   }

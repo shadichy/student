@@ -3,7 +3,6 @@ import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/section_label.dart';
 
 class TimetableNextupClassWidget extends StatefulWidget {
   final TimetableData timetableData;
@@ -117,16 +116,16 @@ class _TimetableNextupClassWidgetState
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SectionLabel(
-          "Môn học tiếp theo",
-          Option(Icons.arrow_forward, "", () {}),
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: colorScheme.onSurface,
-        ),
+        // SectionLabel(
+        //   "Môn học tiếp theo",
+        //   Option(Icons.arrow_forward, "", () {}),
+        //   fontWeight: FontWeight.bold,
+        //   fontSize: 16,
+        //   color: colorScheme.onSurface,
+        // ),
         TimetableNextupClassCard(classStamps[index]),
         Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 32, left: 8, right: 8),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Row(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -137,6 +136,7 @@ class _TimetableNextupClassWidgetState
                   () => changeClass(0),
                 ),
                 iconSize: 28,
+                margin: const EdgeInsets.only(right: 8),
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.primaryContainer,
                 iconColor: colorScheme.onPrimaryContainer,
@@ -148,6 +148,7 @@ class _TimetableNextupClassWidgetState
                   () => changeClass(index - 1),
                 ),
                 iconSize: 28,
+                margin: const EdgeInsets.only(right: 8),
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.primaryContainer,
                 iconColor: colorScheme.onPrimaryContainer,
@@ -168,6 +169,7 @@ class _TimetableNextupClassWidgetState
                   () => changeClass(index + 1),
                 ),
                 iconSize: 28,
+                margin: const EdgeInsets.only(left: 8),
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.primaryContainer,
                 iconColor: colorScheme.onPrimaryContainer,
@@ -179,6 +181,7 @@ class _TimetableNextupClassWidgetState
                   () => changeClass(classStamps.length - 1),
                 ),
                 iconSize: 28,
+                margin: const EdgeInsets.only(left: 8),
                 padding: const EdgeInsets.all(4),
                 backgroundColor: colorScheme.primaryContainer,
                 iconColor: colorScheme.onPrimaryContainer,

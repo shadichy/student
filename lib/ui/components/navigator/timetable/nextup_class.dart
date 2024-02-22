@@ -80,14 +80,14 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
       );
     }
 
-    return Card(
+    return Card.outlined(
       color: Colors.transparent,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      child: ElevatedButton(
-        onPressed: () {
+      child: InkWell(
+        onTap: () {
           showBottomSheet(
             context: context,
             builder: ((BuildContext context) {
@@ -95,82 +95,81 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
             }),
           );
         },
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: EdgeInsets.zero,
-          backgroundColor: colorScheme.surface,
-          shape: RoundedRectangleBorder(
-              // borderRadius: BorderRadius.zero,
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(
-                color: colorScheme.primaryContainer,
-                width: 1,
-              )),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              // margin: ,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
-                ),
-              ),
-              child: Text(
-                widget.nextupClass.classId,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-              ),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: colorScheme.primaryContainer,
+              width: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 8, left: 16, bottom: 16, right: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.nextupClass.classDesc,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                      color: colorScheme.onPrimaryContainer,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                // margin: ,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                ),
+                child: Text(
+                  widget.nextupClass.classId,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 8, left: 16, bottom: 16, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.nextupClass.classDesc,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
                     ),
-                  ),
-                  textTile(
-                    Icons.meeting_room,
-                    "Room",
-                    widget.nextupClass.room,
-                  ),
-                  textTile(
-                    Icons.alarm,
-                    "Time",
-                    "${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
-                  ),
-                  textTile(
-                    Icons.event,
-                    "Date",
-                    DateFormat("EEEE, dd/MM/yyyy")
-                        .format(widget.nextupClass.startTime),
-                  ),
-                  textTile(
-                    Icons.person,
-                    "Teacher",
-                    widget.nextupClass.teacher,
-                  ),
-                ],
+                    textTile(
+                      Icons.meeting_room,
+                      "Room",
+                      widget.nextupClass.room,
+                    ),
+                    textTile(
+                      Icons.alarm,
+                      "Time",
+                      "${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
+                    ),
+                    textTile(
+                      Icons.event,
+                      "Date",
+                      DateFormat("EEEE, dd/MM/yyyy")
+                          .format(widget.nextupClass.startTime),
+                    ),
+                    textTile(
+                      Icons.person,
+                      "Teacher",
+                      widget.nextupClass.teacher,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

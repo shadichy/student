@@ -21,39 +21,63 @@ class _HomeTopBarState extends State<HomeTopBar> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16),
+                  dense: true,
+              onTap: Options.search.target,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
-                color: colorScheme.surfaceVariant,
               ),
-              child: InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(30),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.search,
-                        color: colorScheme.onSurfaceVariant,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Search",
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
+              tileColor: colorScheme.primary.withOpacity(0.05),
+              leading: Icon(
+                Icons.search,
+                color: colorScheme.onSurface,
+                size: 20,
+              ),
+              title: Text(
+                "Search",
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 16,
                 ),
               ),
             ),
           ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(30),
+          //       color: colorScheme.surfaceVariant,
+          //     ),
+          //     child: InkWell(
+          //       onTap: Options.search.target,
+          //       borderRadius: BorderRadius.circular(30),
+          //       child: Padding(
+          //         padding:
+          //             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //         child: Row(
+          //           children: [
+          //             Icon(
+          //               Icons.search,
+          //               color: colorScheme.onSurfaceVariant,
+          //               size: 20,
+          //             ),
+          //             const SizedBox(width: 8),
+          //             Text(
+          //               "Search",
+          //               style: TextStyle(
+          //                 color: colorScheme.onSurfaceVariant,
+          //                 fontSize: 16,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           IconOption(
             Options.notifications,
             margin: const EdgeInsets.only(left: 4),

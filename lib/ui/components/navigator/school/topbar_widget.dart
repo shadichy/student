@@ -14,7 +14,7 @@ class _SchoolTopBarState extends State<SchoolTopBar> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -25,8 +25,8 @@ class _SchoolTopBarState extends State<SchoolTopBar> {
               (Option o) => IconOption(
                 o,
                 iconColor: colorScheme.onSecondaryContainer,
-                iconSize: 28,
-                padding: const EdgeInsets.all(8),
+                iconSize: 24,
+                // padding: const EdgeInsets.all(8),
                 // backgroundColor: colorScheme.secondaryContainer,
               ),
             )

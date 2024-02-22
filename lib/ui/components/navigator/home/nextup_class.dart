@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student/ui/components/navigator/home/nextup_class_preview_widget.dart';
+import 'package:student/ui/components/navigator/nextup_class.dart';
 
 class HomeNextupClassCard extends StatefulWidget {
-  final String classId;
-  final String classDesc;
-  final String teacher;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String room;
-  const HomeNextupClassCard({
-    super.key,
-    required this.classId,
-    required this.classDesc,
-    required this.teacher,
-    required this.startTime,
-    required this.endTime,
-    required this.room,
-  });
+  final NextupClassView nextupClass;
+  const HomeNextupClassCard(this.nextupClass, {super.key});
 
   @override
   State<HomeNextupClassCard> createState() => _HomeNextupClassCardState();
@@ -65,7 +54,14 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            showBottomSheet(
+              context: context,
+              builder: ((BuildContext context) {
+                return HomeNextupClassSheet(widget.nextupClass);
+              }),
+            );
+          },
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -76,16 +72,12 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisSize: MainAxisSize.max,
                 children: [
                   textTile(
-                    "${widget.room} - ",
+                    "${widget.nextupClass.room} - ",
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
@@ -95,30 +87,33 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                     size: 18,
                   ),
                   textTile(
-                    timeLeft(widget.startTime, widget.endTime),
+                    timeLeft(
+                      widget.nextupClass.startTime,
+                      widget.nextupClass.endTime,
+                    ),
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
                 ],
               ),
               textTile(
-                widget.classId,
+                widget.nextupClass.classId,
                 overflow: TextOverflow.ellipsis,
                 fontWeight: FontWeight.w900,
                 fontSize: 20,
               ),
               textTile(
-                widget.classDesc,
+                widget.nextupClass.classDesc,
                 overflow: TextOverflow.ellipsis,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),
               textTile(
-                "Time: ${hmFormat(widget.startTime)} - ${hmFormat(widget.endTime)}",
+                "Time: ${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
                 fontSize: 14,
               ),
               textTile(
-                "Teacher: ${widget.teacher}",
+                "Teacher: ${widget.nextupClass.teacher}",
                 fontSize: 14,
               ),
             ],

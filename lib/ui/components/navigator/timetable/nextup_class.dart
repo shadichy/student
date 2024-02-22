@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student/ui/components/navigator/nextup_class.dart';
 
 class TimetableNextupClassCard extends StatefulWidget {
-  final String classId;
-  final String classDesc;
-  final String teacher;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String room;
-  const TimetableNextupClassCard({
-    super.key,
-    required this.classId,
-    required this.classDesc,
-    required this.teacher,
-    required this.startTime,
-    required this.endTime,
-    required this.room,
-  });
+  final NextupClassView nextupClass;
+  const TimetableNextupClassCard(this.nextupClass, {super.key});
 
   @override
   State<TimetableNextupClassCard> createState() =>
@@ -126,7 +114,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 ),
               ),
               child: Text(
-                widget.classId,
+                widget.nextupClass.classId,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
@@ -143,7 +131,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.classDesc,
+                    widget.nextupClass.classDesc,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
@@ -153,22 +141,23 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                   textTile(
                     Icons.meeting_room,
                     "Room",
-                    widget.room,
+                    widget.nextupClass.room,
                   ),
                   textTile(
                     Icons.alarm,
                     "Time",
-                    "${hmFormat(widget.startTime)} - ${hmFormat(widget.endTime)}",
+                    "${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
                     Icons.event,
                     "Date",
-                    DateFormat("EEEE, dd/MM/yyyy").format(widget.startTime),
+                    DateFormat("EEEE, dd/MM/yyyy")
+                        .format(widget.nextupClass.startTime),
                   ),
                   textTile(
                     Icons.person,
                     "Teacher",
-                    widget.teacher,
+                    widget.nextupClass.teacher,
                   ),
                 ],
               ),

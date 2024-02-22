@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/timetable/timetable.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/section_label.dart';
 

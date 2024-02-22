@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
+import 'package:student/ui/components/navigator/nextup_class.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/section_label.dart';
@@ -15,8 +16,8 @@ class TimetableNextupClassWidget extends StatefulWidget {
 
 class _TimetableNextupClassWidgetState
     extends State<TimetableNextupClassWidget> {
-  List<TimetableNextupClassCard> classStamps = [
-    TimetableNextupClassCard(
+  List<NextupClassView> classStamps = [
+    NextupClassView(
       classId: 'NNLAPTRINH.8.1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -24,7 +25,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.2',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -32,7 +33,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.3',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -40,7 +41,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.4',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -48,7 +49,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.5',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -56,7 +57,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.6',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -64,7 +65,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.7',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -72,7 +73,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.8',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -80,7 +81,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.9',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -88,7 +89,7 @@ class _TimetableNextupClassWidgetState
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    TimetableNextupClassCard(
+    NextupClassView(
       classId: 'NNLAPTRINH.8.10',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
@@ -123,7 +124,7 @@ class _TimetableNextupClassWidgetState
           fontSize: 16,
           color: colorScheme.onTertiaryContainer,
         ),
-        classStamps[index],
+        TimetableNextupClassCard(classStamps[index]),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 32, left: 8, right: 8),
           child: Row(

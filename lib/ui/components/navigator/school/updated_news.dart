@@ -26,7 +26,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
           Option(Icons.arrow_forward, "", () {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
-          color: colorScheme.onSurface,
+          color: colorScheme.onSecondaryContainer,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -38,7 +38,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Card.outlined(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.all(16),
                     // shape: RoundedRectangleBorder(
                     //   borderRadius: BorderRadius.circular(16),
                     // ),
@@ -51,7 +51,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: 140,
+                            height: MediaQuery.of(context).size.width * 0.56,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.network(
@@ -68,7 +68,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
                               "Bao moi",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: colorScheme.onSurface,
+                                color: colorScheme.onSecondaryContainer,
                                 fontSize: 18,
                               ),
                             ),

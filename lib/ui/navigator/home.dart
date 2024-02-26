@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
 import 'package:student/ui/components/navigator/home/nextup_class_widget.dart';
+import 'package:student/ui/components/navigator/home/notification.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/option_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
@@ -9,9 +10,13 @@ import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/navigator/quick_navigations.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  Home({super.key});
 
-  final bool hasNotif = false;
+  final List<Notif> notifs = [
+    Notif("title", content: "content"),
+  ];
+
+  late final bool hasNotif = notifs.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +25,7 @@ class Home extends StatelessWidget {
           padding: padding,
           child: Text(
             text,
-            textAlign: TextAlign.start,
             maxLines: 2,
-            overflow: TextOverflow.clip,
             style: TextStyle(
               color: colorScheme.onSurface,
             ),
@@ -56,7 +59,7 @@ class Home extends StatelessWidget {
                     Options.help,
                     Options.search,
                   ]),
-                  if (hasNotif) const NotifExpandable([]),
+                  if (hasNotif) const HomeNotifWidget([]),
                   HomeNextupClassWidget(TimetableData.from2dList([])),
                   OptionLabelWidgets([
                     Options.settings,

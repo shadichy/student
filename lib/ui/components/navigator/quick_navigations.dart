@@ -33,7 +33,7 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
               e,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               color: colorScheme.onSurface,
-              backgroundColor: colorScheme.surface,
+              backgroundColor: Colors.transparent,
               fontWeight: FontWeight.w700,
             ),
           )

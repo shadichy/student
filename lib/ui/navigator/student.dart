@@ -284,7 +284,7 @@ class Student extends StatelessWidget {
                         child: const Icon(
                           Icons.location_on,
                           color: Color(0xff000000),
-                          size: 20,
+                          size: 20, 
                         ),
                       ),
                       const Expanded(

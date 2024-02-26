@@ -22,16 +22,22 @@ class SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    Color fColor = color ?? colorScheme.onSurface;
-    Color fBackgroundColor = backgroundColor ?? colorScheme.surface;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Text(
+    Color fColor = color ?? Colors.transparent;
+    Color fBackgroundColor = backgroundColor ?? Colors.transparent;
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: 8,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Text(
             label,
             // textAlign: TextAlign.start,
             // overflow: TextOverflow.clip,
@@ -42,15 +48,15 @@ class SectionLabel extends StatelessWidget {
               color: fColor,
             ),
           ),
-        ),
-        IconOption(
-          option,
-          backgroundColor: fBackgroundColor,
-          iconColor: fColor,
-          iconSize: 28,
-          padding: const EdgeInsets.all(8),
-        ),
-      ],
+          IconOption(
+            option,
+            backgroundColor: fBackgroundColor,
+            iconColor: fColor,
+            iconSize: 28,
+            // padding: const EdgeInsets.all(8),
+          ),
+        ],
+      ),
     );
   }
 }

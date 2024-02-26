@@ -29,6 +29,29 @@ class School extends StatelessWidget {
             Options.user,
             Options.help,
           ]),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Visit ",
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "https://thanglong.edu.vn",
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

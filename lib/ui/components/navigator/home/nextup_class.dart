@@ -38,7 +38,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
         overflow: overflow,
         style: TextStyle(
           fontSize: fontSize,
-          color: colorScheme.onSurface,
+          color: colorScheme.onSecondaryContainer,
           fontWeight: fontWeight,
         ),
       );
@@ -49,7 +49,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
       child: Card.filled(
         elevation: 0,
         // color: colorScheme.primaryContainer,
-        color: colorScheme.primary.withOpacity(0.1),
+        color: colorScheme.secondaryContainer,
         // color: Colors.transparent,
         margin: const EdgeInsets.only(left: 16),
         shape: RoundedRectangleBorder(
@@ -67,7 +67,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
           },
           borderRadius: BorderRadius.circular(8.0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,7 +80,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                     ),
                     Icon(
                       Icons.alarm,
-                      color: colorScheme.onSurface,
+                      color: colorScheme.onSecondaryContainer,
                       size: 18,
                     ),
                     textTile(

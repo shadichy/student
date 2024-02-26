@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:student/ui/components/navigator/home/notification.dart';
 
-class NotifExpandable extends StatefulWidget {
-  final List notifications;
-  const NotifExpandable(this.notifications, {super.key});
+class HomeNotifWidget extends StatefulWidget {
+  final List<Notif> notifications;
+  const HomeNotifWidget(this.notifications, {super.key});
 
   @override
-  State<NotifExpandable> createState() => _NotifExpandableState();
+  State<HomeNotifWidget> createState() => _HomeNotifWidgetState();
 }
 
-class _NotifExpandableState extends State<NotifExpandable> {
+class _HomeNotifWidgetState extends State<HomeNotifWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,6 +26,7 @@ class _NotifExpandableState extends State<NotifExpandable> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
+          NotifExpandableBox(widget.notifications),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
             child: Row(

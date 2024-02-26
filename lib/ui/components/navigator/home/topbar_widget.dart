@@ -22,9 +22,8 @@ class _HomeTopBarState extends State<HomeTopBar> {
         children: [
           Expanded(
             child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16),
-                  dense: true,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              dense: true,
               onTap: Options.search.target,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -86,7 +85,11 @@ class _HomeTopBarState extends State<HomeTopBar> {
             backgroundColor: colorScheme.surface,
           ),
           IconOption(
-            Options.user,
+            Option(
+              Icons.people,
+              "",
+              Scaffold.of(context).openDrawer,
+            ),
             margin: const EdgeInsets.only(left: 4),
             iconSize: 20,
             iconColor: colorScheme.onSurface,

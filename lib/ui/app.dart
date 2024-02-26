@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   ThemeData _buildTheme() {
     ThemeData baseTheme = ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.lightBlueAccent,
+        seedColor: Colors.red,
         brightness: Brightness.light,
       ),
       useMaterial3: true,
@@ -42,7 +42,7 @@ class _MainState extends State<Main> {
   int _selectedTab = 0;
   final List<int> _visitedTabs = [];
   // final Map<int, Widget> _defaultRoutes = {0: const Home()};
-  final List<Widget> _defaultRoutes = const [
+  final List<Widget> _defaultRoutes = [
     Home(),
     Timetable(),
     School(),

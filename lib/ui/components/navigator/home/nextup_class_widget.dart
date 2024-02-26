@@ -116,29 +116,26 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       ]
     ]).output;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionLabel(
-            "Next-up classes",
-            Option(Icons.arrow_forward, "", () {}),
-            fontWeight: FontWeight.w900,
-            fontSize: 20,
-            color: colorScheme.onSurface,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: content,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionLabel(
+          "Next-up classes",
+          Option(Icons.arrow_forward, "", () {}),
+          fontWeight: FontWeight.w900,
+          fontSize: 20,
+          color: colorScheme.onSurface,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: content,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

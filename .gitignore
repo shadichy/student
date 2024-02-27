@@ -26,6 +26,5 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
-
-#editor prefs
+# Editor
 .vscode

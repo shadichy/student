@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+import 'package:student/ui/navigator/home.dart';
+import 'package:student/ui/navigator/timetable.dart';
+import 'package:student/ui/navigator/school.dart';
+import 'package:student/ui/navigator/student.dart';
+import 'package:student/ui/pages/help/mdviewer.dart';
+import 'package:student/ui/pages/info/edu_program_info.dart';
+import 'package:student/ui/pages/info/profession_info.dart';
+import 'package:student/ui/pages/info/student_decisions.dart';
+import 'package:student/ui/pages/learning/finance.dart';
+import 'package:student/ui/pages/learning/result.dart';
+import 'package:student/ui/pages/learning/status.dart';
+import 'package:student/ui/pages/notification/notification.dart';
+import 'package:student/ui/pages/notification/notification_detail.dart';
+import 'package:student/ui/pages/notification/notification_preview.dart';
+import 'package:student/ui/pages/search/search.dart';
+import 'package:student/ui/pages/search/search_result.dart';
+import 'package:student/ui/pages/settings/settings.dart';
+import 'package:student/ui/pages/settings/themes.dart';
+import 'package:student/ui/pages/subject/subject.dart';
+import 'package:student/ui/pages/subject/subject_class.dart';
+import 'package:student/ui/pages/subject/subject_class_preview.dart';
+import 'package:student/ui/pages/tools/timetable_generator.dart';
+
+abstract final class AppPages {
+  static List<Widget> main = [
+    HomePage(),
+    TimetablePage(),
+    SchoolPage(),
+    StudentPage(),
+  ];
+  static MainNavigators pages = MainNavigators();
+}
+
+final class MainNavigators {
+  static HelpPages help = HelpPages();
+
+  static InfoPages info = InfoPages();
+
+  static LearningPages learning = LearningPages();
+
+  static NotificationPages notification = NotificationPages();
+
+  static SearchPages search = SearchPages();
+
+  static SettingsPages settings = SettingsPages();
+
+  static SubjectPages subject = SubjectPages();
+
+  static ToolsPages tools = ToolsPages();
+}
+
+final class HelpPages {
+  static MdviewerPage mdviewer = MdviewerPage();
+}
+
+final class InfoPages {
+  static EduProgramInfoPage edu_program_info = EduProgramInfoPage();
+
+  static ProfessionInfoPage profession_info = ProfessionInfoPage();
+
+  static StudentDecisionsPage student_decisions = StudentDecisionsPage();
+}
+
+final class LearningPages {
+  static FinancePage finance = FinancePage();
+
+  static ResultPage result = ResultPage();
+
+  static StatusPage status = StatusPage();
+}
+
+final class NotificationPages {
+  static NotificationPage notification = NotificationPage();
+
+  static NotificationDetailPage notification_detail = NotificationDetailPage();
+
+  static NotificationPreviewPage notification_preview = NotificationPreviewPage();
+}
+
+final class SearchPages {
+  static SearchPage search = SearchPage();
+
+  static SearchResultPage search_result = SearchResultPage();
+}
+
+final class SettingsPages {
+  static SettingsPage settings = SettingsPage();
+
+  static ThemesPage themes = ThemesPage();
+}
+
+final class SubjectPages {
+  static SubjectPage subject = SubjectPage();
+
+  static SubjectClassPage subject_class = SubjectClassPage();
+
+  static SubjectClassPreviewPage subject_class_preview =
+      SubjectClassPreviewPage();
+}
+
+final class ToolsPages {
+  static TimetableGeneratorPage timetable_generator = TimetableGeneratorPage();
+}

@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 
 class TimetableNextupClassCard extends StatefulWidget {
-  final String classId;
-  final String classDesc;
-  final String teacher;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String room;
-  const TimetableNextupClassCard({
-    super.key,
-    required this.classId,
-    required this.classDesc,
-    required this.teacher,
-    required this.startTime,
-    required this.endTime,
-    required this.room,
-  });
+  final NextupClassView nextupClass;
+  const TimetableNextupClassCard(this.nextupClass, {super.key});
 
   @override
   State<TimetableNextupClassCard> createState() =>
@@ -52,13 +41,13 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: 18,
-                color: colorScheme.onTertiaryContainer,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             Text(
@@ -69,7 +58,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 fontWeight: FontWeight.w600,
                 // fontStyle: FontStyle.normal,
                 fontSize: 15,
-                color: colorScheme.onTertiaryContainer,
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             Expanded(
@@ -77,13 +66,13 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 value,
                 // textAlign: TextAlign.start,
                 // overflow: TextOverflow.clip,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   // fontWeight: FontWeight.w600,
                   // fontStyle: FontStyle.normal,
                   fontSize: 16,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -91,48 +80,49 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
       );
     }
 
-    return Card(
+    return Card.outlined(
       color: Colors.transparent,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-      ),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: EdgeInsets.zero,
-          backgroundColor: colorScheme.background,
-          shape: RoundedRectangleBorder(
-              // borderRadius: BorderRadius.zero,
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(
-                color: colorScheme.tertiaryContainer,
-                width: 1,
-              )),
+        side: BorderSide(
+          color: colorScheme.primaryContainer,
+          width: 1,
         ),
+      ),
+      child: InkWell(
+        onTap: () {
+          showBottomSheet(
+            context: context,
+            builder: ((BuildContext context) {
+              return NextupClassSheet(widget.nextupClass);
+            }),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               // margin: ,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.primaryContainer,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
                 ),
               ),
               child: Text(
-                widget.classId,
+                widget.nextupClass.classId,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -144,32 +134,33 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.classDesc,
+                    widget.nextupClass.classDesc,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
-                      color: colorScheme.onTertiaryContainer,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                   ),
                   textTile(
                     Icons.meeting_room,
                     "Room",
-                    widget.room,
+                    widget.nextupClass.room,
                   ),
                   textTile(
                     Icons.alarm,
                     "Time",
-                    "${hmFormat(widget.startTime)} - ${hmFormat(widget.endTime)}",
+                    "${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
                     Icons.event,
                     "Date",
-                    DateFormat("EEEE, dd/MM/yyyy").format(widget.startTime),
+                    DateFormat("EEEE, dd/MM/yyyy")
+                        .format(widget.nextupClass.startTime),
                   ),
                   textTile(
                     Icons.person,
                     "Teacher",
-                    widget.teacher,
+                    widget.nextupClass.teacher,
                   ),
                 ],
               ),

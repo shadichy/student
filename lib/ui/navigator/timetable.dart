@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class_widget.dart';
+import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
-import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/quick_option.dart';
-import 'package:student/ui/components/section_label.dart';
 
 class TimetablePage extends StatelessWidget {
   const TimetablePage({super.key});
@@ -21,32 +18,33 @@ class TimetablePage extends StatelessWidget {
         children: [
           const TimetableTopBar(),
           TimetableNextupClassWidget(TimetableData.from2dList([])),
-          // const Padding(
-          //   padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     mainAxisSize: MainAxisSize.max,
-          //     children: [
-          //       Text(
-          //         "Môn học tiếp theo",
-          //         textAlign: TextAlign.start,
-          //         overflow: TextOverflow.clip,
-          //         style: TextStyle(
-          //           fontWeight: FontWeight.w600,
-          //           fontStyle: FontStyle.normal,
-          //           fontSize: 16,
-          //           color: Color(0xff000000),
-          //         ),
-          //       ),
-          //       Icon(
-          //         Icons.arrow_forward,
-          //         color: Color(0xff212435),
-          //         size: 24,
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          TimetableWidget(TimetableData.from2dList([])),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "Môn học tiếp theo",
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 16,
+                    color: Color(0xff000000),
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward,
+                  color: Color(0xff212435),
+                  size: 24,
+                ),
+              ],
+            ),
+          ),
           Container(
             margin: const EdgeInsets.all(0),
             padding: const EdgeInsets.all(0),

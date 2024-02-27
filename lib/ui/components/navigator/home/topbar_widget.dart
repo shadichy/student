@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/quick_option.dart';
+import 'package:student/ui/components/options.dart';
 
 class HomeTopBar extends StatefulWidget {
   const HomeTopBar({super.key});
@@ -14,58 +14,86 @@ class _HomeTopBarState extends State<HomeTopBar> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          IconOption(
-            Option(Icons.menu, "", Scaffold.of(context).openDrawer),
-            padding: const EdgeInsets.all(4),
-            iconSize: 28,
-            iconColor: colorScheme.onSecondaryContainer,
-            backgroundColor: colorScheme.background,
-          ),
           Expanded(
-            flex: 1,
-            child: ElevatedButton(
-              onPressed: () => {},
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                backgroundColor: colorScheme.secondaryContainer.withAlpha(50),
-                elevation: 0,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              dense: true,
+              onTap: Options.search.target,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    "Search",
-                    style: TextStyle(
-                      color: colorScheme.onSecondaryContainer,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Icon(
-                    Icons.search,
-                    color: colorScheme.onSecondaryContainer,
-                    size: 24,
-                  ),
-                ],
+              tileColor: colorScheme.primary.withOpacity(0.05),
+              leading: Icon(
+                Icons.search,
+                color: colorScheme.onSurface,
+                size: 20,
+              ),
+              title: Text(
+                "Search",
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(30),
+          //       color: colorScheme.surfaceVariant,
+          //     ),
+          //     child: InkWell(
+          //       onTap: Options.search.target,
+          //       borderRadius: BorderRadius.circular(30),
+          //       child: Padding(
+          //         padding:
+          //             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //         child: Row(
+          //           children: [
+          //             Icon(
+          //               Icons.search,
+          //               color: colorScheme.onSurfaceVariant,
+          //               size: 20,
+          //             ),
+          //             const SizedBox(width: 8),
+          //             Text(
+          //               "Search",
+          //               style: TextStyle(
+          //                 color: colorScheme.onSurfaceVariant,
+          //                 fontSize: 16,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           IconOption(
             Options.notifications,
-            padding: const EdgeInsets.all(4),
-            iconSize: 28,
-            iconColor: colorScheme.onSecondaryContainer,
-            backgroundColor: colorScheme.background,
+            margin: const EdgeInsets.only(left: 4),
+            iconSize: 20,
+            iconColor: colorScheme.onSurface,
+            backgroundColor: colorScheme.surface,
+          ),
+          IconOption(
+            Option(
+              Icons.people,
+              "",
+              Scaffold.of(context).openDrawer,
+            ),
+            margin: const EdgeInsets.only(left: 4),
+            iconSize: 20,
+            iconColor: colorScheme.onSurface,
+            backgroundColor: colorScheme.surface,
           ),
         ],
       ),

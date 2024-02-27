@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   ThemeData _buildTheme() {
     ThemeData baseTheme = ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepPurple,
+        seedColor: Colors.red,
         brightness: Brightness.light,
       ),
       useMaterial3: true,
@@ -43,7 +43,7 @@ class _MainState extends State<Main> {
   final List<int> _visitedTabs = [];
   // final Map<int, Widget> _defaultRoutes = {0: const Home()};
   // final Map<int, Widget> _defaultRoutes = {0: const Timetable()};
-  final List<Widget> _defaultRoutes = const [
+  final List<Widget> _defaultRoutes = [
     HomePage(),
     TimetablePage(),
     SchoolPage(),
@@ -88,17 +88,17 @@ class _MainState extends State<Main> {
         case 3:
           return const StudentPage();
         default:
-          return _defaultRoutes[0]!;
+          return _defaultRoutes[0];
       }
     }();
-    return _defaultRoutes[index]!;
+    return _defaultRoutes[index];
   }
 
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: PopScope(
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();

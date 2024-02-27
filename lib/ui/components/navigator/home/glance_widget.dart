@@ -18,7 +18,7 @@ class _GlanceState extends State<Glance> {
       padding: const EdgeInsets.all(16),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: colorScheme.tertiaryContainer,
+        color: colorScheme.primaryContainer,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -33,7 +33,7 @@ class _GlanceState extends State<Glance> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: colorScheme.onTertiaryContainer,
+                color: colorScheme.onPrimaryContainer,
                 width: 2.0,
               ),
             ),
@@ -56,17 +56,19 @@ class _GlanceState extends State<Glance> {
                 "Welcome back,",
                 style: TextStyle(
                   fontSize: 24,
-                  color: colorScheme.onTertiaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.w700,
                 ),
+                overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
                 widget.name,
                 style: TextStyle(
                   fontSize: 18,
-                  color: colorScheme.onTertiaryContainer.withOpacity(.95),
+                  color: colorScheme.onPrimaryContainer.withOpacity(.95),
                 ),
+                overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
               ),
               dense: false,

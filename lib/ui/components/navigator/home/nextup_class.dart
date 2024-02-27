@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 
@@ -21,8 +21,6 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
     if (diffStart.inMinutes < 0) return "now";
     return "$hour${diffStart.inMinutes}m";
   }
-
-  String hmFormat(DateTime time) => DateFormat("HH:mm").format(time);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +104,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   fontSize: 14,
                 ),
                 textTile(
-                  "Time: ${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
+                  "Time: ${timeFormat(widget.nextupClass.startTime)} - ${timeFormat(widget.nextupClass.endTime)}",
                   fontSize: 14,
                 ),
                 textTile(

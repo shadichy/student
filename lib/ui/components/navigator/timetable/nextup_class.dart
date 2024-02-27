@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 
@@ -22,8 +23,6 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
     if (diffStart.inMinutes < 0) return "now";
     return "$hour${diffStart.inMinutes}m";
   }
-
-  String hmFormat(DateTime time) => DateFormat("HH:mm").format(time);
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +104,7 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
           children: [
             Container(
               // margin: ,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer,
@@ -149,13 +147,12 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                   textTile(
                     Icons.alarm,
                     "Time",
-                    "${hmFormat(widget.nextupClass.startTime)} - ${hmFormat(widget.nextupClass.endTime)}",
+                    "${timeFormat(widget.nextupClass.startTime)} - ${timeFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
                     Icons.event,
                     "Date",
-                    DateFormat("EEEE, dd/MM/yyyy")
-                        .format(widget.nextupClass.startTime),
+                    timeFormat(widget.nextupClass.startTime),
                   ),
                   textTile(
                     Icons.person,

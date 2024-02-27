@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/functions.dart';
+import 'package:student/core/generator.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class_widget.dart';
 import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
@@ -18,7 +20,38 @@ class TimetablePage extends StatelessWidget {
         children: [
           const TimetableTopBar(),
           TimetableNextupClassWidget(TimetableData.from2dList([])),
-          TimetableWidget(TimetableData.from2dList([])),
+          TimetableWidget(
+            BaseTimetable(classes: [
+              SubjectClass(
+                classID: "classID1",
+                subjectID: "subjectID1",
+                timestamp: [
+                  ClassTimeStamp(
+                    intMatrix: 123,
+                    dayOfWeek: 4,
+                    classID: "classID1",
+                    teacherID: "teacherID",
+                    room: "room",
+                    classType: ClassType.offline,
+                  )
+                ],
+              ),
+              SubjectClass(
+                classID: "classID2",
+                subjectID: "subjectID2",
+                timestamp: [
+                  ClassTimeStamp(
+                    intMatrix: 132,
+                    dayOfWeek: 5,
+                    classID: "classID2",
+                    teacherID: "teacherID",
+                    room: "room",
+                    classType: ClassType.offline,
+                  )
+                ],
+              ),
+            ]),
+          ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             child: Row(

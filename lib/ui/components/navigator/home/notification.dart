@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student/ui/components/interpolator.dart';
 
 class Notif {
   final String title;
@@ -37,11 +38,20 @@ class _NotifExpandState extends State<NotifExpand> {
       );
     }
 
-    TextStyle titleStyle = genericStyle(fontWeight: FontWeight.bold);
-    TextStyle contentStyle = genericStyle();
+    TextStyle titleStyle = genericStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    TextStyle contentStyle = genericStyle(
+      fontSize: 14,
+    );
     TextStyle noteStyle = genericStyle(
       fontSize: 12,
       fontWeight: FontWeight.w100,
+    );
+    TextStyle linkStyle = genericStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
     );
 
     String timeNote = (widget.notification.time is DateTime)
@@ -95,7 +105,15 @@ class _NotifExpandState extends State<NotifExpand> {
                   widget.notification.content,
                   style: contentStyle,
                   maxLines: isExpanded ? 8 : 1,
-                )
+                ),
+                if (isExpanded)
+                  InkWell(
+                    onTap:widget.notification.target,
+                    child: textBox(
+                      "More",
+                      style: linkStyle,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -168,6 +186,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
               "${notif.title}  ",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 16,
                 color: colorScheme.onPrimaryContainer,
               ),
               overflow: TextOverflow.ellipsis,
@@ -176,6 +195,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
               child: Text(
                 notif.content,
                 style: TextStyle(
+                  fontSize: 14,
                   color: colorScheme.onPrimaryContainer,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -189,61 +209,63 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        children: <Widget>[
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.primary.withOpacity(0.05),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.notifications,
-                      color: colorScheme.onPrimaryContainer,
-                      size: 16,
-                    ),
+        children: Interpolator<Widget>([
+          [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.primary.withOpacity(0.05),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        "Latest Notifications",
-                        style: TextStyle(
-                          color: colorScheme.onPrimaryContainer,
-                        ),
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    Icons.notifications,
+                    color: colorScheme.onPrimaryContainer,
+                    size: 16,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      "Latest Notifications",
+                      style: TextStyle(
+                        color: colorScheme.onPrimaryContainer,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: IconButton(
-                      onPressed: changeState,
-                      icon: Icon(
-                          isExpanded
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                          size: 16,
-                          color: colorScheme.onSecondaryContainer),
-                      style: IconButton.styleFrom(
-                        backgroundColor: colorScheme.primary.withOpacity(0.05),
-                      ),
-                      splashRadius: 1,
-                      iconSize: 16,
-                      padding: EdgeInsets.zero,
+                ),
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: IconButton(
+                    onPressed: changeState,
+                    icon: Icon(
+                        isExpanded
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        size: 16,
+                        color: colorScheme.onSecondaryContainer),
+                    style: IconButton.styleFrom(
+                      backgroundColor: colorScheme.primary.withOpacity(0.05),
                     ),
-                  )
-                ],
-              ),
-              const Divider(
-                color: Colors.transparent,
-                height: 4,
-              )
-            ] +
-            notifications.map((Notif n) {
-              return isExpanded ? NotifExpand(n) : titlePreview(n);
-            }).toList(),
+                    splashRadius: 1,
+                    iconSize: 16,
+                    padding: EdgeInsets.zero,
+                  ),
+                )
+              ],
+            ),
+            const Divider(
+              color: Colors.transparent,
+              height: 4,
+            )
+          ],
+          notifications.map((Notif n) {
+            return isExpanded ? NotifExpand(n) : titlePreview(n);
+          }).toList()
+        ]).output,
       ),
     );
   }

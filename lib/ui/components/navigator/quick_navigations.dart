@@ -21,7 +21,7 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
       [
         SectionLabel(
           "Quick actions",
-          Options.add("", () {}),
+          Options.add("", (BuildContext context) {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
           color: colorScheme.onSurface,
@@ -42,7 +42,7 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
         SizedBox(
           width: 220,
           child: TextOption(
-            Options.add("Thêm shortcut", () {}),
+            Options.add("Thêm shortcut", (BuildContext context) {}),
             margin: const EdgeInsets.symmetric(vertical: 8),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             color: colorScheme.onSecondaryContainer,

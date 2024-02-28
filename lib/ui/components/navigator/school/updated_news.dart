@@ -23,7 +23,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
       children: [
         SectionLabel(
           "Tài liệu mới cập nhật",
-          Option(Icons.arrow_forward, "", () {}),
+          Option(Icons.arrow_forward, "", (BuildContext context) {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
           color: colorScheme.onSecondaryContainer,

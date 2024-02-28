@@ -118,7 +118,7 @@ class _TimetableNextupClassWidgetState
       children: [
         // SectionLabel(
         //   "Môn học tiếp theo",
-        //   Option(Icons.arrow_forward, "", () {}),
+        //   Option(Icons.arrow_forward, "", (BuildContext context) {}),
         //   fontWeight: FontWeight.bold,
         //   fontSize: 16,
         //   color: colorScheme.onSurface,
@@ -133,7 +133,7 @@ class _TimetableNextupClassWidgetState
                 Option(
                   Icons.keyboard_double_arrow_left,
                   "",
-                  () => changeClass(0),
+                  (context) => changeClass(0),
                 ),
                 iconSize: 28,
                 margin: const EdgeInsets.only(right: 8),
@@ -145,7 +145,7 @@ class _TimetableNextupClassWidgetState
                 Option(
                   Icons.keyboard_arrow_left,
                   "",
-                  () => changeClass(index - 1),
+                  (context) => changeClass(index - 1),
                 ),
                 iconSize: 28,
                 margin: const EdgeInsets.only(right: 8),
@@ -166,7 +166,7 @@ class _TimetableNextupClassWidgetState
                 Option(
                   Icons.keyboard_arrow_right,
                   "",
-                  () => changeClass(index + 1),
+                  (context) => changeClass(index + 1),
                 ),
                 iconSize: 28,
                 margin: const EdgeInsets.only(left: 8),
@@ -178,7 +178,7 @@ class _TimetableNextupClassWidgetState
                 Option(
                   Icons.keyboard_double_arrow_right,
                   "",
-                  () => changeClass(classStamps.length - 1),
+                  (context) => changeClass(classStamps.length - 1),
                 ),
                 iconSize: 28,
                 margin: const EdgeInsets.only(left: 8),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';       
 import 'package:student/ui/navigator/home.dart';
-import 'package:student/ui/navigator/school.dart';
+import 'package:student/ui/navigator/school.dart';                                                                           
 import 'package:student/ui/navigator/student.dart';
 import 'package:student/ui/navigator/timetable.dart';
 
@@ -75,23 +75,6 @@ class _MainState extends State<Main> {
       _visitedTabs.removeLast();
       if (_visitedTabs.isNotEmpty) _selectedTab = _visitedTabs.last;
     });
-  }
-
-  @deprecated
-  Widget mapRoute(int index) {
-    _defaultRoutes[index] = () {
-      switch (index) {
-        case 1:
-          return const TimetablePage();
-        case 2:
-          return const SchoolPage();
-        case 3:
-          return const StudentPage();
-        default:
-          return _defaultRoutes[0];
-      }
-    }();
-    return _defaultRoutes[index];
   }
 
   @override

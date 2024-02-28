@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StudentPage extends StatelessWidget {
-  const StudentPage({super.key});
+  StudentPage({super.key});
+  late final bool hasData = [].isNotEmpty;
 
   @override
   Widget build(BuildContext context) {

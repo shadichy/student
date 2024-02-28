@@ -3,7 +3,7 @@ import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 
 class TimetableTopBar extends StatefulWidget {
-  const TimetableTopBar({ super.key });
+  const TimetableTopBar({super.key});
 
   @override
   State<TimetableTopBar> createState() => _TimetableTopBarState();
@@ -25,7 +25,7 @@ class _TimetableTopBarState extends State<TimetableTopBar> {
         textAlign: TextAlign.center,
       ),
       leading: IconOption(
-        Option(Icons.menu, "", Scaffold.of(context).openDrawer),
+        Option(Icons.menu, "", (context) => Scaffold.of(context).openDrawer),
         iconColor: colorScheme.onSurface,
         iconSize: 20,
         // padding: const EdgeInsets.all(8),

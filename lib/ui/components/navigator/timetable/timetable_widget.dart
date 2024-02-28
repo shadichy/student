@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student/core/functions.dart';
 import 'package:student/core/generator.dart';
 import 'package:student/misc/misc_variables.dart';
-import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/navigator/timetable/timetable.dart';
 import 'package:student/ui/components/option.dart';
@@ -59,7 +57,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
             Option(
               Icons.keyboard_arrow_left,
               "",
-              () {},
+              (BuildContext context) {},
             ),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
@@ -82,7 +80,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
             Option(
               Icons.keyboard_arrow_right,
               "",
-              () {},
+              (BuildContext context) {},
             ),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
@@ -195,7 +193,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       children: [
         SectionLabel(
           "Thời khoá biểu",
-          Option(Icons.arrow_forward, "", () {}),
+          Option(Icons.arrow_forward, "", (context) {}),
           fontWeight: FontWeight.bold,
           fontSize: 16,
           color: colorScheme.onSurface,

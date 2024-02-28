@@ -16,7 +16,7 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
       padding: const EdgeInsets.all(16),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: Options.search.target,
+        onTap: () => Options.search.target(context),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),

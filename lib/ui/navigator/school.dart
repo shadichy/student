@@ -7,7 +7,8 @@ import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/navigator/quick_navigations.dart';
 
 class SchoolPage extends StatelessWidget {
-  const SchoolPage({super.key});
+  SchoolPage({super.key});
+  late final bool hasData = [].isNotEmpty;
 
   @override
   Widget build(BuildContext context) {

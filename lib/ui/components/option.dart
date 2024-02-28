@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Option {
   final IconData icon;
   final String label;
-  final void Function()? target;
+  final void Function(BuildContext) target;
   Option(this.icon, this.label, this.target);
 }
 
@@ -64,7 +64,7 @@ class _TextOptionState extends State<TextOption> {
     //   ),
     // );
     Widget optionWidget = ListTile(
-      onTap: widget.id.target,
+      onTap: () => widget.id.target(context),
       contentPadding: widget.padding,
       shape: (widget.borderRadius == BorderRadius.zero)
           ? null
@@ -124,7 +124,7 @@ class _IconOptionState extends State<IconOption> {
   Widget build(BuildContext context) {
     Widget optionWidget = IconButton(
       iconSize: widget.iconSize,
-      onPressed: widget.id.target,
+      onPressed: () => widget.id.target(context),
       padding: widget.padding,
       // color: widget.backgroundColor
       style: IconButton.styleFrom(

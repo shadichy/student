@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 import 'package:student/ui/components/navigator/nextup_class_preview.dart';

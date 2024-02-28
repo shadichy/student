@@ -20,8 +20,6 @@ class SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     Color fColor = color ?? Colors.transparent;
     Color fBackgroundColor = backgroundColor ?? Colors.transparent;
 

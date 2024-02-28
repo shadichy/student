@@ -30,14 +30,14 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
           .toList(),
       [
         IconOption(
-          Options.add("", () {}),
+          Options.add("", (BuildContext context) {}),
           padding: const EdgeInsets.all(8),
           iconColor: colorScheme.onPrimaryContainer,
           backgroundColor: colorScheme.surface,
         )
       ]
     ]).output;
-  
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(

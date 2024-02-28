@@ -18,7 +18,7 @@ class _SchoolTopBarState extends State<SchoolTopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Option(Icons.sort, "", Scaffold.of(context).openDrawer),
+          Option(Icons.sort, "", (context) => Scaffold.of(context).openDrawer),
           Options.notifications,
         ]
             .map(

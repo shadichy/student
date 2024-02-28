@@ -7,7 +7,8 @@ import 'package:student/ui/components/navigator/timetable/timetable_widget.dart'
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
 
 class TimetablePage extends StatelessWidget {
-  const TimetablePage({super.key});
+  TimetablePage({super.key});
+  late final bool hasData = [].isNotEmpty;
 
   @override
   Widget build(BuildContext context) {

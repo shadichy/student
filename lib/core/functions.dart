@@ -137,11 +137,14 @@ class Subject {
   final String name;
   final int tin;
   final List<SubjectClass> classes;
+  final List<String> dependencies;
   const Subject({
     required this.subjectID,
     required this.name,
     required this.tin,
     required this.classes,
+    // placeholer
+    this.dependencies = const [],
   });
 
   Subject filter(SubjectFilter filterLayer) {

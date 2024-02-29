@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
-// import 'package:student/core/functions.dart';
+import 'package:student/core/functions.dart';
 
 // class NextupClass {
-//   final ClassTimeStamp stamp;
+//   late final ClassTimeStamp stamp;
 //   late final String room;
 //   NextupClass(this.stamp) {
 //     room = stamp.room;
@@ -25,12 +25,12 @@
 // }
 
 class NextupClassView {
-  final String classId;
-  final String classDesc;
-  final String teacher;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String room;
+  late final String classId;
+  late final String classDesc;
+  late final String teacher;
+  late final DateTime startTime;
+  late final DateTime endTime;
+  late final String room;
   // more info required, including ca, teacher id, subject id, kì học, tuần thứ n
 
   NextupClassView({
@@ -41,4 +41,14 @@ class NextupClassView {
     required this.endTime,
     required this.room,
   });
+
+  NextupClassView.fromStamp(ClassTimeStamp stamp) {
+    classId = stamp.classID;
+    // placeholder
+    classDesc = "";
+    teacher = "";
+    startTime = DateTime.now();
+    endTime = DateTime.now();
+    room = stamp.room;
+  }
 }

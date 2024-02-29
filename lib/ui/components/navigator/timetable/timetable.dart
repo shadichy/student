@@ -1,19 +1,23 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:student/core/functions.dart';
 import 'package:student/core/generator.dart';
 import 'package:student/core/presets.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/components/interpolator.dart';
+import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 // import 'package:web/web.dart';
 
 // class ColorTimetable extends BaseTimetable {
 //   ColorTimetable({required super.classes});
 // }
+
+class ColorCell {
+  final Color color;
+  final ClassTimeStamp? stamp;
+  const ColorCell({required this.color, this.stamp});
+}
 
 class TimetableBox extends StatelessWidget {
   final BaseTimetable timetable;
@@ -24,56 +28,74 @@ class TimetableBox extends StatelessWidget {
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
 
-    List<List<Color>> colorMap = List<List<Color>>.generate(
+    List<List<ColorCell>> colorMap = List<List<ColorCell>>.generate(
       7,
-      (int _) => List<Color>.generate(
+      (int _) => List<ColorCell>.generate(
         classTimeStamps.length,
-        (int _) => Colors.transparent,
+        (int _) => const ColorCell(
+          color: Colors.transparent,
+        ),
       ),
     );
 
     Widget textBox(
       String text, {
       EdgeInsetsGeometry padding = const EdgeInsets.symmetric(vertical: 2),
+      FontWeight? fontWeight,
     }) {
       return Center(
-        child: Padding(
-          padding: padding,
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 12,
-              color: colorScheme.onPrimaryContainer,
-            ),
+          child: Padding(
+        padding: padding,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 12,
+            color: colorScheme.onPrimaryContainer,
+            fontWeight: fontWeight,
+          ),
+        ),
+      ));
+    }
+
+    String dayOfWeek = "SMTWTFS";
+
+    Widget colorBox({Color? color, Widget? child, ClassTimeStamp? stamp}) {
+      return TableCell(
+        verticalAlignment: TableCellVerticalAlignment.fill,
+        child: InkWell(
+          onTap: (stamp is ClassTimeStamp)
+              ? () {
+                  showBottomSheet(
+                    context: context,
+                    builder: ((BuildContext context) {
+                      return NextupClassSheet(NextupClassView.fromStamp(stamp));
+                    }),
+                  );
+                }
+              : null,
+          child: Container(
+            color: color,
+            child: child,
           ),
         ),
       );
     }
 
-    String dayOfWeek = "SMTWTFS";
-
-    Widget colorBox({Color? color, Widget? child}) {
-      return TableCell(
-        verticalAlignment: TableCellVerticalAlignment.fill,
-        child: Container(
-          color: color,
-          child: child,
-        ),
-      );
-    }
-
     timetable.classes.asMap().forEach((int d, SubjectClass c) {
-      c.intMatrix.asMap().forEach((int i, int m) {
-        for (int j = 0; j < classTimeStamps.length; j++) {
+      for (int j = 0; j < classTimeStamps.length; j++) {
+        c.intMatrix.asMap().forEach((int i, int m) {
           if (m & (1 << j) != 0) {
-            colorMap[i][j] = m3PrimeColor[d];
-            continue;
+            colorMap[i][j] = ColorCell(
+              color: m3PrimeColor[d],
+              stamp: c.timestamp[0],
+            );
+          } else if (i == now.weekday && colorMap[i][j].color == Colors.transparent) {
+            colorMap[i][j] = ColorCell(
+              color: colorScheme.primary.withOpacity(0.05),
+            );
           }
-          if (i == now.weekday) {
-            colorMap[i][j] = colorScheme.primary.withOpacity(0.05);
-          }
-        }
-      });
+        });
+      }
     });
 
     List<TableRow> genTable = Interpolator<TableRow>([
@@ -81,10 +103,13 @@ class TimetableBox extends StatelessWidget {
         TableRow(
           children: Interpolator<Widget>([
             [
-              textBox(timeFormat(
-                now.subtract(Duration(days: now.weekday - 1)),
-                format: "dd/MM",
-              )),
+              textBox(
+                timeFormat(
+                  now.subtract(Duration(days: now.weekday - 1)),
+                  format: "dd/MM",
+                ),
+                fontWeight: FontWeight.bold,
+              ),
             ],
             dayOfWeek.characters.indexed.map<Widget>((d) {
               Widget base = textBox(d.$2);
@@ -97,10 +122,13 @@ class TimetableBox extends StatelessWidget {
               return base;
             }).toList(),
             [
-              textBox(timeFormat(
-                now.add(Duration(days: 7 - now.weekday)),
-                format: "dd/MM",
-              ))
+              textBox(
+                timeFormat(
+                  now.add(Duration(days: 7 - now.weekday)),
+                  format: "dd/MM",
+                ),
+                fontWeight: FontWeight.bold,
+              )
             ],
           ]).output,
         )
@@ -120,7 +148,10 @@ class TimetableBox extends StatelessWidget {
               )
             ],
             List<Widget>.generate(7, (int i) {
-              return colorBox(color: colorMap[i][j]);
+              return colorBox(
+                color: colorMap[i][j].color,
+                stamp: colorMap[i][j].stamp,
+              );
             }),
             [
               textBox(

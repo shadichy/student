@@ -59,7 +59,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
           //         child: Row(
           //           children: [
           //             Icon(
-          //               Icons.search,
+          //               const Icon(Icons.search),
           //               color: colorScheme.onSurfaceVariant,
           //               size: 20,
           //             ),
@@ -86,7 +86,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
           ),
           IconOption(
             Option(
-              Icons.people,
+              const Icon(Icons.people),
               "",
               (context) => Scaffold.of(context).openDrawer,
             ),
@@ -164,7 +164,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
             //     isDense: false,
             //     contentPadding:
             //         const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            //     suffixIcon: Icon(Icons.search,
+            //     suffixIcon: Icon(const Icon(Icons.search),
             //         color: colorScheme.onSecondaryContainer, size: 24,),
             //   ),
             // ),

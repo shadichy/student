@@ -5,7 +5,6 @@ import 'package:student/ui/components/option.dart';
 import 'package:student/ui/pages/learning/finance.dart';
 
 abstract final class Options {
-
   static void _goto(BuildContext context, Widget target) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => target,
@@ -13,34 +12,37 @@ abstract final class Options {
   }
 
   static Option add(String label, void Function(BuildContext) f) =>
-      Option(Icons.add, label, f);
+      Option(const Icon(Icons.add), label, f);
+
+  static Option forward(String label, void Function(BuildContext) f) =>
+      Option(const Icon(Icons.arrow_forward), label, f);
 
   static Option notifications = Option(
-    Icons.notifications,
+    const Icon(Icons.notifications),
     "Thông báo",
     (BuildContext context) {},
   );
 
   static Option help = Option(
-    Icons.help,
+    const Icon(Icons.help),
     "Hướng dẫn sử dụng app",
     (BuildContext context) {},
   );
 
   static Option search = Option(
-    Icons.search,
+    const Icon(Icons.search),
     "Tìm kiếm",
     (BuildContext context) {},
   );
 
   static Option settings = Option(
-    Icons.settings,
+    const Icon(Icons.settings),
     "Cài đặt",
     (BuildContext context) {},
   );
 
   static Option student_finance = Option(
-    Icons.credit_card,
+    const Icon(Icons.credit_card),
     "Tài chính sinh viên",
     (BuildContext context) {
       _goto(context, const Finance());
@@ -48,25 +50,25 @@ abstract final class Options {
   );
 
   static Option study_program = Option(
-    Icons.book,
+    const Icon(Icons.book),
     "Chương trình đào tạo",
     (BuildContext context) {},
   );
 
   static Option study_results = Option(
-    Icons.assignment,
+    const Icon(Icons.assignment),
     "Kết quả học tập",
     (BuildContext context) {},
   );
 
   static Option timetable = Option(
-    Icons.calendar_month,
+    const Icon(Icons.calendar_month),
     "Thời khoá biểu",
     (BuildContext context) {},
   );
 
   static Option user = Option(
-    Icons.manage_accounts,
+    const Icon(Icons.manage_accounts),
     "Thông tin sinh viên",
     (BuildContext context) {},
   );

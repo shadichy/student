@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Option {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final void Function(BuildContext) target;
   Option(this.icon, this.label, this.target);
@@ -46,23 +46,20 @@ class TextOption extends StatefulWidget {
 class _TextOptionState extends State<TextOption> {
   @override
   Widget build(BuildContext context) {
-    // ColorScheme colorScheme = Theme.of(context).colorScheme;
-    // Widget optionWidget = ElevatedButton(
-    //   onPressed: widget.id.target,
-    //   style: ElevatedButton.styleFrom(
-    //     padding: widget.padding,
-    //     shape: (widget.borderRadius == BorderRadius.zero)
-    //         ? null
-    //         : RoundedRectangleBorder(borderRadius: widget.borderRadius),
-    //     backgroundColor: widget.iconBackground,
-    //     elevation: 0,
-    //   ),
-    //   child: Icon(
-    //     widget.id.icon,
-    //     color: widget.iconColor,
-    //     size: widget.iconSize,
-    //   ),
-    // );
+    Widget optionIcon = widget.id.icon is Icon
+        ? Icon(
+            (widget.id.icon as Icon).icon,
+            color: widget.color,
+            size: widget.iconSize,
+          )
+        : widget.id.icon is ImageIcon
+            ? ImageIcon(
+                (widget.id.icon as ImageIcon).image,
+                color: widget.color,
+                size: widget.iconSize,
+              )
+            : widget.id.icon;
+
     Widget optionWidget = ListTile(
       onTap: () => widget.id.target(context),
       contentPadding: widget.padding,
@@ -79,11 +76,7 @@ class _TextOptionState extends State<TextOption> {
           color: widget.color,
         ),
       ),
-      leading: Icon(
-        widget.id.icon,
-        color: widget.color,
-        size: widget.iconSize,
-      ),
+      leading: optionIcon,
       trailing: widget.trailing,
       subtitle: widget.subtitle,
       tileColor: widget.backgroundColor,
@@ -122,6 +115,19 @@ class IconOption extends StatefulWidget {
 class _IconOptionState extends State<IconOption> {
   @override
   Widget build(BuildContext context) {
+    Widget optionIcon = widget.id.icon is Icon
+        ? Icon(
+            (widget.id.icon as Icon).icon,
+            color: widget.iconColor,
+            size: widget.iconSize,
+          )
+        : widget.id.icon is ImageIcon
+            ? ImageIcon(
+                (widget.id.icon as ImageIcon).image,
+                color: widget.iconColor,
+                size: widget.iconSize,
+              )
+            : widget.id.icon;
     Widget optionWidget = IconButton(
       iconSize: widget.iconSize,
       onPressed: () => widget.id.target(context),
@@ -133,10 +139,7 @@ class _IconOptionState extends State<IconOption> {
         // elevation: 0,
         // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      icon: Icon(
-        widget.id.icon,
-        color: widget.iconColor,
-      ),
+      icon: optionIcon,
       splashRadius: widget.splashRadius,
     );
     // Widget optionWidget =

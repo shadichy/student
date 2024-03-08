@@ -42,7 +42,7 @@ class NextupClassView {
     required this.room,
   });
 
-  NextupClassView.fromStamp(ClassTimeStamp stamp) {
+  NextupClassView.fromStamp(CourseTimeStamp stamp) {
     classId = stamp.classID;
     // placeholder
     classDesc = "";
@@ -52,3 +52,27 @@ class NextupClassView {
     room = stamp.room;
   }
 }
+
+  //  {
+  //   startStamp = 0;
+  //   if (onlineClass.contains(room)) {
+  //     endStamp = 0;
+  //     // startStampUnix = 0;
+  //     // endStampUnix = 0;
+  //     // day = "";
+  //     return;
+  //   }
+  //   endStamp = 13;
+  //   int tmpDint = intMatrix;
+  //   while (tmpDint != 0) {
+  //     if ((intMatrix & 1) == 0) {
+  //       endStamp--;
+  //     } else {
+  //       startStamp++;
+  //     }
+  //     tmpDint >>= 1;
+  //  }
+  // startStampUnix = classTimeStamps[startStamp][0];
+  // endStampUnix = classTimeStamps[endStamp][1];
+  // day = dates[dayOfWeek];
+  // }

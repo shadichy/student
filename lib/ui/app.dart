@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';       
+import 'package:google_fonts/google_fonts.dart';
+import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/navigator/home.dart';
-import 'package:student/ui/navigator/school.dart';                                                                           
+import 'package:student/ui/navigator/school.dart';
 import 'package:student/ui/navigator/student.dart';
 import 'package:student/ui/navigator/timetable.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
-  ThemeData _buildTheme() {
-    ThemeData baseTheme = ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.red,
-        brightness: Brightness.light,
-      ),
-      useMaterial3: true,
-    );
 
+  static ThemeData baseTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.cyanAccent,
+      brightness: Brightness.light,
+    ),
+    useMaterial3: true,
+  );
+
+  static Future<void> initColor() async {
+    await m3SeededColor(baseTheme.colorScheme.primary);
+  }
+
+  ThemeData _buildTheme() {
     return baseTheme.copyWith(
       textTheme: GoogleFonts.getTextTheme("Varela Round", baseTheme.textTheme),
     );
@@ -23,8 +29,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initColor();
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Student',
       theme: _buildTheme(),
       home: const Main(),
     );

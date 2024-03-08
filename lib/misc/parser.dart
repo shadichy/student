@@ -3,7 +3,7 @@ import 'package:student/core/functions.dart';
 
 class TimetableData {
   late final List<Subject> timetable;
-  late final Map<String, SubjectClass> _classesLT;
+  late final Map<String, SubjectCourse> _classesLT;
   late final Map<String, String> _teacherByIds;
   final RegExp _ltMatch = RegExp(r"/_LT$/");
   final RegExp _btMatch = RegExp(r"/\.[0-9]_BT$/");
@@ -16,7 +16,7 @@ class TimetableData {
     _classesLT = {};
     _teacherByIds = {};
     Map<String, Map<String, dynamic>> tmpTkb = {};
-    Map<String, Map<String, List<ClassTimeStamp>>> tmpTkbLT = {};
+    Map<String, Map<String, List<CourseTimeStamp>>> tmpTkbLT = {};
     // Map<String, List<ClassTimeStamp>> tmpClassesLT = {};
 
     for (List<String> mon in input) {
@@ -34,8 +34,8 @@ class TimetableData {
         classStamp = _toBits(mon[5]);
       }
 
-      ClassTimeStamp stamp = ClassTimeStamp(
-        intMatrix: classStamp,
+      CourseTimeStamp stamp = CourseTimeStamp(
+        intStamp: onlineClass.contains(classRoom) ? 0 : classStamp,
         dayOfWeek: dayOfWeek,
         classID: classID,
         teacherID: teacherID,
@@ -48,10 +48,10 @@ class TimetableData {
       if (_ltMatch.hasMatch(classID)) {
         classID = classID.replaceFirst(_ltMatch, '');
         if (!tmpTkbLT.containsKey(subjectID)) {
-          tmpTkbLT[subjectID] = <String, List<ClassTimeStamp>>{};
+          tmpTkbLT[subjectID] = <String, List<CourseTimeStamp>>{};
         }
         if (!tmpTkbLT[subjectID]!.containsKey(classID)) {
-          tmpTkbLT[subjectID]?[classID] = <ClassTimeStamp>[];
+          tmpTkbLT[subjectID]?[classID] = <CourseTimeStamp>[];
         }
         tmpTkbLT[subjectID]?[classID]!.add(stamp);
         // if (!tmpClassesLT.containsKey(classID)) {
@@ -66,18 +66,18 @@ class TimetableData {
         tmpTkb[subjectID] = {
           "name": name,
           "tin": tin,
-          "classes": <String, List<ClassTimeStamp>>{},
+          "classes": <String, List<CourseTimeStamp>>{},
         };
       }
 
       if (!tmpTkb[subjectID]?["classes"].containsKey(classID)) {
-        tmpTkb[subjectID]?["classes"][classID] = <ClassTimeStamp>[];
+        tmpTkb[subjectID]?["classes"][classID] = <CourseTimeStamp>[];
       }
       tmpTkb[subjectID]?["classes"]?[classID].add(stamp);
     }
 
     tmpTkbLT.forEach((subjectID, classes) => classes
-        .forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
+        .forEach((classID, timestamp) => _classesLT[classID] = SubjectCourse(
               subjectID: subjectID,
               classID: classID,
               timestamp: timestamp,
@@ -102,7 +102,7 @@ class TimetableData {
     }
 
     Map<String, Map<String, dynamic>> tmpTkb = {};
-    Map<String, Map<String, List<ClassTimeStamp>>> tmpTkbLT = {};
+    Map<String, Map<String, List<CourseTimeStamp>>> tmpTkbLT = {};
 
     input.forEach((subjectID, Map<String, dynamic> subjectInfo) {
       if (subjectInfo["classes"] is! Map<String, List>) {
@@ -113,9 +113,9 @@ class TimetableData {
 
       subjectInfo["classes"]
           ?.forEach((classID, List<Map<String, dynamic>> classInfo) {
-        List<ClassTimeStamp> stampList = classInfo
-            .map((stamp) => ClassTimeStamp(
-                  intMatrix: onlineClass.contains(stamp["room"])
+        List<CourseTimeStamp> stampList = classInfo
+            .map((stamp) => CourseTimeStamp(
+                  intStamp: onlineClass.contains(stamp["room"])
                       ? 0
                       : _toBits(stamp["ca"]),
                   dayOfWeek: onlineClass.contains(stamp["room"])
@@ -142,19 +142,19 @@ class TimetableData {
           tmpTkb[subjectID] = {
             "name": name,
             "tin": tin,
-            "classes": <String, List<ClassTimeStamp>>{},
+            "classes": <String, List<CourseTimeStamp>>{},
           };
         }
 
         if (!tmpTkb[subjectID]?["classes"].containsKey(classID)) {
-          tmpTkb[subjectID]?["classes"][classID] = <ClassTimeStamp>[];
+          tmpTkb[subjectID]?["classes"][classID] = <CourseTimeStamp>[];
         }
         tmpTkb[subjectID]?["classes"]?[classID] = stampList;
       });
     });
 
     tmpTkbLT.forEach((subjectID, classes) => classes
-        .forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
+        .forEach((classID, timestamp) => _classesLT[classID] = SubjectCourse(
               subjectID: subjectID,
               classID: classID,
               timestamp: timestamp,
@@ -194,14 +194,14 @@ class TimetableData {
     return teacherID;
   }
 
-  List<SubjectClass> _mapToClass(
-      String id, Map<String, List<ClassTimeStamp>> info) {
-    List<SubjectClass> tmpClasses = [];
+  List<SubjectCourse> _mapToClass(
+      String id, Map<String, List<CourseTimeStamp>> info) {
+    List<SubjectCourse> tmpClasses = [];
     info.forEach((classID, timestamp) {
       if (_btMatch.hasMatch(id)) {
         classID = classID.replaceFirst(RegExp(r"/_BT$/"), '');
       }
-      SubjectClass tmpClass = SubjectClass(
+      SubjectCourse tmpClass = SubjectCourse(
         subjectID: id,
         classID: classID,
         timestamp: timestamp,

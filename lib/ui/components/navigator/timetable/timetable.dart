@@ -4,7 +4,6 @@ import 'package:student/core/generator.dart';
 import 'package:student/core/presets.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_variables.dart';
-import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 // import 'package:web/web.dart';
@@ -15,7 +14,7 @@ import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 
 class ColorCell {
   final Color color;
-  final ClassTimeStamp? stamp;
+  final CourseTimeStamp? stamp;
   const ColorCell({required this.color, this.stamp});
 }
 
@@ -59,11 +58,11 @@ class TimetableBox extends StatelessWidget {
 
     String dayOfWeek = "SMTWTFS";
 
-    Widget colorBox({Color? color, Widget? child, ClassTimeStamp? stamp}) {
+    Widget colorBox({Color? color, Widget? child, CourseTimeStamp? stamp}) {
       return TableCell(
         verticalAlignment: TableCellVerticalAlignment.fill,
         child: InkWell(
-          onTap: (stamp is ClassTimeStamp)
+          onTap: (stamp is CourseTimeStamp)
               ? () {
                   showBottomSheet(
                     context: context,
@@ -81,93 +80,85 @@ class TimetableBox extends StatelessWidget {
       );
     }
 
-    timetable.classes.asMap().forEach((int d, SubjectClass c) {
-      for (int j = 0; j < classTimeStamps.length; j++) {
-        c.intMatrix.asMap().forEach((int i, int m) {
-          if (m & (1 << j) != 0) {
+    timetable.classes.asMap().forEach((int d, SubjectCourse c) {
+      for (int i = 0; i < 7; i++) {
+        for (int j = 0; j < classTimeStamps.length; j++) {
+          if (c.intCourse & (BigInt.one << (classTimeStamps.length * i + j)) !=
+              BigInt.zero) {
             colorMap[i][j] = ColorCell(
-              color: m3PrimeColor[d],
+              color: M3SeededColor.colors[d],
               stamp: c.timestamp[0],
             );
-          } else if (i == now.weekday && colorMap[i][j].color == Colors.transparent) {
+          } else if (i == now.weekday &&
+              colorMap[i][j].color == Colors.transparent) {
             colorMap[i][j] = ColorCell(
               color: colorScheme.primary.withOpacity(0.05),
             );
           }
-        });
+        }
       }
     });
 
-    List<TableRow> genTable = Interpolator<TableRow>([
-      [
-        TableRow(
-          children: Interpolator<Widget>([
-            [
-              textBox(
-                timeFormat(
-                  now.subtract(Duration(days: now.weekday - 1)),
-                  format: "dd/MM",
-                ),
-                fontWeight: FontWeight.bold,
-              ),
-            ],
-            dayOfWeek.characters.indexed.map<Widget>((d) {
-              Widget base = textBox(d.$2);
-              if (d.$1 == now.weekday) {
-                base = colorBox(
-                  color: colorScheme.primary.withOpacity(0.05),
-                  child: base,
-                );
-              }
-              return base;
-            }).toList(),
-            [
-              textBox(
-                timeFormat(
-                  now.add(Duration(days: 7 - now.weekday)),
-                  format: "dd/MM",
-                ),
-                fontWeight: FontWeight.bold,
-              )
-            ],
-          ]).output,
-        )
-      ],
-      List<TableRow>.generate(classTimeStamps.length, (int j) {
+    List<TableRow> genTable = [
+      TableRow(
+        children: [
+          textBox(
+            timeFormat(
+              now.subtract(Duration(days: now.weekday - 1)),
+              format: "dd/MM",
+            ),
+            fontWeight: FontWeight.bold,
+          ),
+          ...dayOfWeek.characters.indexed.map<Widget>((d) {
+            Widget base = textBox(d.$2);
+            if (d.$1 == now.weekday) {
+              base = colorBox(
+                color: colorScheme.primary.withOpacity(0.05),
+                child: base,
+              );
+            }
+            return base;
+          }),
+          textBox(
+            timeFormat(
+              now.add(Duration(days: 7 - now.weekday)),
+              format: "dd/MM",
+            ),
+            fontWeight: FontWeight.bold,
+          )
+        ],
+      ),
+      ...List<TableRow>.generate(classTimeStamps.length, (int j) {
         return TableRow(
-          children: Interpolator<Widget>([
-            [
-              textBox(
-                timeFormat(
-                  date.add(Duration(seconds: classTimeStamps[j][0])),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 2,
-                ),
-              )
-            ],
-            List<Widget>.generate(7, (int i) {
+          children: [
+            textBox(
+              timeFormat(
+                date.add(Duration(seconds: classTimeStamps[j][0])),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 2,
+              ),
+            ),
+            ...List<Widget>.generate(7, (int i) {
               return colorBox(
                 color: colorMap[i][j].color,
                 stamp: colorMap[i][j].stamp,
               );
             }),
-            [
-              textBox(
-                timeFormat(
-                  date.add(Duration(seconds: classTimeStamps[j][1])),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 2,
-                ),
-              )
-            ],
-          ]).output,
+            textBox(
+              timeFormat(
+                date.add(Duration(seconds: classTimeStamps[j][1])),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 2,
+              ),
+            )
+          ],
         );
       }),
-    ]).output;
+    ];
 
     return Table(
       columnWidths: const {

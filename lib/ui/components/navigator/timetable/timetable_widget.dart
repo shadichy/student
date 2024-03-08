@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/functions.dart';
 import 'package:student/core/generator.dart';
 import 'package:student/misc/misc_variables.dart';
-import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/navigator/timetable/timetable.dart';
 import 'package:student/ui/components/option.dart';
+import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableWidget extends StatefulWidget {
@@ -18,6 +19,48 @@ class _TimetableWidgetState extends State<TimetableWidget> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    Widget colorDef(int key, SubjectCourse value) {
+      return Row(
+        children: [
+          Container(
+            width: 64,
+            height: 32,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: M3SeededColor.colors[key],
+              border: Border.all(
+                width: 1,
+                color: colorScheme.primary.withOpacity(0.05),
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(children: [
+              Text(
+                value.classID,
+                style: TextStyle(
+                  color: colorScheme.onSecondaryContainer,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                value.subjectID,
+                style: TextStyle(
+                  color: colorScheme.onSecondaryContainer,
+                  fontSize: 12,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ]),
+          )
+        ],
+      );
+    }
 
     Widget topBar = Container(
       width: MediaQuery.of(context).size.width,
@@ -55,7 +98,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconOption(
             Option(
-              Icons.keyboard_arrow_left,
+              const Icon(Icons.keyboard_arrow_left),
               "",
               (BuildContext context) {},
             ),
@@ -78,7 +121,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           IconOption(
             Option(
-              Icons.keyboard_arrow_right,
+              const Icon(Icons.keyboard_arrow_right),
               "",
               (BuildContext context) {},
             ),
@@ -97,66 +140,22 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: Interpolator<Widget>([
-          [
-            Text(
-              "Definitions by colors: ",
-              style: TextStyle(
-                color: colorScheme.onPrimaryContainer,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            )
-          ],
-          widget.timetableData.classes
+        children: [
+          Text(
+            "Definitions by colors: ",
+            style: TextStyle(
+              color: colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          ...widget.timetableData.classes
               .asMap()
-              .map<int, Widget>((key, value) {
-                return MapEntry(
-                    key,
-                    Row(
-                      children: [
-                        Container(
-                          width: 64,
-                          height: 32,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: m3PrimeColor[key],
-                            border: Border.all(
-                              width: 1,
-                              color: colorScheme.primary.withOpacity(0.05),
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(children: [
-                            Text(
-                              value.classID,
-                              style: TextStyle(
-                                color: colorScheme.onSecondaryContainer,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              value.subjectID,
-                              style: TextStyle(
-                                color: colorScheme.onSecondaryContainer,
-                                fontSize: 12,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ]),
-                        )
-                      ],
-                    ));
-              })
+              .map<int, Widget>(
+                (key, value) => MapEntry(key, colorDef(key, value)),
+              )
               .values
-              .toList(),
-        ]).output,
+        ],
       ),
     );
 
@@ -193,7 +192,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       children: [
         SectionLabel(
           "Thời khoá biểu",
-          Option(Icons.arrow_forward, "", (context) {}),
+          Options.forward("", (context) {}),
           fontWeight: FontWeight.bold,
           fontSize: 16,
           color: colorScheme.onSurface,

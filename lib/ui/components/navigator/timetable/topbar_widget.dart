@@ -25,7 +25,7 @@ class _TimetableTopBarState extends State<TimetableTopBar> {
         textAlign: TextAlign.center,
       ),
       leading: IconOption(
-        Option(Icons.menu, "", (context) => Scaffold.of(context).openDrawer),
+        Option(const Icon(Icons.menu), "", (context) => Scaffold.of(context).openDrawer),
         iconColor: colorScheme.onSurface,
         iconSize: 20,
         // padding: const EdgeInsets.all(8),

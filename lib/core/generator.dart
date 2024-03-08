@@ -1,17 +1,22 @@
 import 'package:student/core/functions.dart';
 
 class BaseTimetable {
-  final List<SubjectClass> classes;
-  late final List<int> intMatrix;
+  final List<SubjectCourse> classes;
+  late final BigInt intMatrix;
   late final int length;
   BaseTimetable({required this.classes}) {
     length = classes.length;
-    intMatrix = [0, 0, 0, 0, 0, 0, 0];
-    for (SubjectClass c in classes) {
-      for (int i = 0; i < 7; i++) {
-        intMatrix[i] |= c.intMatrix[i];
-      }
+    intMatrix = matrixIterate(classes);
+    // for (SubjectCourse c in classes) {
+    //   intMatrix |= c.intCourse;
+    // }
+  }
+    static BigInt matrixIterate(List<SubjectCourse> stamps) {
+    BigInt foldedStamp = BigInt.zero;
+    for (SubjectCourse c in stamps) {
+      foldedStamp |= c.intCourse;
     }
+    return foldedStamp;
   }
 }
 
@@ -19,7 +24,7 @@ class GenTimetable {
   final List<Subject> _tkb;
   late final Map<String, SubjectFilter> _input;
   late List<BaseTimetable> output = [];
-  late List<int> intMatrix = [0, 0, 0, 0, 0, 0, 0];
+  late BigInt intMatrix = BigInt.zero;
   late int length = 0;
   GenTimetable(this._tkb, this._input) {
     _input.forEach((key, value) => _generate(key, value));
@@ -29,19 +34,16 @@ class GenTimetable {
     Subject filteredSubject =
         _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
     if (output.isEmpty) {
-      output
-          .addAll(filteredSubject.classes.map((c) => BaseTimetable(classes: [c])));
+      output.addAll(
+          filteredSubject.classes.map((c) => BaseTimetable(classes: [c])));
     } else {
       List<BaseTimetable> newOutput = [];
       for (BaseTimetable sample in output) {
-        for (SubjectClass target in filteredSubject.classes) {
-          List<int> tmpDint = [0, 0, 0, 0, 0, 0, 0];
-          for (int i = 0; i < 7; i++) {
-            tmpDint[i] = sample.intMatrix[i] & target.intMatrix[i];
-          }
-          if (tmpDint.fold(0, (a, b) => a + b) == 0) {
-            newOutput.add(BaseTimetable(classes: sample.classes + [target]));
-          }
+        for (SubjectCourse target in filteredSubject.classes) {
+          BigInt tmpDint = BigInt.zero;
+          tmpDint = sample.intMatrix & target.intCourse;
+          if (tmpDint != BigInt.zero) continue;
+          newOutput.add(BaseTimetable(classes: sample.classes + [target]));
         }
       }
       output = newOutput;

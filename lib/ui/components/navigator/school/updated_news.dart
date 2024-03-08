@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/option.dart';
+import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class URL {
@@ -23,7 +23,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
       children: [
         SectionLabel(
           "Tài liệu mới cập nhật",
-          Option(Icons.arrow_forward, "", (BuildContext context) {}),
+          Options.forward("", (BuildContext context) {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
           color: colorScheme.onSecondaryContainer,

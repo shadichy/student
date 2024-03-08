@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/interpolator.dart';
 
 class Notif {
   final String title;
@@ -49,8 +48,8 @@ class _NotifExpandState extends State<NotifExpand> {
       fontWeight: FontWeight.w100,
     );
     TextStyle linkStyle = genericStyle(
-      fontSize: 13,
-      fontWeight: FontWeight.w500,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
     );
 
     String timeNote = (widget.notification.time is DateTime)
@@ -107,9 +106,9 @@ class _NotifExpandState extends State<NotifExpand> {
                 ),
                 if (isExpanded)
                   InkWell(
-                    onTap:widget.notification.target,
+                    onTap: widget.notification.target,
                     child: textBox(
-                      "More",
+                      "More...",
                       style: linkStyle,
                     ),
                   ),
@@ -208,63 +207,61 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        children: Interpolator<Widget>([
-          [
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colorScheme.primary.withOpacity(0.05),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: Icon(
-                    Icons.notifications,
-                    color: colorScheme.onPrimaryContainer,
-                    size: 16,
-                  ),
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colorScheme.primary.withOpacity(0.05),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      "Latest Notifications",
-                      style: TextStyle(
-                        color: colorScheme.onPrimaryContainer,
-                      ),
+                padding: const EdgeInsets.all(4),
+                child: Icon(
+                  Icons.notifications,
+                  color: colorScheme.onPrimaryContainer,
+                  size: 16,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    "Latest Notifications",
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer,
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: IconButton(
-                    onPressed: changeState,
-                    icon: Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: colorScheme.onSecondaryContainer),
-                    style: IconButton.styleFrom(
-                      backgroundColor: colorScheme.primary.withOpacity(0.05),
-                    ),
-                    splashRadius: 1,
-                    iconSize: 16,
-                    padding: EdgeInsets.zero,
+              ),
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: IconButton(
+                  onPressed: changeState,
+                  icon: Icon(
+                      isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      size: 16,
+                      color: colorScheme.onSecondaryContainer),
+                  style: IconButton.styleFrom(
+                    backgroundColor: colorScheme.primary.withOpacity(0.05),
                   ),
-                )
-              ],
-            ),
-            const Divider(
-              color: Colors.transparent,
-              height: 4,
-            )
-          ],
-          notifications.map((Notif n) {
-            return isExpanded ? NotifExpand(n) : titlePreview(n);
-          }).toList()
-        ]).output,
+                  splashRadius: 1,
+                  iconSize: 16,
+                  padding: EdgeInsets.zero,
+                ),
+              )
+            ],
+          ),
+          const Divider(
+            color: Colors.transparent,
+            height: 4,
+          ),
+          ...notifications.map(
+            (Notif n) => isExpanded ? NotifExpand(n) : titlePreview(n),
+          )
+        ],
       ),
     );
   }

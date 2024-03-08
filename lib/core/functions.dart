@@ -1,9 +1,9 @@
-
+import 'package:student/core/presets.dart';
 
 enum ClassType { offline, online }
 
-class ClassTimeStamp {
-  late final int intMatrix;
+class CourseTimeStamp {
+  final int intStamp;
   // late int startStamp;
   // late final int startStampUnix;
   // late int endStamp;
@@ -14,95 +14,87 @@ class ClassTimeStamp {
   final String teacherID;
   final String room;
   final ClassType classType;
-  ClassTimeStamp({
-    required this.intMatrix,
+  const CourseTimeStamp({
+    required this.intStamp,
     required this.dayOfWeek,
     required this.classID,
     required this.teacherID,
     required this.room,
     required this.classType,
-  }) {
-    if (classType == ClassType.online) {
-      intMatrix = 0;
-    }
-  }
-  //  {
-  //   startStamp = 0;
-  //   if (onlineClass.contains(room)) {
-  //     endStamp = 0;
-  //     // startStampUnix = 0;
-  //     // endStampUnix = 0;
-  //     // day = "";
-  //     return;
-  //   }
-  //   endStamp = 13;
-  //   int tmpDint = intMatrix;
-  //   while (tmpDint != 0) {
-  //     if ((intMatrix & 1) == 0) {
-  //       endStamp--;
-  //     } else {
-  //       startStamp++;
-  //     }
-  //     tmpDint >>= 1;
-  //  }
-  // startStampUnix = classTimeStamps[startStamp][0];
-  // endStampUnix = classTimeStamps[endStamp][1];
-  // day = dates[dayOfWeek];
-  // }
+  });
 }
 
-class SubjectClass {
+class SubjectCourse {
   final String classID;
   final String subjectID;
-  final List<ClassTimeStamp> timestamp;
-  late final List<int> intMatrix;
+  final List<CourseTimeStamp> timestamp;
+  late final BigInt intCourse;
   late final int length;
   late final List<String> teachers;
   late final List<String> rooms;
-  SubjectClass({
+  SubjectCourse({
     required this.classID,
     required this.subjectID,
     required this.timestamp,
   }) {
-    intMatrix = [0, 0, 0, 0, 0, 0, 0];
     length = timestamp.length;
     teachers = timestamp.map((m) => m.teacherID).toList();
     rooms = timestamp.map((m) => m.room).toList();
-    // if (onlineClass.contains(timestamp[0].room)) {
-    //   return;
-    // }
-    for (ClassTimeStamp stamp in timestamp) {
-      intMatrix[stamp.dayOfWeek] |= stamp.intMatrix;
-    }
+    intCourse = matrixIterate(timestamp);
   }
 
-  void mergeLT(SubjectClass? lt) {
-    if (lt is! SubjectClass) {
-      return;
+  static BigInt matrixIterate(List<CourseTimeStamp> stamps) {
+    BigInt foldedStamp = BigInt.zero;
+    for (CourseTimeStamp stamp in stamps) {
+      foldedStamp |= (BigInt.from(stamp.intStamp) <<
+          (stamp.dayOfWeek * classTimeStamps.length));
     }
-    for (ClassTimeStamp stamp in lt.timestamp) {
-      intMatrix[stamp.dayOfWeek] |= stamp.intMatrix;
-    }
+    return foldedStamp;
+  }
+
+  void mergeLT(SubjectCourse? lt) {
+    if (lt is! SubjectCourse) return;
+    intCourse |= matrixIterate(lt.timestamp);
   }
 }
 
 class SubjectFilter {
+  static final BigInt m01 = BigInt.parse("0x55555555555555555555555555555555");
+  static final BigInt m02 = BigInt.parse("0x33333333333333333333333333333333");
+  static final BigInt m04 = BigInt.parse("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
+  static final BigInt m08 = BigInt.parse("0x00ff00ff00ff00ff00ff00ff00ff00ff");
+  static final BigInt m16 = BigInt.parse("0x0000ffff0000ffff0000ffff0000ffff");
+  static final BigInt m32 = BigInt.parse("0x00000000ffffffff00000000ffffffff");
+  static final BigInt m64 = BigInt.parse("0x0000000000000000ffffffffffffffff");
+  static final BigInt h01 = BigInt.parse("0x01010101010101010101010101010101");
+
+  static BigInt bigPopCount(BigInt x) {
+    x -= (x >> 1) & m01;
+    x = (x & m02) + ((x >> 2) & m02);
+    x = (x + (x >> 4)) & m04;
+    x += x >> 8;
+    x += x >> 16;
+    x += x >> 32;
+    x += x >> 64;
+    return x & BigInt.from(0x7f);
+  }
+
   final List<String> inClass;
   final List<String> notInClass;
   final List<String> includeTeacher;
   final List<String> excludeTeacher;
-  final List<int> forcefulDint;
-  final List<int> spareDint;
   late int length;
   late final bool isEmpty;
   late final bool isNotEmpty;
+  late final BigInt forcefulMatrix;
+  late final BigInt spareMatrix;
   SubjectFilter({
     this.inClass = const [],
     this.notInClass = const [],
     this.includeTeacher = const [],
     this.excludeTeacher = const [],
-    this.forcefulDint = const [],
-    this.spareDint = const [],
+    forcefulStamp = const [],
+    spareStamp = const [],
   }) {
     length = 0;
     List<List> verifyList = [
@@ -110,8 +102,8 @@ class SubjectFilter {
       notInClass,
       includeTeacher,
       excludeTeacher,
-      forcefulDint,
-      spareDint,
+      forcefulStamp,
+      spareStamp,
     ];
     for (List property in verifyList) {
       if (property.isNotEmpty) {
@@ -120,12 +112,20 @@ class SubjectFilter {
     }
     isEmpty = length == 0;
     isNotEmpty = !isEmpty;
+    forcefulMatrix = _fold(forcefulStamp);
+    spareMatrix = _fold(spareStamp);
+  }
+  BigInt _fold(List<int> org) {
+    return org.fold(
+      BigInt.zero,
+      (p, n) => (p << classTimeStamps.length) | BigInt.from(n),
+    );
   }
 }
 
 class CompareStamp {
-  final double delta;
-  final SubjectClass subjectClass;
+  final num delta;
+  final SubjectCourse subjectClass;
   const CompareStamp({
     required this.delta,
     required this.subjectClass,
@@ -134,12 +134,14 @@ class CompareStamp {
 
 class Subject {
   final String subjectID;
+  final String? subjectAltID;
   final String name;
   final int tin;
-  final List<SubjectClass> classes;
+  final List<SubjectCourse> classes;
   final List<String> dependencies;
   const Subject({
     required this.subjectID,
+    this.subjectAltID,
     required this.name,
     required this.tin,
     required this.classes,
@@ -151,7 +153,7 @@ class Subject {
     if (filterLayer.isEmpty) {
       return this;
     }
-    List<SubjectClass> result = [];
+    List<SubjectCourse> result = [];
     if (filterLayer.inClass.isNotEmpty) {
       result = classes
           .where((c) => filterLayer.inClass.contains(c.classID))
@@ -200,30 +202,21 @@ class Subject {
           .map((c) => c.subjectClass)
           .toList();
     }
-    if (filterLayer.forcefulDint.isNotEmpty) {
+    if (filterLayer.forcefulMatrix != BigInt.zero) {
       result = classes.where((c) {
-        for (int i = 0; i < 7; i++) {
-          if (c.intMatrix[i] & filterLayer.forcefulDint[i] != 0) {
-            return false;
-          }
-        }
-        return true;
+        return c.intCourse & filterLayer.forcefulMatrix == BigInt.zero;
       }).toList();
     }
-    if (filterLayer.spareDint.isNotEmpty) {
+    if (filterLayer.spareMatrix != BigInt.zero) {
       List<CompareStamp> o = classes
           .map((c) => CompareStamp(
-                delta: (() {
-                  double deltaSum = 1.0;
-                  for (int i = 0; i < 7; i++) {
-                    deltaSum *= 1 + (c.intMatrix[i] & filterLayer.spareDint[i]);
-                  }
-                  return deltaSum;
-                })(),
+                delta: (c.intCourse & filterLayer.spareMatrix).toDouble(),
                 subjectClass: c,
               ))
           .toList();
-      o.sort((a, b) => a.delta.compareTo(b.delta).toInt());
+      o.sort((a, b) => SubjectFilter.bigPopCount(BigInt.from(a.delta))
+          .compareTo(SubjectFilter.bigPopCount(BigInt.from(b.delta)))
+          .toInt());
       result = o.map((c) => c.subjectClass).toList();
     }
     return Subject(subjectID: subjectID, name: name, tin: tin, classes: result);

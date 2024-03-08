@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Glance extends StatefulWidget {
+class HomeGlance extends StatefulWidget {
   final Image image;
   final String name;
-  const Glance(this.image, this.name, {super.key});
+  const HomeGlance(this.image, this.name, {super.key});
 
   @override
-  State<Glance> createState() => _GlanceState();
+  State<HomeGlance> createState() => _HomeGlanceState();
 }
 
-class _GlanceState extends State<Glance> {
+class _HomeGlanceState extends State<HomeGlance> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;

@@ -55,7 +55,7 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Glance(
+                  HomeGlance(
                     Image.network(
                       "https://picsum.photos/250?image=9",
                       fit: BoxFit.cover,

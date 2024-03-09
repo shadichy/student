@@ -40,7 +40,7 @@ class TimetableBox extends StatelessWidget {
     Widget textBox(
       String text, {
       EdgeInsetsGeometry padding = const EdgeInsets.symmetric(vertical: 2),
-      FontWeight? fontWeight,
+      FontWeight fontWeight = FontWeight.w600,
     }) {
       return Center(
           child: Padding(
@@ -54,6 +54,28 @@ class TimetableBox extends StatelessWidget {
           ),
         ),
       ));
+    }
+
+    Widget dayTextBox(DateTime time) {
+      return textBox(
+        timeFormat(
+          time,
+          format: "dd/MM",
+        ),
+        fontWeight: FontWeight.w800,
+      );
+    }
+
+    Widget hmTextBox(int seconds) {
+      return textBox(
+        timeFormat(
+          date.add(Duration(seconds: seconds)),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 4,
+          vertical: 2,
+        ),
+      );
     }
 
     String dayOfWeek = "SMTWTFS";
@@ -83,7 +105,7 @@ class TimetableBox extends StatelessWidget {
     timetable.classes.asMap().forEach((int d, SubjectCourse c) {
       for (int i = 0; i < 7; i++) {
         for (int j = 0; j < classTimeStamps.length; j++) {
-          if (c.intCourse & (BigInt.one << (classTimeStamps.length * i + j)) !=
+          if ((c.intCourse >> (classTimeStamps.length * i + j)) & BigInt.one !=
               BigInt.zero) {
             colorMap[i][j] = ColorCell(
               color: M3SeededColor.colors[d],
@@ -102,59 +124,29 @@ class TimetableBox extends StatelessWidget {
     List<TableRow> genTable = [
       TableRow(
         children: [
-          textBox(
-            timeFormat(
-              now.subtract(Duration(days: now.weekday - 1)),
-              format: "dd/MM",
-            ),
-            fontWeight: FontWeight.bold,
-          ),
+          dayTextBox(now.subtract(Duration(days: now.weekday))),
           ...dayOfWeek.characters.indexed.map<Widget>((d) {
             Widget base = textBox(d.$2);
-            if (d.$1 == now.weekday) {
-              base = colorBox(
-                color: colorScheme.primary.withOpacity(0.05),
-                child: base,
-              );
-            }
-            return base;
+            if (d.$1 != now.weekday) return base;
+            return colorBox(
+              color: colorScheme.primary.withOpacity(0.05),
+              child: base,
+            );
           }),
-          textBox(
-            timeFormat(
-              now.add(Duration(days: 7 - now.weekday)),
-              format: "dd/MM",
-            ),
-            fontWeight: FontWeight.bold,
-          )
+          dayTextBox(now.add(Duration(days: 6 - now.weekday))),
         ],
       ),
       ...List<TableRow>.generate(classTimeStamps.length, (int j) {
         return TableRow(
           children: [
-            textBox(
-              timeFormat(
-                date.add(Duration(seconds: classTimeStamps[j][0])),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 2,
-              ),
-            ),
+            hmTextBox(classTimeStamps[j][0]),
             ...List<Widget>.generate(7, (int i) {
               return colorBox(
                 color: colorMap[i][j].color,
                 stamp: colorMap[i][j].stamp,
               );
             }),
-            textBox(
-              timeFormat(
-                date.add(Duration(seconds: classTimeStamps[j][1])),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 2,
-              ),
-            )
+            hmTextBox(classTimeStamps[j][1])
           ],
         );
       }),

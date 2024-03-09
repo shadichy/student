@@ -57,6 +57,10 @@ class TimetablePage extends StatelessWidget {
           ),
           const ResultSummaryWidget(),
           const MajorInfoWidget(),
+          const Divider(
+            color: Colors.transparent,
+            height: 16,
+          )
         ],
       ),
     );

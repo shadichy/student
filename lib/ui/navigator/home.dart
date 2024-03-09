@@ -31,14 +31,11 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Widget endText(String text, EdgeInsetsGeometry padding) => Padding(
-          padding: padding,
-          child: Text(
-            text,
-            maxLines: 2,
-            style: TextStyle(
-              color: colorScheme.onSurface,
-            ),
+    Widget endText(String text) => Text(
+          text,
+          maxLines: 2,
+          style: TextStyle(
+            color: colorScheme.onSurface,
           ),
         );
     return SizedBox(
@@ -78,19 +75,30 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
                     Options.student_finance,
                     Options.help,
                   ]),
-                  endText(
-                    "You've reached the end",
-                    const EdgeInsets.only(top: 16),
+                  const Divider(
+                    color: Colors.transparent,
+                    height: 16,
                   ),
-                  endText(
-                    "Have a nice day!",
-                    const EdgeInsets.only(bottom: 16),
+                  endText("You've reached the end"),
+                  endText("Have a nice day!"),
+                  const Divider(
+                    color: Colors.transparent,
+                    height: 16,
                   ),
                 ],
               ),
             ),
           ),
-          const HomeTopBar(),
+          HomeTopBar(
+            userPicture: ClipOval(
+              child: Image.network(
+                "https://picsum.photos/250?image=9",
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
         ],
       ),
     );

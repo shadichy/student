@@ -5,7 +5,12 @@ import 'package:student/ui/components/section_label.dart';
 
 class OptionLabelWidgets extends StatefulWidget {
   final List<Option> options;
-  const OptionLabelWidgets(this.options, {super.key});
+  final String headingLabel;
+  const OptionLabelWidgets(
+    this.options, {
+    super.key,
+    this.headingLabel = "Quick actions",
+  });
 
   @override
   State<OptionLabelWidgets> createState() => _OptionLabelWidgetsState();
@@ -18,7 +23,7 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
 
     List<Widget> content = [
       SectionLabel(
-        "Quick actions",
+        widget.headingLabel,
         Options.add("", (BuildContext context) {}),
         fontWeight: FontWeight.w900,
         fontSize: 20,

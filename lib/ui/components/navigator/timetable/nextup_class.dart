@@ -80,7 +80,6 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
 
     return Card.outlined(
       color: Colors.transparent,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(

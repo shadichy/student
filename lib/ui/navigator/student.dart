@@ -10,7 +10,7 @@ class StudentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -33,8 +33,8 @@ class StudentPage extends StatelessWidget {
             Options.study_results,
             Options.settings,
             Options.help,
-          ]),
-          ],
+          ], headingLabel: "Settings"),
+        ],
       ),
     );
   }

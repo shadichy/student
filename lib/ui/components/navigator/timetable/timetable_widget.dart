@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:student/core/functions.dart';
 import 'package:student/core/generator.dart';
 import 'package:student/misc/misc_variables.dart';
+import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/navigator/timetable/timetable.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
@@ -36,28 +37,31 @@ class _TimetableWidgetState extends State<TimetableWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(children: [
-              Text(
-                value.classID,
-                style: TextStyle(
-                  color: colorScheme.onSecondaryContainer,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                value.subjectID,
-                style: TextStyle(
-                  color: colorScheme.onSecondaryContainer,
-                  fontSize: 12,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ]),
-          )
+          const Divider(
+            color: Colors.transparent,
+            height: 8,
+          ),
+          Text(
+            value.classID,
+            style: TextStyle(
+              color: colorScheme.onSecondaryContainer,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            value.subjectID,
+            style: TextStyle(
+              color: colorScheme.onSecondaryContainer,
+              fontSize: 12,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const Divider(
+            color: Colors.transparent,
+            height: 8,
+          ),
         ],
       );
     }
@@ -134,7 +138,10 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       ),
     );
 
-    Widget mainContent = TimetableBox(widget.timetableData);
+    Widget mainContent = Container(
+      color: colorScheme.primary.withOpacity(0.05),
+      child: TimetableBox(widget.timetableData),
+    );
 
     Widget detailPane = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -197,25 +204,15 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           fontSize: 16,
           color: colorScheme.onSurface,
         ),
-        Card.filled(
-          color: colorScheme.primary.withOpacity(0.05),
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: InkWell(
-            onTap: () {},
-            hoverColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            borderRadius: BorderRadius.circular(16),
-            child: Column(children: [
-              topBar,
-              mainContent,
-              bottomBar,
-              detailPane,
-              trailingButton,
-            ]),
-          ),
+        ClickableCard(
+          target: () {},
+          child: Column(children: [
+            topBar,
+            mainContent,
+            bottomBar,
+            detailPane,
+            // trailingButton,
+          ]),
         ),
       ],
     );

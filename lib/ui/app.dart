@@ -9,30 +9,42 @@ import 'package:student/ui/navigator/timetable.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
-  static ThemeData baseTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.cyanAccent,
-      brightness: Brightness.light,
-    ),
-    useMaterial3: true,
-  );
-
-  static Future<void> initColor() async {
-    await m3SeededColor(baseTheme.colorScheme.primary);
-  }
-
-  ThemeData _buildTheme() {
-    return baseTheme.copyWith(
-      textTheme: GoogleFonts.getTextTheme("Varela Round", baseTheme.textTheme),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    initColor();
+    ColorScheme colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.red,
+      brightness: Brightness.light,
+    );
+    Color bgColor = colorScheme.primary.withOpacity(0.05);
+    ThemeData baseTheme = ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      splashColor: bgColor,
+      hoverColor: bgColor,
+      focusColor: bgColor,
+      highlightColor: bgColor,
+      scaffoldBackgroundColor: colorScheme.surface,
+      cardTheme: CardTheme(
+        color: bgColor,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+    ThemeData buildTheme() {
+      return baseTheme.copyWith(
+        textTheme: GoogleFonts.getTextTheme(
+          "Varela Round",
+          baseTheme.textTheme,
+        ),
+      );
+    }
+
+    m3SeededColor(baseTheme.colorScheme.primary);
     return MaterialApp(
       title: 'Student',
-      theme: _buildTheme(),
+      theme: buildTheme(),
       home: const Main(),
     );
   }
@@ -86,9 +98,8 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       body: PopScope(
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();

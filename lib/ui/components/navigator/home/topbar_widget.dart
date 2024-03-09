@@ -3,7 +3,8 @@ import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 
 class HomeTopBar extends StatefulWidget {
-  const HomeTopBar({super.key});
+  final Widget userPicture;
+  const HomeTopBar({super.key, required this.userPicture});
 
   @override
   State<HomeTopBar> createState() => _HomeTopBarState();
@@ -86,7 +87,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
           ),
           IconOption(
             Option(
-              const Icon(Icons.people),
+              widget.userPicture,
               "",
               (context) => Scaffold.of(context).openDrawer,
             ),

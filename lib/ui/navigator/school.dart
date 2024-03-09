@@ -22,7 +22,24 @@ class SchoolPage extends StatelessWidget {
           const SchoolTopBar(),
           const SchoolGlance(AssetImage("assets/images/thanglonguni.png")),
           const SchoolSearchBar(),
-          const UpdatedNews([]),
+          const UpdatedNews([
+            URL(
+              "label1",
+              "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
+            ),
+            URL(
+              "label2",
+              "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
+            ),
+            URL(
+              "label3",
+              "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
+            ),
+            URL(
+              "label4",
+              "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
+            ),
+          ]),
           OptionLabelWidgets([
             Options.notifications,
             Options.study_program,

@@ -5,7 +5,7 @@ import 'package:student/ui/components/navigator/timetable/nextup_class.dart';
 import 'package:student/ui/components/option.dart';
 
 class TimetableNextupClassWidget extends StatefulWidget {
-  final TimetableData timetableData;
+  final SampleTimetableData timetableData;
   const TimetableNextupClassWidget(this.timetableData, {super.key});
 
   @override
@@ -131,7 +131,7 @@ class _TimetableNextupClassWidgetState
             children: [
               IconOption(
                 Option(
-                  const Icon(Icons.keyboard_double_arrow_left),
+                  const Icon(Icons.keyboard_double_arrow_left_outlined),
                   "",
                   (context) => changeClass(0),
                 ),
@@ -143,7 +143,7 @@ class _TimetableNextupClassWidgetState
               ),
               IconOption(
                 Option(
-                  const Icon(Icons.keyboard_arrow_left),
+                  const Icon(Icons.keyboard_arrow_left_outlined),
                   "",
                   (context) => changeClass(index - 1),
                 ),
@@ -164,7 +164,7 @@ class _TimetableNextupClassWidgetState
               ),
               IconOption(
                 Option(
-                  const Icon(Icons.keyboard_arrow_right),
+                  const Icon(Icons.keyboard_arrow_right_outlined),
                   "",
                   (context) => changeClass(index + 1),
                 ),
@@ -176,7 +176,7 @@ class _TimetableNextupClassWidgetState
               ),
               IconOption(
                 Option(
-                  const Icon(Icons.keyboard_double_arrow_right),
+                  const Icon(Icons.keyboard_double_arrow_right_outlined),
                   "",
                   (context) => changeClass(classStamps.length - 1),
                 ),

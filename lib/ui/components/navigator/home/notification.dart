@@ -122,8 +122,8 @@ class _NotifExpandState extends State<NotifExpand> {
               onPressed: changeState,
               icon: Icon(
                   isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
+                      ? Icons.keyboard_arrow_up_outlined
+                      : Icons.keyboard_arrow_down_outlined,
                   size: 16,
                   color: colorScheme.onSecondaryContainer),
               style: IconButton.styleFrom(
@@ -217,7 +217,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                 ),
                 padding: const EdgeInsets.all(4),
                 child: Icon(
-                  Icons.notifications,
+                  Icons.notifications_outlined,
                   color: colorScheme.onPrimaryContainer,
                   size: 16,
                 ),
@@ -240,8 +240,8 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                   onPressed: changeState,
                   icon: Icon(
                       isExpanded
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
+                          ? Icons.keyboard_arrow_up_outlined
+                          : Icons.keyboard_arrow_down_outlined,
                       size: 16,
                       color: colorScheme.onSecondaryContainer),
                   style: IconButton.styleFrom(

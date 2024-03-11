@@ -112,7 +112,7 @@ class _StudentGlanceState extends State<StudentGlance> {
             ),
             IconOption(
               Option(
-                const Icon(Icons.logout),
+                const Icon(Icons.logout_outlined),
                 "Logout",
                 (BuildContext context) {},
               ),
@@ -128,7 +128,7 @@ class _StudentGlanceState extends State<StudentGlance> {
         //   width: 160,
         //   child: TextOption(
         //     Option(
-        //       const Icon(Icons.logout),
+        //       const Icon(Icons.logout_outlined),
         //       "Logout",
         //       (BuildContext context) {},
         //     ),

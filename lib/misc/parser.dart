@@ -1,14 +1,21 @@
 import 'package:student/core/presets.dart';
-import 'package:student/core/functions.dart';
+import 'package:student/core/semester/functions.dart';
 
-class TimetableData {
+extension MergeLT on SubjectCourse {
+  void mergeLT(SubjectCourse? lt) {
+    if (lt is! SubjectCourse) return;
+    intCourse |= SubjectCourse.matrixIterate(lt.timestamp);
+  }
+}
+
+class SampleTimetableData {
   late final List<Subject> timetable;
   late final Map<String, SubjectCourse> _classesLT;
   late final Map<String, String> _teacherByIds;
   final RegExp _ltMatch = RegExp(r"/_LT$/");
   final RegExp _btMatch = RegExp(r"/\.[0-9]_BT$/");
   final dynamic input;
-  TimetableData.from2dList(this.input) {
+  SampleTimetableData.from2dList(this.input) {
     if (input is! List) {
       throw Exception("input source is not 2d array");
     }
@@ -37,12 +44,12 @@ class TimetableData {
       CourseTimeStamp stamp = CourseTimeStamp(
         intStamp: onlineClass.contains(classRoom) ? 0 : classStamp,
         dayOfWeek: dayOfWeek,
-        classID: classID,
+        courseID: classID,
         teacherID: teacherID,
         room: classRoom,
-        classType: onlineClass.contains(classRoom)
-            ? ClassType.online
-            : ClassType.offline,
+        timeStampType: onlineClass.contains(classRoom)
+            ? TimeStampType.online
+            : TimeStampType.offline,
       );
 
       if (_ltMatch.hasMatch(classID)) {
@@ -79,7 +86,7 @@ class TimetableData {
     tmpTkbLT.forEach((subjectID, classes) => classes
         .forEach((classID, timestamp) => _classesLT[classID] = SubjectCourse(
               subjectID: subjectID,
-              classID: classID,
+              courseID: classID,
               timestamp: timestamp,
             )));
 
@@ -93,10 +100,12 @@ class TimetableData {
           subjectID: subjectID,
           name: subjectInfo["name"].toString(),
           tin: subjectInfo["tin"],
-          classes: _mapToClass(subjectID, subjectInfo["classes"]),
+          courses: _mapToClass(subjectID, subjectInfo["classes"]),
+          subjectAltID: subjectID,
+          dependencies: [],
         )));
   }
-  TimetableData.fromObject(this.input) {
+  SampleTimetableData.fromObject(this.input) {
     if (input is! Map<String, dynamic>) {
       throw Exception("input source is not JSON object");
     }
@@ -121,12 +130,12 @@ class TimetableData {
                   dayOfWeek: onlineClass.contains(stamp["room"])
                       ? 0
                       : (int.parse(stamp["dayOfWeek"]) - 1),
-                  classID: classID,
+                  courseID: classID,
                   teacherID: stamp['teacherID'],
                   room: stamp["room"],
-                  classType: onlineClass.contains(stamp["room"])
-                      ? ClassType.online
-                      : ClassType.offline,
+                  timeStampType: onlineClass.contains(stamp["room"])
+                      ? TimeStampType.online
+                      : TimeStampType.offline,
                 ))
             .toList();
         if (_ltMatch.hasMatch(classID)) {
@@ -156,7 +165,7 @@ class TimetableData {
     tmpTkbLT.forEach((subjectID, classes) => classes
         .forEach((classID, timestamp) => _classesLT[classID] = SubjectCourse(
               subjectID: subjectID,
-              classID: classID,
+              courseID: classID,
               timestamp: timestamp,
             )));
 
@@ -164,7 +173,9 @@ class TimetableData {
           subjectID: subjectID,
           name: subjectInfo["name"].toString(),
           tin: subjectInfo["tin"],
-          classes: _mapToClass(subjectID, subjectInfo["classes"]),
+          courses: _mapToClass(subjectID, subjectInfo["classes"]),
+          subjectAltID: subjectID,
+          dependencies: [],
         )));
   }
 
@@ -203,7 +214,7 @@ class TimetableData {
       }
       SubjectCourse tmpClass = SubjectCourse(
         subjectID: id,
-        classID: classID,
+        courseID: classID,
         timestamp: timestamp,
       );
       if (_btMatch.hasMatch(id)) {

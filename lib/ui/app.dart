@@ -1,63 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/navigator/home.dart';
 import 'package:student/ui/navigator/school.dart';
 import 'package:student/ui/navigator/student.dart';
 import 'package:student/ui/navigator/timetable.dart';
 
-class App extends StatelessWidget {
+
+class App extends StatefulWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.red,
-      brightness: Brightness.light,
-    );
-    Color bgColor = colorScheme.primary.withOpacity(0.05);
-    ThemeData baseTheme = ThemeData(
-      colorScheme: colorScheme,
-      useMaterial3: true,
-      splashColor: bgColor,
-      hoverColor: bgColor,
-      focusColor: bgColor,
-      highlightColor: bgColor,
-      scaffoldBackgroundColor: colorScheme.surface,
-      cardTheme: CardTheme(
-        color: bgColor,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
-    ThemeData buildTheme() {
-      return baseTheme.copyWith(
-        textTheme: GoogleFonts.getTextTheme(
-          "Varela Round",
-          baseTheme.textTheme,
-        ),
-      );
-    }
-
-    m3SeededColor(baseTheme.colorScheme.primary);
-    return MaterialApp(
-      title: 'Student',
-      theme: buildTheme(),
-      home: const Main(),
-    );
-  }
+  State<App> createState() => _AppState();
 }
 
-class Main extends StatefulWidget {
-  const Main({super.key});
-
-  @override
-  State<Main> createState() => _MainState();
-}
-
-class _MainState extends State<Main> {
+class _AppState extends State<App> {
   int _selectedTab = 0;
   final List<int> _visitedTabs = [];
   // final Map<int, Widget> _defaultRoutes = {0: const Home()};
@@ -104,26 +59,26 @@ class _MainState extends State<Main> {
         onPopInvoked: (bool didPop) {
           if (didPop) callGoBack();
         },
-        child: _defaultRoutes[_selectedTab],
+        child: SafeArea(child: _defaultRoutes[_selectedTab]),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedTab,
         onDestinationSelected: _onItemTapped,
         destinations: const <NavigationDestination>[
           NavigationDestination(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
             label: "Home",
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_month_outlined),
             label: "Time table",
           ),
           NavigationDestination(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.school_outlined),
             label: "School",
           ),
           NavigationDestination(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outlined),
             label: "Student",
           ),
         ],

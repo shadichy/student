@@ -77,7 +77,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                       fontWeight: FontWeight.w600,
                     ),
                     Icon(
-                      Icons.alarm,
+                      Icons.alarm_outlined,
                       color: colorScheme.onSecondaryContainer,
                       size: 18,
                     ),

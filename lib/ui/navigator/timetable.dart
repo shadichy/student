@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student/core/functions.dart';
-import 'package:student/core/generator.dart';
+import 'package:student/core/semester/functions.dart';
+import 'package:student/core/generator/generator.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/timetable/major_info_widget.dart';
 import 'package:student/ui/components/navigator/timetable/nextup_class_widget.dart';
@@ -22,34 +22,34 @@ class TimetablePage extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           const TimetableTopBar(),
-          TimetableNextupClassWidget(TimetableData.from2dList([])),
+          TimetableNextupClassWidget(SampleTimetableData.from2dList([])),
           TimetableWidget(
-            BaseTimetable(classes: [
+            SampleTimetable(classes: [
               SubjectCourse(
-                classID: "classID1",
+                courseID: "classID1",
                 subjectID: "subjectID1",
                 timestamp: const [
                   CourseTimeStamp(
                     intStamp: 123,
                     dayOfWeek: 4,
-                    classID: "classID1",
+                    courseID: "classID1",
                     teacherID: "teacherID",
                     room: "room",
-                    classType: ClassType.offline,
+                    timeStampType: TimeStampType.offline,
                   )
                 ],
               ),
               SubjectCourse(
-                classID: "classID2",
+                courseID: "classID2",
                 subjectID: "subjectID2",
                 timestamp: const [
                   CourseTimeStamp(
                     intStamp: 132,
                     dayOfWeek: 5,
-                    classID: "classID2",
+                    courseID: "classID2",
                     teacherID: "teacherID",
                     room: "room",
-                    classType: ClassType.offline,
+                    timeStampType: TimeStampType.offline,
                   )
                 ],
               ),

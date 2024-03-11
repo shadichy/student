@@ -1,60 +1,23 @@
 import 'package:student/core/presets.dart';
+import 'package:student/core/semester/functions.dart';
 
-enum ClassType { offline, online }
-
-class CourseTimeStamp {
-  final int intStamp;
-  // late int startStamp;
-  // late final int startStampUnix;
-  // late int endStamp;
-  // late final int endStampUnix;
-  final int dayOfWeek;
-  // late final String day;
-  final String classID;
-  final String teacherID;
-  final String room;
-  final ClassType classType;
-  const CourseTimeStamp({
-    required this.intStamp,
-    required this.dayOfWeek,
-    required this.classID,
-    required this.teacherID,
-    required this.room,
-    required this.classType,
-  });
-}
-
-class SubjectCourse {
-  final String classID;
-  final String subjectID;
-  final List<CourseTimeStamp> timestamp;
-  late final BigInt intCourse;
+class SampleTimetable {
+  final List<SubjectCourse> classes;
+  late final BigInt intMatrix;
   late final int length;
-  late final List<String> teachers;
-  late final List<String> rooms;
-  SubjectCourse({
-    required this.classID,
-    required this.subjectID,
-    required this.timestamp,
-  }) {
-    length = timestamp.length;
-    teachers = timestamp.map((m) => m.teacherID).toList();
-    rooms = timestamp.map((m) => m.room).toList();
-    intCourse = matrixIterate(timestamp);
+  SampleTimetable({required this.classes}) {
+    length = classes.length;
+    intMatrix = matrixIterate(classes);
+    // for (SubjectCourse c in classes) {
+    //   intMatrix |= c.intCourse;
+    // }
   }
-
-  static BigInt matrixIterate(List<CourseTimeStamp> stamps) {
+  static BigInt matrixIterate(List<SubjectCourse> stamps) {
     BigInt foldedStamp = BigInt.zero;
-    for (CourseTimeStamp stamp in stamps) {
-      foldedStamp |= (BigInt.from(stamp.intStamp) <<
-          (stamp.dayOfWeek * classTimeStamps.length));
+    for (SubjectCourse c in stamps) {
+      foldedStamp |= c.intCourse;
     }
     return foldedStamp;
-  }
-
-  void mergeLT(SubjectCourse? lt) {
-    if (lt is! SubjectCourse) return;
-    intCourse |= matrixIterate(lt.timestamp);
   }
 }
 
@@ -132,40 +95,24 @@ class CompareStamp {
   });
 }
 
-class Subject {
-  final String subjectID;
-  final String? subjectAltID;
-  final String name;
-  final int tin;
-  final List<SubjectCourse> classes;
-  final List<String> dependencies;
-  const Subject({
-    required this.subjectID,
-    this.subjectAltID,
-    required this.name,
-    required this.tin,
-    required this.classes,
-    // placeholer
-    this.dependencies = const [],
-  });
-
+extension Filter on Subject {
   Subject filter(SubjectFilter filterLayer) {
     if (filterLayer.isEmpty) {
       return this;
     }
     List<SubjectCourse> result = [];
     if (filterLayer.inClass.isNotEmpty) {
-      result = classes
-          .where((c) => filterLayer.inClass.contains(c.classID))
+      result = courses
+          .where((c) => filterLayer.inClass.contains(c.courseID))
           .toList();
     }
     if (filterLayer.notInClass.isNotEmpty) {
-      result = classes
-          .where((c) => !filterLayer.notInClass.contains(c.classID))
+      result = courses
+          .where((c) => !filterLayer.notInClass.contains(c.courseID))
           .toList();
     }
     if (filterLayer.includeTeacher.isNotEmpty) {
-      List<CompareStamp> o = classes
+      List<CompareStamp> o = courses
           .map((c) => CompareStamp(
                 delta: c.teachers.isEmpty
                     ? 0.0
@@ -186,7 +133,7 @@ class Subject {
       result = o.map((c) => c.subjectClass).toList();
     }
     if (filterLayer.excludeTeacher.isNotEmpty) {
-      result = classes
+      result = courses
           .map((c) => CompareStamp(
                 delta: c.teachers.isEmpty
                     ? 0.0
@@ -203,12 +150,12 @@ class Subject {
           .toList();
     }
     if (filterLayer.forcefulMatrix != BigInt.zero) {
-      result = classes.where((c) {
+      result = courses.where((c) {
         return c.intCourse & filterLayer.forcefulMatrix == BigInt.zero;
       }).toList();
     }
     if (filterLayer.spareMatrix != BigInt.zero) {
-      List<CompareStamp> o = classes
+      List<CompareStamp> o = courses
           .map((c) => CompareStamp(
                 delta: (c.intCourse & filterLayer.spareMatrix).toDouble(),
                 subjectClass: c,
@@ -219,6 +166,64 @@ class Subject {
           .toInt());
       result = o.map((c) => c.subjectClass).toList();
     }
-    return Subject(subjectID: subjectID, name: name, tin: tin, classes: result);
+    return Subject(
+      subjectID: subjectID,
+      name: name,
+      tin: tin,
+      courses: result,
+      subjectAltID: subjectID,
+      dependencies: [],
+    );
   }
+}
+
+class GenTimetable {
+  final List<Subject> _tkb;
+  late final Map<String, SubjectFilter> _input;
+  late List<SampleTimetable> output = [];
+  late BigInt intMatrix = BigInt.zero;
+  late int length = 0;
+  GenTimetable(this._tkb, this._input) {
+    _input.forEach((key, value) => _generate(key, value));
+  }
+
+  void _generate(String key, SubjectFilter filterLayer) {
+    Subject filteredSubject =
+        _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
+    if (output.isEmpty) {
+      output.addAll(
+          filteredSubject.courses.map((c) => SampleTimetable(classes: [c])));
+    } else {
+      List<SampleTimetable> newOutput = [];
+      for (SampleTimetable sample in output) {
+        for (SubjectCourse target in filteredSubject.courses) {
+          BigInt tmpDint = BigInt.zero;
+          tmpDint = sample.intMatrix & target.intCourse;
+          if (tmpDint != BigInt.zero) continue;
+          newOutput.add(SampleTimetable(classes: sample.classes + [target]));
+        }
+      }
+      output = newOutput;
+    }
+  }
+
+  GenTimetable add(Map<String, SubjectFilter> subj) {
+    subj.forEach((key, value) {
+      _input[key] = value;
+      _generate(key, value);
+    });
+    return this;
+  }
+
+  SubjectFilter? remove(String key) {
+    SubjectFilter? value = _input.remove(key);
+    output = [];
+    _input.forEach((key, value) => _generate(key, value));
+    return value;
+  }
+
+  bool unsave(SampleTimetable sample) => output.remove(sample);
+
+  GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
+  SubjectFilter? operator -(String key) => remove(key);
 }

@@ -22,7 +22,7 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
         ),
         tileColor: colorScheme.primary.withOpacity(0.1),
         leading: Icon(
-          Icons.search,
+          Icons.search_outlined,
           color: colorScheme.onPrimaryContainer,
           size: 20,
         ),

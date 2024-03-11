@@ -67,7 +67,7 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
                     Options.search,
                   ]),
                   if (hasNotif) HomeNotifWidget(notifs),
-                  HomeNextupClassWidget(TimetableData.from2dList([])),
+                  HomeNextupClassWidget(SampleTimetableData.from2dList([])),
                   OptionLabelWidgets([
                     Options.settings,
                     Options.study_program,

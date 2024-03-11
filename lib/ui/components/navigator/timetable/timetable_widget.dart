@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student/core/functions.dart';
-import 'package:student/core/generator.dart';
+import 'package:student/core/semester/functions.dart';
+import 'package:student/core/generator/generator.dart';
 import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/navigator/timetable/timetable.dart';
@@ -9,7 +9,7 @@ import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableWidget extends StatefulWidget {
-  final BaseTimetable timetableData;
+  final SampleTimetable timetableData;
   const TimetableWidget(this.timetableData, {super.key});
 
   @override
@@ -22,48 +22,43 @@ class _TimetableWidgetState extends State<TimetableWidget> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     Widget colorDef(int key, SubjectCourse value) {
-      return Row(
-        children: [
-          Container(
-            width: 64,
-            height: 32,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: M3SeededColor.colors[key],
-              border: Border.all(
-                width: 1,
-                color: colorScheme.primary.withOpacity(0.05),
+      return Row(children: [
+        Container(
+          width: 64,
+          height: 32,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: M3SeededColor.colors[key],
+            border: Border.all(
+              width: 1,
+              color: colorScheme.primary.withOpacity(0.05),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(children: [
+            Text(
+              value.courseID,
+              style: TextStyle(
+                color: colorScheme.onSecondaryContainer,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const Divider(
-            color: Colors.transparent,
-            height: 8,
-          ),
-          Text(
-            value.classID,
-            style: TextStyle(
-              color: colorScheme.onSecondaryContainer,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+            Text(
+              value.subjectID,
+              style: TextStyle(
+                color: colorScheme.onSecondaryContainer,
+                fontSize: 12,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            value.subjectID,
-            style: TextStyle(
-              color: colorScheme.onSecondaryContainer,
-              fontSize: 12,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Divider(
-            color: Colors.transparent,
-            height: 8,
-          ),
-        ],
-      );
+          ]),
+        )
+      ]);
     }
 
     Widget topBar = Container(
@@ -102,7 +97,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconOption(
             Option(
-              const Icon(Icons.keyboard_arrow_left),
+              const Icon(Icons.keyboard_arrow_left_outlined),
               "",
               (BuildContext context) {},
             ),
@@ -125,7 +120,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           IconOption(
             Option(
-              const Icon(Icons.keyboard_arrow_right),
+              const Icon(Icons.keyboard_arrow_right_outlined),
               "",
               (BuildContext context) {},
             ),

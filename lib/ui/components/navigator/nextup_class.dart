@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-import 'package:student/core/functions.dart';
+import 'package:student/core/semester/functions.dart';
 
 // class NextupClass {
 //   late final ClassTimeStamp stamp;
@@ -43,7 +43,7 @@ class NextupClassView {
   });
 
   NextupClassView.fromStamp(CourseTimeStamp stamp) {
-    classId = stamp.classID;
+    classId = stamp.courseID;
     // placeholder
     classDesc = "";
     teacher = "";

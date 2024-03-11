@@ -31,7 +31,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
               ),
               tileColor: colorScheme.primary.withOpacity(0.05),
               leading: Icon(
-                Icons.search,
+                Icons.search_outlined,
                 color: colorScheme.onSurface,
                 size: 20,
               ),
@@ -60,7 +60,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
           //         child: Row(
           //           children: [
           //             Icon(
-          //               const Icon(Icons.search),
+          //               const Icon(Icons.search_outlined),
           //               color: colorScheme.onSurfaceVariant,
           //               size: 20,
           //             ),
@@ -165,7 +165,7 @@ class _HomeTopBarState extends State<HomeTopBar> {
             //     isDense: false,
             //     contentPadding:
             //         const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            //     suffixIcon: Icon(const Icon(Icons.search),
+            //     suffixIcon: Icon(const Icon(Icons.search_outlined),
             //         color: colorScheme.onSecondaryContainer, size: 24,),
             //   ),
             // ),

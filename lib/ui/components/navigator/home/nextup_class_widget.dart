@@ -6,7 +6,7 @@ import 'package:student/ui/components/section_label.dart';
 import 'package:student/ui/components/navigator/nextup_class.dart';
 
 class HomeNextupClassWidget extends StatefulWidget {
-  final TimetableData timetableData;
+  final SampleTimetableData timetableData;
   const HomeNextupClassWidget(this.timetableData, {super.key});
 
   @override
@@ -106,7 +106,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Icon(
-          Icons.done,
+          Icons.done_outlined,
           color: colorScheme.onSurface,
           size: 32,
         ),

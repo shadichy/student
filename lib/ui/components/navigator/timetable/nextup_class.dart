@@ -138,22 +138,22 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                     ),
                   ),
                   textTile(
-                    Icons.meeting_room,
+                    Icons.meeting_room_outlined,
                     "Room",
                     widget.nextupClass.room,
                   ),
                   textTile(
-                    Icons.alarm,
+                    Icons.alarm_outlined,
                     "Time",
                     "${timeFormat(widget.nextupClass.startTime)} - ${timeFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
-                    Icons.event,
+                    Icons.event_outlined,
                     "Date",
                     timeFormat(widget.nextupClass.startTime),
                   ),
                   textTile(
-                    Icons.person,
+                    Icons.person_outlined,
                     "Teacher",
                     widget.nextupClass.teacher,
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student/core/functions.dart';
-import 'package:student/core/generator.dart';
+import 'package:student/core/semester/functions.dart';
+import 'package:student/core/generator/generator.dart';
 import 'package:student/core/presets.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_variables.dart';
@@ -15,11 +15,12 @@ import 'package:student/ui/components/navigator/nextup_class_preview.dart';
 class ColorCell {
   final Color color;
   final CourseTimeStamp? stamp;
-  const ColorCell({required this.color, this.stamp});
+  final Widget? child;
+  const ColorCell({required this.color, this.stamp, this.child});
 }
 
 class TimetableBox extends StatelessWidget {
-  final BaseTimetable timetable;
+  final SampleTimetable timetable;
   const TimetableBox(this.timetable, {super.key});
   @override
   Widget build(BuildContext context) {
@@ -95,6 +96,7 @@ class TimetableBox extends StatelessWidget {
                 }
               : null,
           child: Container(
+            alignment: Alignment.center,
             color: color,
             child: child,
           ),
@@ -107,15 +109,31 @@ class TimetableBox extends StatelessWidget {
         for (int j = 0; j < classTimeStamps.length; j++) {
           if ((c.intCourse >> (classTimeStamps.length * i + j)) & BigInt.one !=
               BigInt.zero) {
+            CourseTimeStamp timestamp = c.timestamp.firstWhere(
+              (CourseTimeStamp s) =>
+                  c.intCourse &
+                      (BigInt.from(s.intStamp) << classTimeStamps.length * i) !=
+                  BigInt.zero,
+            );
             colorMap[i][j] = ColorCell(
               color: M3SeededColor.colors[d],
-              stamp: c.timestamp[0],
+              stamp: timestamp,
+              child: Text(
+                timestamp.room,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: colorScheme.onPrimary,
+                  fontSize: 12,
+                ),
+              ),
             );
-          } else if (i == now.weekday &&
-              colorMap[i][j].color == Colors.transparent) {
-            colorMap[i][j] = ColorCell(
-              color: colorScheme.primary.withOpacity(0.05),
-            );
+          } else {
+            if (i == now.weekday &&
+                colorMap[i][j].color == Colors.transparent) {
+              colorMap[i][j] = ColorCell(
+                color: colorScheme.primary.withOpacity(0.05),
+              );
+            }
           }
         }
       }
@@ -144,6 +162,7 @@ class TimetableBox extends StatelessWidget {
               return colorBox(
                 color: colorMap[i][j].color,
                 stamp: colorMap[i][j].stamp,
+                child: colorMap[i][j].child,
               );
             }),
             hmTextBox(classTimeStamps[j][1])

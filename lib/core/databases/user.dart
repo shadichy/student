@@ -17,15 +17,22 @@ final class User {
   // only be in ID
   static late final List<String> passedSubjectIDs;
   // can be either ID or Alt ID
-  static late final List<String> learningSubjectIDs;
+  static late final List<String> learningCourseIDs;
   static bool initialized = false;
 
   static Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("user");
     if (rawInfo is! String) {
-      throw ErrorDescription("Could not get user info from cache!");
+      throw Exception("Could not get user info from cache!");
     }
-    Map<String, dynamic> parsedInfo = jsonDecode(rawInfo);
+
+    Map<String, dynamic> parsedInfo = {};
+
+    try {
+      parsedInfo = jsonDecode(rawInfo);
+    } catch (e) {
+      throw Exception("Failed to parse user info JSON from cache! $e");
+    }
 
     id = parsedInfo["id"] as String;
     name = parsedInfo["name"] as String;
@@ -36,7 +43,7 @@ final class User {
     semester = TLUSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
     passedSubjectIDs = parsedInfo["passed"] as List<String>;
-    learningSubjectIDs = parsedInfo["learning"] as List<String>;
+    learningCourseIDs = parsedInfo["learning"] as List<String>;
     initialized = true;
   }
 }

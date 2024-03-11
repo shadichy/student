@@ -44,6 +44,7 @@ dependencies:
   draggable_bottom_sheet: ^1.0.2
   bitcount: ^0.3.0
   flutter_svg: ^2.0.10+1
+  http: ^1.2.1
   # sheet: ^0.0.4+1
 
 dev_dependencies:

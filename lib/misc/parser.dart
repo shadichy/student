@@ -179,6 +179,10 @@ class SampleTimetableData {
         )));
   }
 
+  static String unifyJson(String input) {
+    return input;
+  }
+
   int _add0(int i, int n) => i << n;
   int _add1(int i, int n) => (i << (n + 1)) + (2 << n) - 1;
 

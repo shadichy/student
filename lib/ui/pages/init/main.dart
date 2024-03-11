@@ -7,7 +7,7 @@ class Initializer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SharedPrefs.setString("user", "").then((_) => User.initialize());
+    SharedPrefs.setString("user", '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":2,"schoolYear":36,"passed":[],"learning":[]}').then((_) => User.initialize());
     return Scaffold();
   }
 }

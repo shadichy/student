@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/core/databases/user.dart';
+// import 'package:student/core/databases/user.dart';
 import 'package:student/ui/app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/misc/misc_variables.dart';
-import 'package:student/ui/pages/init/main.dart';
+// import 'package:student/ui/pages/init/main.dart';
 
 class StudentApp extends StatelessWidget {
   const StudentApp({super.key});
@@ -35,10 +35,12 @@ class StudentApp extends StatelessWidget {
     );
     ThemeData buildTheme() {
       return baseTheme.copyWith(
-        textTheme: GoogleFonts.getTextTheme(
-          "Varela Round",
-          baseTheme.textTheme,
-        ).apply(
+        textTheme: 
+        // GoogleFonts.getTextTheme(
+        //   "Varela Round",
+        //   baseTheme.textTheme,
+        // )
+        baseTheme.textTheme.apply(
           displayColor: textColor,
           bodyColor: textColor,
         ),
@@ -49,7 +51,8 @@ class StudentApp extends StatelessWidget {
     return MaterialApp(
       title: 'Student',
       theme: buildTheme(),
-      home: User.initialized ? const App() : const Initializer(),
+      // home: User.initialized ? const App() : const Initializer(),
+      home: const App(),
     );
   }
 }

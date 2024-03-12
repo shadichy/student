@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/parser.dart';
 
-final class Server {
+abstract final class Server {
   static const String url = "";
   static Future<String> fetch(String endpoint) async {
     final res = await http.get(Uri.parse("$url/$endpoint"));

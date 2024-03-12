@@ -7,20 +7,31 @@ enum TLUGroup { n1, n2, n3 }
 
 enum TLUSemester { k1, k2, k3 }
 
-final class User {
-  static late final String id;
-  static late final String name;
-  static late final ImageProvider<Object>? picture;
-  static late final TLUGroup group;
-  static late final TLUSemester semester;
-  static late final int schoolYear;
-  // only be in ID
-  static late final List<String> passedSubjectIDs;
-  // can be either ID or Alt ID
-  static late final List<String> learningCourseIDs;
-  static bool initialized = false;
+class User {
+  User._instance() {
+    initialize();
+  }
+  factory User() {
+    return _userInstance;
+  }
+  static final _userInstance = User._instance();
 
-  static Future<void> initialize() async {
+  late final String id;
+  late final String name;
+  late final ImageProvider<Object>? picture;
+  late final TLUGroup group;
+  late final TLUSemester semester;
+  late final int schoolYear;
+  // only be in ID
+  late final List<String> passedSubjectIDs;
+  // can be either ID or Alt ID
+  late final List<String> learningCourseIDs;
+  late final String? major; // later
+  bool _initialized = false;
+
+  bool get initialized => _initialized;
+
+  Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("user");
     if (rawInfo is! String) {
       throw Exception("Could not get user info from cache!");
@@ -42,8 +53,8 @@ final class User {
     group = TLUGroup.values[parsedInfo["group"] as int];
     semester = TLUSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
-    passedSubjectIDs = parsedInfo["passed"] as List<String>;
-    learningCourseIDs = parsedInfo["learning"] as List<String>;
-    initialized = true;
+    passedSubjectIDs = (parsedInfo["passed"] as List<dynamic>).map((s) => s as String).toList();
+    learningCourseIDs = (parsedInfo["learning"] as List<dynamic>).map((s) => s as String).toList();
+    _initialized = true;
   }
 }

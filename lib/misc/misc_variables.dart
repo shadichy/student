@@ -18,7 +18,7 @@ Color randomFromSeed(Color seed, {double delta = 1}) {
   return Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
 }
 
-Future<void> m3SeededColor(Color seed) async {
+void m3SeededColor(Color seed) {
   M3SeededColor.colors = List.generate(
     Colors.primaries.length,
     (_) => randomFromSeed(
@@ -31,5 +31,5 @@ Future<void> m3SeededColor(Color seed) async {
 }
 
 abstract final class M3SeededColor {
-  static late final List<Color> colors;
+  static late List<Color> colors;
 }

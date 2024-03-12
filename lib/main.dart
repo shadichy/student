@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
-// import 'package:student/core/databases/user.dart';
+import 'package:student/core/databases/user.dart';
 import 'package:student/ui/app.dart';
+import 'package:student/ui/connect.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/misc/misc_variables.dart';
-// import 'package:student/ui/pages/init/main.dart';
+import 'package:student/ui/pages/init/main.dart';
 
-class StudentApp extends StatelessWidget {
+class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
+  
+  @override
+  State<StudentApp> createState() => _StudentAppState();
+}
 
+class _StudentAppState extends State<StudentApp> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = ColorScheme.fromSeed(
@@ -26,8 +32,8 @@ class StudentApp extends StatelessWidget {
       highlightColor: bgColor,
       scaffoldBackgroundColor: colorScheme.surface,
       cardTheme: CardTheme(
-        // color: bgColor,
-        // margin: const EdgeInsets.symmetric(horizontal: 16),
+        color: bgColor,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -48,16 +54,18 @@ class StudentApp extends StatelessWidget {
     }
 
     m3SeededColor(baseTheme.colorScheme.primary);
+    // initialize();
+
     return MaterialApp(
       title: 'Student',
       theme: buildTheme(),
-      // home: User.initialized ? const App() : const Initializer(),
-      home: const App(),
+      home: SharedPrefs.getString("user") is String ? const App() : const Initializer(),
+      // home: const App(),
     );
   }
 }
 
 void main() async {
   await SharedPrefs.initialize();
-  runApp(const StudentApp());
+  runApp(RestartWidget(child: const StudentApp()));
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/misc/misc_functions.dart';
 
 enum DayType { H, T, N, B, Q }
 
@@ -20,17 +21,21 @@ class SemesterPlan {
 }
 
 final class StudyPlan {
-  static late final DateTime startDate; // must be start of week
-  static late final List<SemesterPlan> table;
+  StudyPlan._instance();
+  static final _studyPlanInstance = StudyPlan._instance();
+  factory StudyPlan() {
+    return _studyPlanInstance;
+  }
+
+  late final DateTime startDate; // must be start of week
+  late final List<SemesterPlan> table;
 
   // static List<DayType> _full(DayType type) => List.generate(7, (_) => type);
 
-  static DateTime epoch(int s) => DateTime.fromMillisecondsSinceEpoch(s * 1000);
-
-  static Future<void> initialize() async {
+  Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("studyPlan");
     if (rawInfo is! String) {
-      rawInfo = await Server.getStudyPlan(User.group);
+      rawInfo = await Server.getStudyPlan(User().group);
       await SharedPrefs.setString("studyPlan", rawInfo);
     }
 
@@ -42,20 +47,22 @@ final class StudyPlan {
       throw Exception("Failed to parse studyPlan info JSON from cache! $e");
     }
 
-    startDate = epoch(parsedInfo["startDate"] as int);
+    startDate = MiscFns.epoch(parsedInfo["startDate"] as int);
 
-    table = (parsedInfo["plan"] as List<Map<String, dynamic>>)
+    table = MiscFns.listType<Map<String, dynamic>>(parsedInfo["plan"] as List)
         .asMap()
         .map((l, s) {
           return MapEntry(
             l,
             SemesterPlan(
               currentSemester: TLUSemester.values[l],
-              timetable: (s["week"] as List<List<int>>).map((w) {
-                return w.map((i) => DayType.values[i]).toList();
+              timetable: MiscFns.listType<List>(s["week"] as List).map((w) {
+                return MiscFns.listType<int>(w)
+                    .map((i) => DayType.values[i])
+                    .toList();
               }).toList(),
-              studyWeeks: s["studyWeek"] as List<int>,
-              startDate: epoch(s["startDate"] as int),
+              studyWeeks: MiscFns.listType<int>(s["studyWeek"] as List),
+              startDate: MiscFns.epoch(s["startDate"] as int),
             ),
           );
         })

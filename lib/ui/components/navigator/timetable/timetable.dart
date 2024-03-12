@@ -59,7 +59,7 @@ class TimetableBox extends StatelessWidget {
 
     Widget dayTextBox(DateTime time) {
       return textBox(
-        timeFormat(
+        MiscFns.timeFormat(
           time,
           format: "dd/MM",
         ),
@@ -69,7 +69,7 @@ class TimetableBox extends StatelessWidget {
 
     Widget hmTextBox(int seconds) {
       return textBox(
-        timeFormat(
+        MiscFns.timeFormat(
           date.add(Duration(seconds: seconds)),
         ),
         padding: const EdgeInsets.symmetric(

@@ -2,19 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/misc/misc_functions.dart';
 
 enum TLUGroup { n1, n2, n3 }
 
 enum TLUSemester { k1, k2, k3 }
 
 class User {
-  User._instance() {
-    initialize();
-  }
+  User._instance();
+  static final _userInstance = User._instance();
   factory User() {
     return _userInstance;
   }
-  static final _userInstance = User._instance();
 
   late final String id;
   late final String name;
@@ -53,8 +52,8 @@ class User {
     group = TLUGroup.values[parsedInfo["group"] as int];
     semester = TLUSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
-    passedSubjectIDs = (parsedInfo["passed"] as List<dynamic>).map((s) => s as String).toList();
-    learningCourseIDs = (parsedInfo["learning"] as List<dynamic>).map((s) => s as String).toList();
+    passedSubjectIDs = MiscFns.listType<String>(parsedInfo["passed"] as List,);
+    learningCourseIDs = MiscFns.listType<String>(parsedInfo["learning"] as List,);
     _initialized = true;
   }
 }

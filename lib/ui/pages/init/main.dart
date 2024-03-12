@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/core/databases/user.dart';
+// import 'package:student/core/databases/user.dart';
 import 'package:student/ui/connect.dart';
 
 class Initializer extends StatelessWidget {
@@ -8,8 +8,10 @@ class Initializer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SharedPrefs.setString("user", '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":2,"schoolYear":36,"passed":[],"learning":[]}',).then((_) {print(User().initialized);RestartWidget.restartApp(context);});
+    SharedPrefs.setString(
+      "user",
+      '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":2,"schoolYear":36,"passed":[],"learning":[]}',
+    ).then((_) => RestartWidget.restartApp(context));
     return Scaffold();
   }
 }
-

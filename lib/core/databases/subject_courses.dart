@@ -8,22 +8,28 @@ import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
 
 final class InStudyCourses {
-  static late final List<Subject> _inStudyCourses;
-  static final RegExp _getCourseID = RegExp(r'(^[A-Z]+(\([A-Z]\))?)');
+  InStudyCourses._instance();
+  static final _inStudyCoursesInstance = InStudyCourses._instance();
+  factory InStudyCourses() {
+    return _inStudyCoursesInstance;
+  }
 
-  static Subject? getSubject(String id) =>
+  late final List<Subject> _inStudyCourses;
+  final RegExp _getCourseID = RegExp(r'(^[A-Z]+(\([A-Z]\))?)');
+
+  Subject? getSubject(String id) =>
       _inStudyCourses.firstWhere((Subject s) => s.subjectID == id);
 
-  static Subject? getSubjectAlt(String id) =>
+  Subject? getSubjectAlt(String id) =>
       _inStudyCourses.firstWhere((Subject s) => s.subjectAltID == id);
 
-  static SubjectCourse? getCourse(String id) =>
+  SubjectCourse? getCourse(String id) =>
       getSubjectAlt(_getCourseID.firstMatch(id).toString())?.getCourse(id);
 
-  static Future<void> initialize() async {
+  Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("inStudyCourses");
     if (rawInfo is! String) {
-      rawInfo = await Server.getSemester(User.group, User.semester);
+      rawInfo = await Server.getSemester(User().group, User().semester);
       await SharedPrefs.setString("inStudyCourses", rawInfo);
     }
 
@@ -39,7 +45,7 @@ final class InStudyCourses {
     _inStudyCourses = parsedInfo
         .map<String, Subject>(
           (key, value) {
-            BaseSubject? s = Subjects.getSubject(key);
+            BaseSubject? s = Subjects().getSubject(key);
             if (s is! Subject) {
               throw Exception(
                   "Failed to parse inStudyCourses info JSON: $key is invalid!");

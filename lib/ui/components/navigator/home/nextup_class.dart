@@ -104,7 +104,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   fontSize: 14,
                 ),
                 textTile(
-                  "Time: ${timeFormat(widget.nextupClass.startTime)} - ${timeFormat(widget.nextupClass.endTime)}",
+                  "Time: ${MiscFns.timeFormat(widget.nextupClass.startTime)} - ${MiscFns.timeFormat(widget.nextupClass.endTime)}",
                   fontSize: 14,
                 ),
                 textTile(

@@ -5,6 +5,7 @@ import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/subject_courses.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
+import 'package:student/misc/misc_functions.dart';
 
 class WeekTimetable {
   final DateTime startDate; // must be start of week
@@ -14,30 +15,36 @@ class WeekTimetable {
 }
 
 final class SemesterTimetable {
-  static late List<WeekTimetable> timetable;
-  static final TLUSemester currentSemester = User.semester;
-  static late final DateTime startDate;
+  SemesterTimetable._instance();
+  static final _semesterTimetableInstance = SemesterTimetable._instance();
+  factory SemesterTimetable() {
+    return _semesterTimetableInstance;
+  }
 
-  static DateTime epoch(int s) => DateTime.fromMillisecondsSinceEpoch(s * 1000);
+  late List<WeekTimetable> timetable;
+  final TLUSemester currentSemester = User().semester;
+  late final DateTime startDate;
 
-  static Future<void> update(dynamic info) async {
+  Future<void> update(dynamic info) async {
     await _write();
   }
 
-  static Future<void> _write() async {
+  Future<void> _write() async {
     String rawInfo = json.encode(timetable);
     await SharedPrefs.setString("userTimetable", rawInfo);
   }
 
-  static Future<void> initialize() async {
+  Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("userTimetable");
-    SemesterPlan currentPlan = StudyPlan.table[currentSemester.index];
+    SemesterPlan currentPlan = StudyPlan().table[currentSemester.index];
     startDate = currentPlan.startDate;
     if (rawInfo is String) {
       List<Map<String, dynamic>> parsedInfo = jsonDecode(rawInfo);
       timetable = parsedInfo.map((w) {
         return WeekTimetable(
-          (w["timetable"] as List<Map<String, dynamic>>).map((s) {
+          MiscFns.listType<Map<String, dynamic>>(
+            w["timetable"] as List,
+          ).map((s) {
             return CourseTimeStamp(
               intStamp: s["intStamp"] as int,
               dayOfWeek: s["dayOfWeek"] as int,
@@ -47,15 +54,16 @@ final class SemesterTimetable {
               timeStampType: TimeStampType.values[s["timeStampType"] as int],
             );
           }).toList(),
-          startDate: epoch(w["startDate"] as int),
+          startDate: MiscFns.epoch(w["startDate"] as int),
           weekNo: w["weekNo"] as int?,
         );
       }).toList();
       return;
     }
 
-    List<SubjectCourse> registeredCourses = User.learningCourseIDs
-        .map((id) => InStudyCourses.getCourse(id)!)
+    List<SubjectCourse> registeredCourses = User()
+        .learningCourseIDs
+        .map((id) => InStudyCourses().getCourse(id)!)
         .toList();
     timetable = currentPlan.timetable
         .asMap()

@@ -4,20 +4,26 @@ import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/misc/misc_functions.dart';
 
 final class Subjects {
-  static late final List<BaseSubject> _subjects;
+  Subjects._instance();
+  static final _subjectsInstance = Subjects._instance();
+  factory Subjects() {
+    return _subjectsInstance;
+  }
+  late final List<BaseSubject> _subjects;
 
-  static BaseSubject? getSubject(String id) =>
+  BaseSubject? getSubject(String id) =>
       _subjects.firstWhere((BaseSubject s) => s.subjectID == id);
 
-  static BaseSubject? getSubjectAlt(String id) =>
+  BaseSubject? getSubjectAlt(String id) =>
       _subjects.firstWhere((BaseSubject s) => s.subjectAltID == id);
 
-  static Future<void> initialize() async {
+  Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("subjects");
     if (rawInfo is! String) {
-      rawInfo = await Server.getSubjects(User.group);
+      rawInfo = await Server.getSubjects(User().group);
       await SharedPrefs.setString("subjects", rawInfo);
     }
 
@@ -36,7 +42,7 @@ final class Subjects {
           subjectAltID: json["subjectAltID"] as String,
           name: json["name"] as String,
           tin: json["tin"] as int,
-          dependencies: json["dependencies"] as List<String>,
+          dependencies: MiscFns.listType<String>(json["dependencies"] as List),
         );
       },
     ).toList();

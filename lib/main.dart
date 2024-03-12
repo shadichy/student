@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
+// import 'package:student/core/databases/teachers.dart';
+// import 'package:student/core/databases/subjects.dart';
+// import 'package:student/core/databases/subject_courses.dart';
+// import 'package:student/core/databases/study_plan.dart';
+// import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/connect.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/pages/init/main.dart';
 
 class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
-  
+
   @override
   State<StudentApp> createState() => _StudentAppState();
 }
 
 class _StudentAppState extends State<StudentApp> {
+  bool initialized = SharedPrefs.getString("user") is String;
+
+  Future<void> initialize() async {
+    if (initialized) {
+      await User().initialize();
+      // await Teachers().initialize();
+      // await Subjects().initialize();
+      // await StudyPlan().initialize();
+      // await InStudyCourses().initialize();
+      // await SemesterTimetable().initialize();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = ColorScheme.fromSeed(
@@ -41,25 +59,25 @@ class _StudentAppState extends State<StudentApp> {
     );
     ThemeData buildTheme() {
       return baseTheme.copyWith(
-        textTheme: 
-        // GoogleFonts.getTextTheme(
-        //   "Varela Round",
-        //   baseTheme.textTheme,
-        // )
-        baseTheme.textTheme.apply(
+        textTheme:
+            // GoogleFonts.getTextTheme(
+            //   "Varela Round",
+            //   baseTheme.textTheme,
+            // )
+            baseTheme.textTheme.apply(
           displayColor: textColor,
           bodyColor: textColor,
         ),
       );
     }
 
+    initialize();
     m3SeededColor(baseTheme.colorScheme.primary);
-    // initialize();
 
     return MaterialApp(
       title: 'Student',
       theme: buildTheme(),
-      home: SharedPrefs.getString("user") is String ? const App() : const Initializer(),
+      home: initialized ? const App() : const Initializer(),
       // home: const App(),
     );
   }

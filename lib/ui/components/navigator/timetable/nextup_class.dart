@@ -145,12 +145,12 @@ class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
                   textTile(
                     Icons.alarm_outlined,
                     "Time",
-                    "${timeFormat(widget.nextupClass.startTime)} - ${timeFormat(widget.nextupClass.endTime)}",
+                    "${MiscFns.timeFormat(widget.nextupClass.startTime)} - ${MiscFns.timeFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
                     Icons.event_outlined,
                     "Date",
-                    timeFormat(widget.nextupClass.startTime),
+                    MiscFns.timeFormat(widget.nextupClass.startTime),
                   ),
                   textTile(
                     Icons.person_outlined,

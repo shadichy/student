@@ -12,7 +12,9 @@ class HomeGlance extends StatefulWidget {
 class _HomeGlanceState extends State<HomeGlance> {
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       padding: const EdgeInsets.all(16),
@@ -54,19 +56,17 @@ class _HomeGlanceState extends State<HomeGlance> {
             child: ListTile(
               title: Text(
                 "Welcome back,",
-                style: TextStyle(
-                  fontSize: 24,
+                style: textTheme.headlineSmall!.copyWith(
                   color: colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.bold,
                 ),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
                 widget.name,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: colorScheme.onPrimaryContainer.withOpacity(.95),
+                style: textTheme.titleLarge!.copyWith(
+                  color: colorScheme.onPrimaryContainer,
                 ),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,

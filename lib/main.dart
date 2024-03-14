@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 // import 'package:student/core/databases/teachers.dart';
@@ -84,6 +85,7 @@ class _StudentAppState extends State<StudentApp> {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.initialize();
   runApp(RestartWidget(child: const StudentApp()));
 }

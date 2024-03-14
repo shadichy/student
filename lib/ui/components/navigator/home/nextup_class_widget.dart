@@ -99,7 +99,10 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
 
     List<Widget> content = [
       ...classStamps.map((c) => HomeNextupClassCard(c)),
@@ -113,16 +116,26 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       ),
     ];
 
+    // return SingleChildScrollView(
+    //       scrollDirection: Axis.horizontal,
+    //       child: Padding(
+    //         padding: const EdgeInsets.symmetric(vertical: 8),
+    //         child: Row(
+    //           children: content,
+    //         ),
+    //       ),
+    //     );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionLabel(
-          "Next-up classes",
-          Options.forward("", (BuildContext context) {}),
-          fontWeight: FontWeight.w900,
-          fontSize: 20,
-          color: colorScheme.onSurface,
-        ),
+        // SectionLabel(
+        //   "Next-up classes",
+        //   Options.forward("", (BuildContext context) {}),
+        //   fontWeight: FontWeight.w900,
+        //   fontSize: 20,
+        //   color: colorScheme.onSurface,
+        // ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(

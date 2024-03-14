@@ -49,7 +49,7 @@ class _StudentAppState extends State<StudentApp> {
       hoverColor: bgColor,
       focusColor: bgColor,
       highlightColor: bgColor,
-      scaffoldBackgroundColor: colorScheme.surface,
+      // scaffoldBackgroundColor: colorScheme.surface,
       cardTheme: CardTheme(
         color: bgColor,
         margin: const EdgeInsets.symmetric(horizontal: 16),

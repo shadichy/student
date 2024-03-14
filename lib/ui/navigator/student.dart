@@ -17,7 +17,7 @@ class StudentPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const StudentTopBar(),
+          // const StudentTopBar(),
           StudentGlance(
             userCode: "A47548",
             userFullName: "Shadashi Ken Ichi",

@@ -45,27 +45,22 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
         alignment: Alignment.topLeft,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 72, 0, 0),
+            // padding: const EdgeInsets.fromLTRB(0, 72, 0, 0),
+            padding: EdgeInsets.zero,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  HomeGlance(
-                    Image.network(
-                      "https://picsum.photos/250?image=9",
-                      fit: BoxFit.cover,
-                    ),
-                    "Shadichy",
-                  ),
-                  OptionIconWidgets([
-                    Options.settings,
-                    Options.user,
-                    Options.timetable,
-                    Options.help,
-                    Options.search,
-                  ]),
+                  HomeGlance(),
+                  // OptionIconWidgets([
+                  //   Options.settings,
+                  //   Options.user,
+                  //   Options.timetable,
+                  //   Options.help,
+                  //   Options.search,
+                  // ]),
                   if (hasNotif) HomeNotifWidget(notifs),
                   HomeNextupClassWidget(SampleTimetableData.from2dList([])),
                   OptionLabelWidgets([
@@ -89,16 +84,16 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
               ),
             ),
           ),
-          HomeTopBar(
-            userPicture: ClipOval(
-              child: Image.network(
-                "https://picsum.photos/250?image=9",
-                width: 28,
-                height: 28,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
+          // HomeTopBar(
+            // userPicture: ClipOval(
+            //   child: Image.network(
+            //     "https://picsum.photos/250?image=9",
+            //     width: 28,
+            //     height: 28,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
+          // ),
         ],
       ),
     );

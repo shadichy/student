@@ -19,7 +19,7 @@ class SchoolPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const SchoolTopBar(),
+          // const SchoolTopBar(),
           const SchoolGlance(AssetImage("assets/images/thanglonguni.png")),
           const SchoolSearchBar(),
           const UpdatedNews([

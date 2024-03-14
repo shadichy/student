@@ -21,7 +21,7 @@ class TimetablePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const TimetableTopBar(),
+          // const TimetableTopBar(),
           TimetableNextupClassWidget(SampleTimetableData.from2dList([])),
           TimetableWidget(
             SampleTimetable(classes: [

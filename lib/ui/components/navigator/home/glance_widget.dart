@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/user.dart';
 
 class HomeGlance extends StatefulWidget {
-  final Image image;
-  final String name;
-  const HomeGlance(this.image, this.name, {super.key});
+  const HomeGlance({super.key});
 
   @override
   State<HomeGlance> createState() => _HomeGlanceState();
@@ -14,13 +13,14 @@ class _HomeGlanceState extends State<HomeGlance> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
+    TextTheme textTheme = theme.textTheme.apply(displayColor: colorScheme.onPrimaryContainer,bodyColor: colorScheme.onPrimaryContainer);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       padding: const EdgeInsets.all(16),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
+        // border: Border.all(color: colorScheme.primaryContainer, width:2,),
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -29,27 +29,27 @@ class _HomeGlanceState extends State<HomeGlance> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: colorScheme.onPrimaryContainer,
-                width: 2.0,
-              ),
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(4),
-              height: 120,
-              width: 120,
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: widget.image,
-            ),
-          ),
+          // Container(
+          //   width: 80,
+          //   height: 80,
+          //   decoration: BoxDecoration(
+          //     shape: BoxShape.circle,
+          //     border: Border.all(
+          //       color: colorScheme.onPrimaryContainer,
+          //       width: 2.0,
+          //     ),
+          //   ),
+          //   child: Container(
+          //     margin: const EdgeInsets.all(4),
+          //     height: 120,
+          //     width: 120,
+          //     clipBehavior: Clip.antiAlias,
+          //     decoration: const BoxDecoration(
+          //       shape: BoxShape.circle,
+          //     ),
+          //     child: widget.image,
+          //   ),
+          // ),
           Expanded(
             // height: 100,
             // width: MediaQuery.of(context).size.width,
@@ -57,17 +57,14 @@ class _HomeGlanceState extends State<HomeGlance> {
               title: Text(
                 "Welcome back,",
                 style: textTheme.headlineSmall!.copyWith(
-                  color: colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
               ),
               subtitle: Text(
-                widget.name,
-                style: textTheme.titleLarge!.copyWith(
-                  color: colorScheme.onPrimaryContainer,
-                ),
+                User().name,
+                style: textTheme.titleMedium,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
               ),

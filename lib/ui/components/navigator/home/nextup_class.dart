@@ -24,7 +24,9 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme.apply(bodyColor: colorScheme.onPrimaryContainer);
     Text textTile(
       String text, {
       double? fontSize,
@@ -36,18 +38,18 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
         overflow: overflow,
         style: TextStyle(
           fontSize: fontSize,
-          color: colorScheme.onSecondaryContainer,
+          color: colorScheme.onPrimaryContainer,
           fontWeight: fontWeight,
         ),
       );
     }
 
     return SizedBox(
-      width: 280,
-      child: Card.filled(
+      width: MediaQuery.of(context).size.width * .9,
+      child: Card.outlined(
         elevation: 0,
         // color: colorScheme.primaryContainer,
-        color: colorScheme.secondaryContainer,
+        color: colorScheme.primaryContainer,
         // color: Colors.transparent,
         margin: const EdgeInsets.only(left: 16),
         shape: RoundedRectangleBorder(
@@ -78,7 +80,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                     ),
                     Icon(
                       Icons.alarm_outlined,
-                      color: colorScheme.onSecondaryContainer,
+                      color: colorScheme.onPrimaryContainer,
                       size: 18,
                     ),
                     textTile(
@@ -94,23 +96,27 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                 textTile(
                   widget.nextupClass.classId,
                   overflow: TextOverflow.ellipsis,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w600,
                   fontSize: 20,
                 ),
+                // Text("${widget.nextupClass.classDesc} ${widget.nextupClass.classId.replaceFirst(RegExp(r"^[A-Z]+(\([A-Z]+\))?\."), '')}",
+                //   overflow: TextOverflow.ellipsis,
+                //   style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w500),
+                // ),
                 textTile(
                   widget.nextupClass.classDesc,
                   overflow: TextOverflow.ellipsis,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   fontSize: 14,
                 ),
                 textTile(
                   "Time: ${MiscFns.timeFormat(widget.nextupClass.startTime)} - ${MiscFns.timeFormat(widget.nextupClass.endTime)}",
                   fontSize: 14,
                 ),
-                textTile(
-                  "Teacher: ${widget.nextupClass.teacher}",
-                  fontSize: 14,
-                ),
+                // textTile(
+                //   "Teacher: ${widget.nextupClass.teacher}",
+                //   fontSize: 14,
+                // ),
               ],
             ),
           ),

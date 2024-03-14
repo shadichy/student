@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 
-class HomeTopBar extends StatefulWidget {
-  final Widget userPicture;
-  const HomeTopBar({super.key, required this.userPicture});
+class HomeTopBar extends StatelessWidget implements PreferredSizeWidget {
+  // final Widget userPicture;
+  const HomeTopBar({super.key});
 
   @override
-  State<HomeTopBar> createState() => _HomeTopBarState();
-}
+  Size get preferredSize => Size.fromHeight(72);
+//   @override
+//   State<HomeTopBar> createState() => _HomeTopBarState();
+// }
 
-class _HomeTopBarState extends State<HomeTopBar> {
+// class _HomeTopBarState extends State<HomeTopBar> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Padding(
+    return Container(
+      height: preferredSize.height,
       padding: const EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -78,23 +81,35 @@ class _HomeTopBarState extends State<HomeTopBar> {
           //     ),
           //   ),
           // ),
+          VerticalDivider(width: 4, color: Colors.transparent,),
+          SizedBox(
+            height: 32,
+            width: 32,
+            child: 
           IconOption(
             Options.notifications,
-            margin: const EdgeInsets.only(left: 4),
             iconSize: 20,
+            padding: EdgeInsets.zero,
             iconColor: colorScheme.onSurface,
             backgroundColor: colorScheme.surface,
           ),
+          ),
+          VerticalDivider(width: 4, color: Colors.transparent,),
+          SizedBox(
+            height: 32,
+            width: 32,
+            child: 
           IconOption(
             Option(
-              widget.userPicture,
+              Icon(Icons.menu_outlined),
               "",
               (context) => Scaffold.of(context).openDrawer,
             ),
-            margin: const EdgeInsets.only(left: 4),
             iconSize: 20,
+            padding: EdgeInsets.zero,
             iconColor: colorScheme.onSurface,
             backgroundColor: colorScheme.surface,
+          ),
           ),
         ],
       ),

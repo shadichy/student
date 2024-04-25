@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:student/ui/navigator/home.dart';
 import 'package:student/ui/navigator/school.dart';
 import 'package:student/ui/navigator/student.dart';
 import 'package:student/ui/navigator/timetable.dart';
-import 'package:student/ui/components/navigator/home/topbar_widget.dart';
-
+// import 'package:student/ui/components/navigator/home/topbar_widget.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -55,42 +55,46 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      body: PopScope(
-        onPopInvoked: (bool didPop) {
-          if (didPop) callGoBack();
-        },
-        child: SafeArea(child: _defaultRoutes[_selectedTab]),
-      ),
-      appBar: AppBar(
-        toolbarHeight: 72,
-        elevation: 0,
-        scrolledUnderElevation: 4,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: colorScheme.shadow,
-        flexibleSpace: HomeTopBar(),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedTab,
-        onDestinationSelected: _onItemTapped,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month),
-            label: "Time table",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.school),
-            label: "School",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person),
-            label: "Student",
-          ),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          systemNavigationBarColor: colorScheme.primary.withOpacity(0.08)),
+      child: Scaffold(
+        body: PopScope(
+          onPopInvoked: (bool didPop) {
+            if (didPop) callGoBack();
+          },
+          child: SafeArea(child: _defaultRoutes[_selectedTab]),
+        ),
+        // appBar: AppBar(
+        //   toolbarHeight: 72,
+        //   elevation: 0,
+        //   scrolledUnderElevation: 4,
+        //   surfaceTintColor: Colors.transparent,
+        //   shadowColor: colorScheme.shadow,
+        //   flexibleSpace: HomeTopBar(),
+        // ),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _selectedTab,
+          onDestinationSelected: _onItemTapped,
+          destinations: const <NavigationDestination>[
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month),
+              label: "Time table",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.school),
+              label: "School",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person),
+              label: "Student",
+            ),
+          ],
+        ),
       ),
     );
   }

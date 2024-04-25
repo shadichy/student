@@ -169,7 +169,7 @@ extension Filter on Subject {
     return Subject(
       subjectID: subjectID,
       name: name,
-      tin: tin,
+      cred: cred,
       courses: result,
       subjectAltID: subjectID,
       dependencies: [],

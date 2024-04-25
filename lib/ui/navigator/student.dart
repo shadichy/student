@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/navigator/quick_navigations.dart';
+import 'package:student/ui/components/navigator/quick_navigators.dart';
 import 'package:student/ui/components/navigator/student/glance_widget.dart';
 import 'package:student/ui/components/navigator/student/topbar_widget.dart';
+
 import 'package:student/ui/components/options.dart';
+import 'package:student/ui/components/with_appbar.dart';
 
 class StudentPage extends StatelessWidget {
   StudentPage({super.key});
@@ -11,31 +13,31 @@ class StudentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          // const StudentTopBar(),
-          StudentGlance(
-            userCode: "A47548",
-            userFullName: "Shadashi Ken Ichi",
-            userPicture: Image.network(
-              "https://picsum.photos/250?image=9",
-              fit: BoxFit.cover,
-            ),
+    return WithAppbar(
+      appBar: const StudentTopBar(),
+      body: [
+        StudentGlance(
+          studentCode: "A47548",
+          studentFullName: "Shadashi Ken Ichi",
+          studentPicture: Image.network(
+            "https://picsum.photos/250?image=9",
+            fit: BoxFit.cover,
           ),
-          OptionLabelWidgets([
-            Options.user,
-            Options.student_finance,
-            Options.study_program,
-            Options.study_results,
-            Options.settings,
-            Options.help,
-          ], headingLabel: "Settings"),
-        ],
-      ),
+          studentSchool: 'Trường Đại học Thăng Long',
+          studentMajor: 'Trí tuệ nhân tạo',
+          studentClass: 'TA3601',
+          studentGPA: '1.1',
+          studentCred: 24,
+        ),
+        OptionLabelWidgets([
+          Options.user,
+          Options.student_finance,
+          Options.study_program,
+          Options.study_results,
+          Options.settings,
+          Options.help,
+        ], headingLabel: "Settings"),
+      ],
     );
   }
 }

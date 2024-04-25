@@ -33,7 +33,7 @@ class SampleTimetableData {
       String classRoom = mon[6];
       int dayOfWeek = 0;
       int classStamp = 0;
-      int tin = int.parse(mon[7]);
+      int cred = int.parse(mon[7]);
       String teacherID = _teacherToID(mon[8]);
 
       if (!onlineClass.contains(classRoom)) {
@@ -72,7 +72,7 @@ class SampleTimetableData {
       if (!tmpTkb.containsKey(subjectID)) {
         tmpTkb[subjectID] = {
           "name": name,
-          "tin": tin,
+          "cred": cred,
           "classes": <String, List<CourseTimeStamp>>{},
         };
       }
@@ -99,7 +99,7 @@ class SampleTimetableData {
     tmpTkb.forEach((String subjectID, subjectInfo) => timetable.add(Subject(
           subjectID: subjectID,
           name: subjectInfo["name"].toString(),
-          tin: subjectInfo["tin"],
+          cred: subjectInfo["cred"],
           courses: _mapToClass(subjectID, subjectInfo["classes"]),
           subjectAltID: subjectID,
           dependencies: [],
@@ -118,7 +118,7 @@ class SampleTimetableData {
         throw Exception("input source is not JSON object");
       }
       String name = subjectInfo["name"];
-      String tin = subjectInfo["tin"];
+      String cred = subjectInfo["cred"];
 
       subjectInfo["classes"]
           ?.forEach((classID, List<Map<String, dynamic>> classInfo) {
@@ -150,7 +150,7 @@ class SampleTimetableData {
         if (!tmpTkb.containsKey(subjectID)) {
           tmpTkb[subjectID] = {
             "name": name,
-            "tin": tin,
+            "cred": cred,
             "classes": <String, List<CourseTimeStamp>>{},
           };
         }
@@ -172,7 +172,7 @@ class SampleTimetableData {
     tmpTkb.forEach((String subjectID, subjectInfo) => timetable.add(Subject(
           subjectID: subjectID,
           name: subjectInfo["name"].toString(),
-          tin: subjectInfo["tin"],
+          cred: subjectInfo["cred"],
           courses: _mapToClass(subjectID, subjectInfo["classes"]),
           subjectAltID: subjectID,
           dependencies: [],

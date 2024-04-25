@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/home/nextup_class.dart';
-import 'package:student/ui/components/options.dart';
-import 'package:student/ui/components/section_label.dart';
-import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/home/upcoming_event.dart';
+import 'package:student/ui/components/navigator/upcoming_event.dart';
 
 class HomeNextupClassWidget extends StatefulWidget {
   final SampleTimetableData timetableData;
@@ -99,7 +97,6 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;

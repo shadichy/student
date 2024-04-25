@@ -41,7 +41,7 @@ final class Subjects {
           subjectID: json["subjectID"] as String,
           subjectAltID: json["subjectAltID"] as String,
           name: json["name"] as String,
-          tin: json["tin"] as int,
+          cred: json["cred"] as int,
           dependencies: MiscFns.listType<String>(json["dependencies"] as List),
         );
       },

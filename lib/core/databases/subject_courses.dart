@@ -56,7 +56,7 @@ final class InStudyCourses {
                 subjectID: s.subjectID,
                 subjectAltID: s.subjectAltID,
                 name: s.name,
-                tin: s.tin,
+                cred: s.cred,
                 dependencies: s.dependencies,
                 courses: value.map<SubjectCourse>((c) {
                   return SubjectCourse(

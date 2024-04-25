@@ -60,7 +60,7 @@ class Subject extends BaseSubject {
     required super.subjectID,
     required super.subjectAltID,
     required super.name,
-    required super.tin,
+    required super.cred,
     required super.dependencies,
     required this.courses,
   });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:sheet/sheet.dart';
-import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/upcoming_event.dart';
 
 class NextupClassSheet extends StatefulWidget {
   final NextupClassView nextupClass;

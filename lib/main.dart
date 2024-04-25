@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 // import 'package:student/core/databases/teachers.dart';
@@ -60,16 +60,17 @@ class _StudentAppState extends State<StudentApp> {
     );
     ThemeData buildTheme() {
       return baseTheme.copyWith(
-        textTheme:
-            // GoogleFonts.getTextTheme(
-            //   "Varela Round",
-            //   baseTheme.textTheme,
-            // )
-            baseTheme.textTheme.apply(
-          displayColor: textColor,
-          bodyColor: textColor,
-        ),
-      );
+          textTheme:
+              // GoogleFonts.getTextTheme(
+              //   "Varela Round",
+              //   baseTheme.textTheme,
+              // )
+              baseTheme.textTheme.apply(
+            displayColor: textColor,
+            bodyColor: textColor,
+          ),
+          bottomNavigationBarTheme: baseTheme.bottomNavigationBarTheme.copyWith(
+              backgroundColor: colorScheme.primary.withOpacity(0.08)));
     }
 
     initialize();
@@ -87,5 +88,6 @@ class _StudentAppState extends State<StudentApp> {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.initialize();
-  runApp(RestartWidget(child: const StudentApp()));
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  runApp(const RestartWidget(child: StudentApp()));
 }

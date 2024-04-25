@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/navigator/nextup_class_preview.dart';
-import 'package:student/ui/components/navigator/nextup_class.dart';
+import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
+import 'package:student/ui/components/navigator/upcoming_event.dart';
 
 class HomeNextupClassCard extends StatefulWidget {
   final NextupClassView nextupClass;
@@ -26,7 +26,8 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme.apply(bodyColor: colorScheme.onPrimaryContainer);
+    TextTheme textTheme =
+        theme.textTheme.apply(bodyColor: colorScheme.onPrimaryContainer);
     Text textTile(
       String text, {
       double? fontSize,

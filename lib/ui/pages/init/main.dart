@@ -12,6 +12,6 @@ class Initializer extends StatelessWidget {
       "user",
       '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":2,"schoolYear":36,"passed":[],"learning":[]}',
     ).then((_) => RestartWidget.restartApp(context));
-    return Scaffold();
+    return const Scaffold();
   }
 }

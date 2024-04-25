@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/navigator/nextup_class.dart';
-import 'package:student/ui/components/navigator/nextup_class_preview.dart';
+import 'package:student/ui/components/navigator/upcoming_event.dart';
+import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
 
 class TimetableNextupClassCard extends StatefulWidget {
   final NextupClassView nextupClass;

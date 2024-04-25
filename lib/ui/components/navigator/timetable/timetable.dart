@@ -4,8 +4,8 @@ import 'package:student/core/generator/generator.dart';
 import 'package:student/core/presets.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_variables.dart';
-import 'package:student/ui/components/navigator/nextup_class.dart';
-import 'package:student/ui/components/navigator/nextup_class_preview.dart';
+import 'package:student/ui/components/navigator/upcoming_event.dart';
+import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
 // import 'package:web/web.dart';
 
 // class ColorTimetable extends BaseTimetable {

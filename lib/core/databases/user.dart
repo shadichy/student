@@ -26,6 +26,8 @@ class User {
   // can be either ID or Alt ID
   late final List<String> learningCourseIDs;
   late final String? major; // later
+  late final String? majorClass; // later
+  late final int? majorCred; // later
   bool _initialized = false;
 
   bool get initialized => _initialized;
@@ -52,8 +54,12 @@ class User {
     group = TLUGroup.values[parsedInfo["group"] as int];
     semester = TLUSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
-    passedSubjectIDs = MiscFns.listType<String>(parsedInfo["passed"] as List,);
-    learningCourseIDs = MiscFns.listType<String>(parsedInfo["learning"] as List,);
+    passedSubjectIDs = MiscFns.listType<String>(
+      parsedInfo["passed"] as List,
+    );
+    learningCourseIDs = MiscFns.listType<String>(
+      parsedInfo["learning"] as List,
+    );
     _initialized = true;
   }
 }

@@ -2,14 +2,14 @@ class BaseSubject {
   final String subjectID;
   final String subjectAltID;
   final String name;
-  final int tin;
+  final int cred;
   // final List<SubjectCourse> courses;
   final List<String> dependencies;
   const BaseSubject({
     required this.subjectID,
     required this.subjectAltID,
     required this.name,
-    required this.tin,
+    required this.cred,
     // required this.courses,
     required this.dependencies,
   });

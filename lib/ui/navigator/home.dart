@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
-import 'package:student/ui/components/navigator/home/nextup_class_widget.dart';
+import 'package:student/ui/components/navigator/home/upcoming_event_widget.dart';
 import 'package:student/ui/components/navigator/home/notification.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
-import 'package:student/ui/components/navigator/home/option_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
 import 'package:student/ui/components/options.dart';
-import 'package:student/ui/components/navigator/quick_navigations.dart';
+import 'package:student/ui/components/navigator/quick_navigators.dart';
+import 'package:student/ui/components/with_appbar.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -30,72 +30,45 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Widget endText(String text) => Text(
-          text,
+    // ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
+
+    return WithAppbar(
+      height: 80,
+      appBar: const HomeTopBar(),
+      body: [
+        const HomeGlance(),
+        // OptionIconWidgets([
+        //   Options.settings,
+        //   Options.user,
+        //   Options.timetable,
+        //   Options.help,
+        //   Options.search,
+        // ]),
+        if (hasNotif) HomeNotifWidget(notifs),
+        HomeNextupClassWidget(SampleTimetableData.from2dList([])),
+        OptionLabelWidgets([
+          Options.settings,
+          Options.study_program,
+          Options.study_results,
+          Options.student_finance,
+          Options.help,
+        ]),
+        const Divider(
+          color: Colors.transparent,
+          height: 16,
+        ),
+        Text(
+          "You've reached the end\nHave a nice day!",
           maxLines: 2,
-          style: TextStyle(
-            color: colorScheme.onSurface,
-          ),
-        );
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        alignment: Alignment.topLeft,
-        children: [
-          Padding(
-            // padding: const EdgeInsets.fromLTRB(0, 72, 0, 0),
-            padding: EdgeInsets.zero,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  HomeGlance(),
-                  // OptionIconWidgets([
-                  //   Options.settings,
-                  //   Options.user,
-                  //   Options.timetable,
-                  //   Options.help,
-                  //   Options.search,
-                  // ]),
-                  if (hasNotif) HomeNotifWidget(notifs),
-                  HomeNextupClassWidget(SampleTimetableData.from2dList([])),
-                  OptionLabelWidgets([
-                    Options.settings,
-                    Options.study_program,
-                    Options.study_results,
-                    Options.student_finance,
-                    Options.help,
-                  ]),
-                  const Divider(
-                    color: Colors.transparent,
-                    height: 16,
-                  ),
-                  endText("You've reached the end"),
-                  endText("Have a nice day!"),
-                  const Divider(
-                    color: Colors.transparent,
-                    height: 16,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // HomeTopBar(
-            // userPicture: ClipOval(
-            //   child: Image.network(
-            //     "https://picsum.photos/250?image=9",
-            //     width: 28,
-            //     height: 28,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
-          // ),
-        ],
-      ),
+          style: textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+        const Divider(
+          color: Colors.transparent,
+          height: 16,
+        ),
+      ],
     );
   }
 }

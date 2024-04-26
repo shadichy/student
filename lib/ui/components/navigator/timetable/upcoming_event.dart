@@ -1,19 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/navigator/upcoming_event.dart';
 import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
 
-class TimetableNextupClassCard extends StatefulWidget {
-  final NextupClassView nextupClass;
-  const TimetableNextupClassCard(this.nextupClass, {super.key});
+class TimetableUpcomingCardAlt extends StatelessWidget {
+  final UpcomingEvent upcomingEvent;
+  const TimetableUpcomingCardAlt(this.upcomingEvent, {super.key});
 
   @override
-  State<TimetableNextupClassCard> createState() =>
-      _TimetableNextupClassCardState();
+  Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme.apply(
+          bodyColor: colorScheme.onPrimaryContainer,
+          displayColor: colorScheme.onPrimary,
+        );
+    return ClickableCard(
+      target: () {},
+      color: colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colorScheme.onPrimaryContainer.withAlpha(160),
+              // border: Border.all(
+              //   width: 1,
+              // ),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "C",
+              style: textTheme.headlineLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const VerticalDivider(
+            color: Colors.transparent,
+            width: 16,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                upcomingEvent.eventLabel,
+                style: textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Row(children: [
+                if (upcomingEvent.location is String)
+                  Text(
+                    "${upcomingEvent.location} \u2022 ",
+                    style: textTheme.titleMedium,
+                  ),
+                Text(
+                  MiscFns.timeLeft(
+                      upcomingEvent.startTime, upcomingEvent.endTime),
+                  style: textTheme.titleMedium,
+                ),
+              ])
+            ],
+          ),
+        ]),
+      ),
+    );
+  }
 }
 
-class _TimetableNextupClassCardState extends State<TimetableNextupClassCard> {
-  String timeLeft(DateTime startTime, DateTime endTime) {
+class TimetableUpcomingCard extends StatefulWidget {
+  final NextupClassView nextupClass;
+  const TimetableUpcomingCard(this.nextupClass, {super.key});
+
+  @override
+  State<TimetableUpcomingCard> createState() => _TimetableUpcomingCardState();
+}
+
+class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
+  static String timeLeft(DateTime startTime, DateTime endTime) {
     Duration diffEnd = endTime.difference(DateTime.now());
     if (diffEnd.inMinutes < 0) return "ended";
     Duration diffStart = startTime.difference(DateTime.now());

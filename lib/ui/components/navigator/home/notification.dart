@@ -94,7 +94,7 @@ class _NotifExpandState extends State<NotifExpand> {
                     ),
                     if (!isExpanded)
                       textBox(
-                        (" \u00B7 $timeNote"),
+                        (" \u2022 $timeNote"),
                         style: noteStyle,
                       ),
                   ],

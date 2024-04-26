@@ -23,34 +23,51 @@ import 'package:student/core/semester/functions.dart';
 //     return Container(color: const Color(0xFFFFE306));
 //   }
 // }
+class UpcomingEvent {
+  final String eventLabel;
+  final DateTime startTime;
+  final DateTime endTime;
+  final String? location;
+  final String? heldBy;
 
-class NextupClassView {
-  late final String classId;
-  late final String classDesc;
-  late final String teacher;
-  late final DateTime startTime;
-  late final DateTime endTime;
-  late final String room;
+  UpcomingEvent({
+    required this.eventLabel,
+    required this.startTime,
+    required this.endTime,
+    this.location,
+    this.heldBy,
+  });
+}
+
+class NextupClassView extends UpcomingEvent {
+  final String classId;
+  final String classDesc;
+  final String teacher;
+  final String room;
   // more info required, including ca, teacher id, subject id, kì học, tuần thứ n
 
   NextupClassView({
     required this.classId,
     required this.classDesc,
     required this.teacher,
-    required this.startTime,
-    required this.endTime,
+    required super.startTime,
+    required super.endTime,
     required this.room,
-  });
+  }) : super(
+          eventLabel: classDesc,
+          location: room,
+          heldBy: teacher,
+        );
 
-  NextupClassView.fromStamp(CourseTimeStamp stamp) {
-    classId = stamp.courseID;
-    // placeholder
-    classDesc = "";
-    teacher = "";
-    startTime = DateTime.now();
-    endTime = DateTime.now();
-    room = stamp.room;
-  }
+  NextupClassView.fromStamp(CourseTimeStamp stamp)
+      : this(
+          classId: stamp.courseID,
+          classDesc: "",
+          startTime: DateTime.now(),
+          endTime: DateTime.now(),
+          room: stamp.room,
+          teacher: '',
+        );
 }
 
   //  {

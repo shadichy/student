@@ -12,22 +12,13 @@ class HomeNextupClassCard extends StatefulWidget {
 }
 
 class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
-  String timeLeft(DateTime startTime, DateTime endTime) {
-    Duration diffEnd = endTime.difference(DateTime.now());
-    if (diffEnd.inMinutes < 0) return "ended";
-    Duration diffStart = startTime.difference(DateTime.now());
-    String hour = "";
-    if (diffStart.inHours > 0) hour += "${diffStart.inHours}h";
-    if (diffStart.inMinutes < 0) return "now";
-    return "$hour${diffStart.inMinutes}m";
-  }
-
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme =
-        theme.textTheme.apply(bodyColor: colorScheme.onPrimaryContainer);
+    TextTheme textTheme = theme.textTheme.apply(
+      bodyColor: colorScheme.onPrimaryContainer,
+    );
     Text textTile(
       String text, {
       double? fontSize,
@@ -75,7 +66,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                 Row(
                   children: [
                     textTile(
-                      "${widget.nextupClass.room} - ",
+                      "${widget.nextupClass.room} \u2022 ",
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -85,7 +76,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                       size: 18,
                     ),
                     textTile(
-                      timeLeft(
+                      MiscFns.timeLeft(
                         widget.nextupClass.startTime,
                         widget.nextupClass.endTime,
                       ),

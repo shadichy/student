@@ -42,7 +42,6 @@ class _StudentGlanceState extends State<StudentGlance> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
             Container(
@@ -93,35 +92,37 @@ class _StudentGlanceState extends State<StudentGlance> {
             color: Colors.transparent,
             height: 8,
           ),
-          Text(
-            widget.studentSchool,
-            style: textTheme.titleLarge!.apply(
-              color: colorScheme.onPrimaryContainer,
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Table(
+              columnWidths: const {0: FixedColumnWidth(60)},
+              children: [
+                MapEntry("Major", widget.studentMajor),
+                MapEntry("Class", widget.studentClass),
+                MapEntry("Credit", "${widget.studentCred}/144"),
+                MapEntry("GPA", widget.studentGPA),
+              ].map((item) {
+                return TableRow(children: [
+                  Text(
+                    "${item.key}: ",
+                    style: textTheme.bodyLarge!.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    item.value,
+                    style: textTheme.bodyLarge!.apply(
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  )
+                ]);
+              }).toList(),
             ),
           ),
-          Text(
-            "Major: ${widget.studentMajor}",
-            style: textTheme.bodyLarge!.apply(
-              color: colorScheme.onPrimaryContainer,
-            ),
-          ),
-          Text(
-            "Major class: ${widget.studentClass}",
-            style: textTheme.bodyLarge!.apply(
-              color: colorScheme.onPrimaryContainer,
-            ),
-          ),
-          Text(
-            "Credit: ${widget.studentCred}/144",
-            style: textTheme.bodyLarge!.apply(
-              color: colorScheme.onPrimaryContainer,
-            ),
-          ),
-          Text(
-            "GPA: ${widget.studentGPA}",
-            style: textTheme.bodyLarge!.apply(
-              color: colorScheme.onPrimaryContainer,
-            ),
+          const Divider(
+            color: Colors.transparent,
+            height: 8,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

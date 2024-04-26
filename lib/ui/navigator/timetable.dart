@@ -20,7 +20,7 @@ class TimetablePage extends StatelessWidget {
     return WithAppbar(
       appBar: const TimetableTopBar(),
       body: [
-        TimetableNextupClassWidget(SampleTimetableData.from2dList([])),
+        TimetableUpcomingWidget(SampleTimetableData.from2dList([])),
         TimetableWidget(
           SampleTimetable(classes: [
             SubjectCourse(

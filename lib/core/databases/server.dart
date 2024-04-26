@@ -12,6 +12,9 @@ abstract final class Server {
     return res.body;
   }
 
+  static Future<String> get getStudyProgramBasics async =>
+      await fetch("/basics.json");
+
   static Future<String> get getTeachers async => await fetch("/teachers.json");
 
   static Future<String> getSubjects(TLUGroup group) async =>

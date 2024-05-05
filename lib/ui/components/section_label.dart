@@ -3,17 +3,17 @@ import 'package:student/ui/components/option.dart';
 
 class SectionLabel extends StatelessWidget {
   final String label;
-  final Option option;
+  final Option? option;
   final FontWeight? fontWeight;
-  final double? fontSize;
+  final TextStyle? textStyle;
   final Color? color;
   final Color? backgroundColor;
   const SectionLabel(
     this.label,
     this.option, {
     super.key,
+    this.textStyle,
     this.fontWeight,
-    this.fontSize,
     this.color,
     this.backgroundColor,
   });
@@ -39,20 +39,21 @@ class SectionLabel extends StatelessWidget {
             label,
             // textAlign: TextAlign.start,
             // overflow: TextOverflow.clip,
-            style: TextStyle(
+            style: textStyle?.copyWith(
               fontWeight: fontWeight,
               // fontStyle: FontStyle.normal,
-              fontSize: fontSize,
+              // fontSize: fontSize,
               color: fColor,
             ),
           ),
-          IconOption(
-            option,
-            backgroundColor: fBackgroundColor,
-            iconColor: fColor,
-            iconSize: 28,
-            // padding: const EdgeInsets.all(8),
-          ),
+          if (option is Option)
+            IconOption(
+              option!,
+              backgroundColor: fBackgroundColor,
+              iconColor: fColor,
+              iconSize: 28,
+              // padding: const EdgeInsets.all(8),
+            ),
         ],
       ),
     );

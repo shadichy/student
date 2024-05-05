@@ -20,6 +20,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
 
     // Widget colorDef(int key, SubjectCourse value) {
     //   return Row(children: [
@@ -135,7 +136,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       // child:
     );
 
-    Widget mainContent = TimetableBoxAlt(widget.timetableData);
+    Widget mainContent = TimetableBox(widget.timetableData);
 
     // Widget detailPane = Padding(
     //   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -195,7 +196,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           "Thời khoá biểu",
           Options.forward("", (context) {}),
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,
         ),
         ClickableCard(

@@ -14,13 +14,14 @@ class _ResultSummaryWidgetState extends State<ResultSummaryWidget> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         SectionLabel(
           "Kết quả học tập kì trước",
           Options.forward("", (context) {}),
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,
         ),
         ClickableCard(

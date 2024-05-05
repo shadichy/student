@@ -13,7 +13,7 @@ class NextupClassSheet extends StatefulWidget {
 class _NextupClassSheetState extends State<NextupClassSheet> {
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // ColorScheme colorScheme = Theme.of(context).colorScheme;
     // return Sheet(
     //   resizable: true,
     //   initialExtent: 200,

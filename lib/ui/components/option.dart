@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Option {
   final Widget icon;
   final String label;
-  final void Function(BuildContext) target;
+  final void Function(BuildContext context) target;
   Option(this.icon, this.label, this.target);
 }
 
@@ -46,6 +46,7 @@ class TextOption extends StatefulWidget {
 class _TextOptionState extends State<TextOption> {
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
     Widget optionIcon = widget.id.icon is Icon
         ? Icon(
             (widget.id.icon as Icon).icon,
@@ -70,9 +71,8 @@ class _TextOptionState extends State<TextOption> {
         widget.id.label,
         textAlign: widget.textAlign,
         // overflow: TextOverflow.ellipsis,
-        style: TextStyle(
+        style: textTheme.titleMedium?.copyWith(
           fontWeight: widget.fontWeight,
-          fontSize: 16,
           color: widget.color,
         ),
       ),

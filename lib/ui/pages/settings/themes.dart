@@ -53,7 +53,7 @@ class _SettingsThemesPageState extends State<SettingsThemesPage> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextTheme textTheme = Theme.of(context).textTheme;
+    // TextTheme textTheme = Theme.of(context).textTheme;
 
     Brightness brightness =
         AppConfig().getConfig<bool>("theme.systemTheme") == true
@@ -63,20 +63,7 @@ class _SettingsThemesPageState extends State<SettingsThemesPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
-          Container(
-            padding: const EdgeInsets.only(
-              top: 120,
-              bottom: 32,
-              left: 16,
-              right: 16,
-            ),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Themes',
-              style: textTheme.displaySmall,
-              textAlign: TextAlign.left,
-            ),
-          ),
+          const HeadLabel("Themes"),
           if (defaultTargetPlatform.supportsAccentColor)
             Opt(
               label: "System theme",

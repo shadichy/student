@@ -12,6 +12,7 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ListTile(
@@ -28,9 +29,8 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
         ),
         title: Text(
           "Search Documents...",
-          style: TextStyle(
+          style: textTheme.titleMedium?.apply(
             color: colorScheme.onPrimaryContainer,
-            fontSize: 16,
           ),
         ),
       ),

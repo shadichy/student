@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
+import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class OptionLabelWidgets extends StatefulWidget {
@@ -20,26 +21,42 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
 
     List<Widget> content = [
       SectionLabel(
         widget.headingLabel,
         Options.add("", (BuildContext context) {}),
         fontWeight: FontWeight.w900,
-        fontSize: 20,
+        textStyle: textTheme.titleLarge,
         color: colorScheme.onSurface,
       ),
-      ...widget.options.map(
-        (Option e) => TextOption(
-          e,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
-          color: colorScheme.onSurface,
-          backgroundColor: Colors.transparent,
-          fontWeight: FontWeight.w700,
-        ),
+      ListView.separated(
+        itemBuilder: ((context, index) {
+          return SubPage(
+            label: widget.options[index].label,
+            action: widget.options[index].target,
+            icon: widget.options[index].icon is Icon
+                ? Icon(
+                    (widget.options[index].icon as Icon).icon,
+                    size: 28,
+                  )
+                : widget.options[index].icon is ImageIcon
+                    ? ImageIcon(
+                        (widget.options[index].icon as ImageIcon).image,
+                        size: 28,
+                      )
+                    : widget.options[index].icon,
+          );
+        }),
+        separatorBuilder: ((context, index) {
+          return const Divider(
+            color: Colors.transparent,
+            height: 8,
+          );
+        }),
+        itemCount: widget.options.length,
+        shrinkWrap: true,
       ),
       SizedBox(
         width: 220,

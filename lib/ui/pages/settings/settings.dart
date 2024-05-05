@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
+import 'package:student/ui/pages/settings/misc.dart';
+import 'package:student/ui/pages/settings/notifications.dart';
 import 'package:student/ui/pages/settings/themes.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,43 +14,38 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextTheme textTheme = Theme.of(context).textTheme;
-    List<Widget> subPages = const [
-      SubPage(
+    // ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // TextTheme textTheme = Theme.of(context).textTheme;
+    List<Widget> subPages = [
+      const SubPage(
         label: "Notifications",
         desc: "Configure notifications and reminders",
+        target: SettingsNotificationsPage(),
       ),
-      SubPage(
+      const SubPage(
         label: "Theme",
         desc: "Change how the app looks and feels",
         target: SettingsThemesPage(),
       ),
-      SubPage(
+      const SubPage(
         label: "Misc",
         desc: "Additional settings",
+        target: SettingsMiscPage(),
       ),
-      SubPage(
+      Opt(
+        label: "Language",
+        desc: "Tieng Viet",
+        buttonType: ButtonType.select,
+        action: (context) {},
+      ),
+      const SubPage(
         label: "About",
       )
     ];
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
-          Container(
-            padding: const EdgeInsets.only(
-              top: 120,
-              bottom: 32,
-              left: 16,
-              right: 16,
-            ),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Settings',
-              style: textTheme.displaySmall,
-              textAlign: TextAlign.left,
-            ),
-          ),
+          const HeadLabel("Settings"),
           ListView.separated(
             shrinkWrap: true,
             itemBuilder: ((context, index) => subPages[index]),

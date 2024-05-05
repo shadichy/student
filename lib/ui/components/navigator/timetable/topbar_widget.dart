@@ -8,6 +8,7 @@ class TimetableTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -23,9 +24,8 @@ class TimetableTopBar extends StatelessWidget {
         ),
         Text(
           "Thời khoá biểu",
-          style: TextStyle(
+          style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w900,
-            fontSize: 20,
             color: colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,

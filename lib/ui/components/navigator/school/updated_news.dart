@@ -20,6 +20,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     List<Widget> mainContent = widget.news.map<Widget>(
       (URL u) {
         return SizedBox(
@@ -49,9 +50,8 @@ class _UpdatedNewsState extends State<UpdatedNews> {
                     child: Text(
                       u.label,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: textTheme.titleMedium?.apply(
                         color: colorScheme.onPrimaryContainer,
-                        fontSize: 18,
                       ),
                     ),
                   )
@@ -68,7 +68,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
           "Tài liệu mới cập nhật",
           Options.forward("", (BuildContext context) {}),
           fontWeight: FontWeight.w900,
-          fontSize: 20,
+          textStyle: textTheme.titleLarge,
           color: colorScheme.onPrimaryContainer,
         ),
         SizedBox(

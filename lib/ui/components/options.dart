@@ -12,10 +12,10 @@ abstract final class Options {
     ));
   }
 
-  static Option add(String label, void Function(BuildContext) f) =>
+  static Option add(String label, void Function(BuildContext context) f) =>
       Option(const Icon(Icons.add_outlined), label, f);
 
-  static Option forward(String label, void Function(BuildContext) f) =>
+  static Option forward(String label, void Function(BuildContext context) f) =>
       Option(const Icon(Icons.arrow_forward_outlined), label, f);
 
   static Option notifications = Option(

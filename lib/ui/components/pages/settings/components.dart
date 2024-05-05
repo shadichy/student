@@ -1,6 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/options.dart';
 
+class HeadLabel extends StatelessWidget {
+  final String label;
+  const HeadLabel(this.label, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(
+        top: 120,
+        bottom: 32,
+        left: 16,
+        right: 16,
+      ),
+      alignment: Alignment.centerLeft,
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.displaySmall,
+        textAlign: TextAlign.left,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+
 enum ButtonType { page, select, switcher }
 
 enum SwitcherType { basic, extended }
@@ -192,7 +216,7 @@ class _OptState extends State<Opt> {
           case ButtonType.switcher:
             switch (widget.switcherType) {
               case SwitcherType.extended:
-                if (widget.action is void Function(BuildContext)) {
+                if (widget.action != null) {
                   widget.action!(context);
                 } else {
                   Options.goto(context, widget.target!);

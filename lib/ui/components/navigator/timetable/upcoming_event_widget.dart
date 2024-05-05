@@ -111,13 +111,14 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         SectionLabel(
           "Môn học tiếp theo",
           Options.forward("", (BuildContext context) {}),
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,
         ),
         ListView.separated(
@@ -132,7 +133,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
             );
           }),
           itemCount: classStamps.length > 2 ? 2 : classStamps.length,
-          scrollDirection: Axis.vertical,
+          // scrollDirection: Axis.vertical,
           shrinkWrap: true,
         ),
         // TimetableUpcomingCard(classStamps[index]),

@@ -24,7 +24,10 @@ final class AppConfig {
   }
 
   void setConfig(String id, dynamic value) {
-    data[id] = value.toString();
+    data[id] =
+        (value is num || value is bool || value is Iterable || value is String)
+            ? value
+            : value.toString();
     _write();
   }
 
@@ -36,6 +39,8 @@ final class AppConfig {
         return int.tryParse("${data[id]}");
       case const (double):
         return double.tryParse("${data[id]}");
+      case const (List):
+        return data[id] ?? [];
       default:
         return data[id] as T?;
     }

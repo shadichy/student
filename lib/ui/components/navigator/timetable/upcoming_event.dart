@@ -81,15 +81,15 @@ class TimetableUpcomingCard extends StatefulWidget {
 }
 
 class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
-  static String timeLeft(DateTime startTime, DateTime endTime) {
-    Duration diffEnd = endTime.difference(DateTime.now());
-    if (diffEnd.inMinutes < 0) return "ended";
-    Duration diffStart = startTime.difference(DateTime.now());
-    String hour = "";
-    if (diffStart.inHours > 0) hour += "${diffStart.inHours}h";
-    if (diffStart.inMinutes < 0) return "now";
-    return "$hour${diffStart.inMinutes}m";
-  }
+  // static String timeLeft(DateTime startTime, DateTime endTime) {
+  //   Duration diffEnd = endTime.difference(DateTime.now());
+  //   if (diffEnd.inMinutes < 0) return "ended";
+  //   Duration diffStart = startTime.difference(DateTime.now());
+  //   String hour = "";
+  //   if (diffStart.inHours > 0) hour += "${diffStart.inHours}h";
+  //   if (diffStart.inMinutes < 0) return "now";
+  //   return "$hour${diffStart.inMinutes}m";
+  // }
 
   @override
   Widget build(BuildContext context) {

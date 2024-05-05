@@ -47,6 +47,7 @@ class _StudentGlanceState extends State<StudentGlance> {
             Container(
               width: 60,
               height: 60,
+              margin: const EdgeInsets.only(left: 16),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -93,9 +94,9 @@ class _StudentGlanceState extends State<StudentGlance> {
             height: 8,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 20),
+            padding: const EdgeInsets.only(left: 16),
             child: Table(
-              columnWidths: const {0: FixedColumnWidth(60)},
+              columnWidths: const {0: FixedColumnWidth(80)},
               children: [
                 MapEntry("Major", widget.studentMajor),
                 MapEntry("Class", widget.studentClass),
@@ -107,7 +108,7 @@ class _StudentGlanceState extends State<StudentGlance> {
                     "${item.key}: ",
                     style: textTheme.bodyLarge!.copyWith(
                       color: colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(

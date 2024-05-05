@@ -50,7 +50,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
                       u.label,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: colorScheme.onSecondaryContainer,
+                        color: colorScheme.onPrimaryContainer,
                         fontSize: 18,
                       ),
                     ),
@@ -69,7 +69,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
           Options.forward("", (BuildContext context) {}),
           fontWeight: FontWeight.w900,
           fontSize: 20,
-          color: colorScheme.onSecondaryContainer,
+          color: colorScheme.onPrimaryContainer,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,

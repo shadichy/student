@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:intl/intl.dart';
 
 abstract final class MiscFns {
@@ -17,8 +19,17 @@ abstract final class MiscFns {
     return "$hour${diffStart.inMinutes}m";
   }
 
+  static String colorCode(Color color) =>
+      color.value.toRadixString(16).substring(2, 8);
+
   static DateTime epoch(int s) => DateTime.fromMillisecondsSinceEpoch(s * 1000);
 
-  static List<Type> listType<Type>(List<dynamic> l) =>
-      (l).map((s) => s as Type).toList();
+  static List<T> listType<T>(List<dynamic> list) =>
+      list.map((s) => s as T).toList();
+
+  // static List<Type> genList<Type>(
+  //   List list, {
+  //   Type Function(Type data)? callback,
+  // }) =>
+  //     list.map((s) => (callback ?? (_) => _)(s as Type)).toList();
 }

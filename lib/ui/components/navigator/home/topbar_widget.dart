@@ -7,6 +7,8 @@ class HomeTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme =
+        Theme.of(context).textTheme.apply(bodyColor: colorScheme.onSurface);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,10 +30,7 @@ class HomeTopBar extends StatelessWidget {
             ),
             title: Text(
               "Search",
-              style: TextStyle(
-                color: colorScheme.onSurface,
-                fontSize: 16,
-              ),
+              style: textTheme.titleMedium,
             ),
           ),
         ),
@@ -112,12 +111,12 @@ class HomeTopBar extends StatelessWidget {
             //         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             //         height: 48,
             //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
-            //         color: colorScheme.secondaryContainer.withOpacity(.5),
+            //         color: colorScheme.primaryContainer.withOpacity(.5),
             // child: Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //   crossAxisAlignment: CrossAxisAlignment.center,
             //   mainAxisSize: MainAxisSize.max,
-            //   children: [Text("Search", style: TextStyle(color: colorScheme.onSecondaryContainer,fontSize: 14,),),],
+            //   children: [Text("Search", style: TextStyle(color: colorScheme.onPrimaryContainer,fontSize: 14,),),],
             // )
             //       ),
             // TextField(
@@ -128,7 +127,7 @@ class HomeTopBar extends StatelessWidget {
             //   style: TextStyle(
             //     fontWeight: FontWeight.w400,
             //     fontSize: 14,
-            //     color: colorScheme.onSecondaryContainer,
+            //     color: colorScheme.onPrimaryContainer,
             //   ),
             //   // const TextStyle(
             //   //   fontWeight: FontWeight.w400,
@@ -167,11 +166,11 @@ class HomeTopBar extends StatelessWidget {
             //     //   color: Color(0xff000000),
             //     // ),
             //     filled: true,
-            //     fillColor: colorScheme.secondaryContainer.withOpacity(.5),
+            //     fillColor: colorScheme.primaryContainer.withOpacity(.5),
             //     isDense: false,
             //     contentPadding:
             //         const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             //     suffixIcon: Icon(const Icon(Icons.search_outlined),
-            //         color: colorScheme.onSecondaryContainer, size: 24,),
+            //         color: colorScheme.onPrimaryContainer, size: 24,),
             //   ),
             // ),

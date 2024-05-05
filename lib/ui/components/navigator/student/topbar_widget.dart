@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/pages/settings/svg_theme.dart';
+import 'package:student/ui/pages/settings/themes.dart';
 
 class StudentTopBar extends StatelessWidget {
   const StudentTopBar({super.key});
@@ -21,9 +22,7 @@ class StudentTopBar extends StatelessWidget {
           ),
           "",
           (context) {
-            // Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => target,
-            // ));
+            Options.goto(context, const SettingsThemesPage());
           },
         ),
         Options.notifications,
@@ -31,10 +30,10 @@ class StudentTopBar extends StatelessWidget {
           .map(
             (Option o) => IconOption(
               o,
-              iconColor: colorScheme.onSecondaryContainer,
+              iconColor: colorScheme.onPrimaryContainer,
               iconSize: 24,
               // padding: const EdgeInsets.all(8),
-              // backgroundColor: colorScheme.secondaryContainer,
+              // backgroundColor: colorScheme.primaryContainer,
             ),
           )
           .toList(),

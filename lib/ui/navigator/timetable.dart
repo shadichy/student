@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/timetable/major_info_widget.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event_widget.dart';
-import 'package:student/ui/components/navigator/timetable/result_summary_widget.dart';
 import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
 
@@ -32,7 +30,7 @@ class TimetablePage extends StatelessWidget {
                   dayOfWeek: 4,
                   courseID: "classID1",
                   teacherID: "teacherID",
-                  room: "room",
+                  room: "A929",
                   timeStampType: TimeStampType.offline,
                 )
               ],
@@ -46,15 +44,15 @@ class TimetablePage extends StatelessWidget {
                   dayOfWeek: 5,
                   courseID: "classID2",
                   teacherID: "teacherID",
-                  room: "room",
+                  room: "B666",
                   timeStampType: TimeStampType.offline,
                 )
               ],
             ),
           ]),
         ),
-        const ResultSummaryWidget(),
-        const MajorInfoWidget(),
+        // const ResultSummaryWidget(),
+        // const MajorInfoWidget(),
         const Divider(
           color: Colors.transparent,
           height: 16,

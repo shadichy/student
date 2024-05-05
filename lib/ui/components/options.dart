@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/pages/learning/finance.dart';
+import 'package:student/ui/pages/settings/settings.dart';
 
 abstract final class Options {
-  static void _goto(BuildContext context, Widget target) {
+  static void goto(BuildContext context, Widget target) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => target,
     ));
@@ -38,14 +39,16 @@ abstract final class Options {
   static Option settings = Option(
     const Icon(Icons.settings_outlined),
     "Cài đặt",
-    (BuildContext context) {},
+    (BuildContext context) {
+      goto(context, const SettingsPage());
+    },
   );
 
   static Option student_finance = Option(
     const Icon(Icons.credit_card_outlined),
     "Tài chính sinh viên",
     (BuildContext context) {
-      _goto(context, const Finance());
+      goto(context, const Finance());
     },
   );
 

@@ -17,17 +17,15 @@ class SchoolTopBar extends StatelessWidget {
           (context) => Scaffold.of(context).openDrawer(),
         ),
         Options.notifications,
-      ]
-          .map(
-            (Option o) => IconOption(
-              o,
-              iconColor: colorScheme.onSecondaryContainer,
-              iconSize: 24,
-              // padding: const EdgeInsets.all(8),
-              // backgroundColor: colorScheme.secondaryContainer,
-            ),
-          )
-          .toList(),
+      ].map((Option o) {
+        return IconOption(
+          o,
+          iconColor: colorScheme.onPrimaryContainer,
+          iconSize: 24,
+          // padding: const EdgeInsets.all(8),
+          // backgroundColor: colorScheme.primaryContainer,
+        );
+      }).toList(),
     );
   }
 }

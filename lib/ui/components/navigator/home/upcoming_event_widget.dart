@@ -14,7 +14,7 @@ class HomeNextupClassWidget extends StatefulWidget {
 class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
   List<NextupClassView> classStamps = [
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -22,7 +22,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -30,7 +30,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -38,7 +38,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -46,7 +46,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -54,7 +54,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -62,7 +62,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -70,7 +70,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -78,7 +78,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -86,7 +86,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       room: 'A709',
     ),
     NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+      classId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -99,7 +99,6 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
 
     List<Widget> content = [
       ...classStamps.map((c) => HomeNextupClassCard(c)),

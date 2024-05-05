@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/upcoming_event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
-import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 

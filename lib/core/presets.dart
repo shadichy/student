@@ -1,4 +1,3 @@
-
 const List<List<int>> classTimeStamps = [
   [25200, 28200],
   [28800, 31800],

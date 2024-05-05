@@ -20,7 +20,9 @@ class SchoolPage extends StatelessWidget {
       appBar: const SchoolTopBar(),
       body: [
         // const SchoolTopBar(),
-        const SchoolGlance(AssetImage("assets/images/thanglonguni.png")),
+        SchoolGlance(AssetImage(
+          "assets/images/thanglonguni${Theme.of(context).brightness == Brightness.light ? '' : "_dark"}.png",
+        )),
         const SchoolSearchBar(),
         const UpdatedNews([
           URL(

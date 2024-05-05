@@ -32,7 +32,10 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
       ...widget.options.map(
         (Option e) => TextOption(
           e,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
           color: colorScheme.onSurface,
           backgroundColor: Colors.transparent,
           fontWeight: FontWeight.w700,
@@ -44,8 +47,8 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
           Options.add("Thêm shortcut", (BuildContext context) {}),
           margin: const EdgeInsets.symmetric(vertical: 8),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          color: colorScheme.onSecondaryContainer,
-          backgroundColor: colorScheme.secondaryContainer,
+          color: colorScheme.onPrimaryContainer,
+          backgroundColor: colorScheme.primaryContainer,
           fontWeight: FontWeight.w700,
           textAlign: TextAlign.center,
           iconSize: 24,

@@ -28,27 +28,20 @@ class _NotifExpandState extends State<NotifExpand> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextStyle genericStyle({double? fontSize, FontWeight? fontWeight}) {
-      return TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: colorScheme.onPrimaryContainer,
-      );
-    }
+    TextTheme textTheme = Theme.of(context)
+        .textTheme
+        .apply(bodyColor: colorScheme.onPrimaryContainer);
 
-    TextStyle titleStyle = genericStyle(
+    TextStyle titleStyle = textTheme.bodyLarge!.copyWith(
+      // 16
       fontWeight: FontWeight.bold,
-      fontSize: 16,
     );
-    TextStyle contentStyle = genericStyle(
-      fontSize: 14,
+    TextStyle contentStyle = textTheme.bodyMedium!; // 14
+    TextStyle noteStyle = textTheme.bodySmall!.copyWith(
+      // 12
+      fontWeight: FontWeight.w200,
     );
-    TextStyle noteStyle = genericStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w100,
-    );
-    TextStyle linkStyle = genericStyle(
-      fontSize: 14,
+    TextStyle linkStyle = contentStyle.copyWith(
       fontWeight: FontWeight.w600,
     );
 
@@ -125,7 +118,7 @@ class _NotifExpandState extends State<NotifExpand> {
                       ? Icons.keyboard_arrow_up_outlined
                       : Icons.keyboard_arrow_down_outlined,
                   size: 16,
-                  color: colorScheme.onSecondaryContainer),
+                  color: colorScheme.onPrimaryContainer),
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.primary.withOpacity(0.05),
               ),
@@ -149,7 +142,7 @@ class NotifExpandableBox extends StatefulWidget {
 }
 
 class _NotifExpandableBoxState extends State<NotifExpandableBox> {
-  late List<Notif> notifications;
+  late List<Notif> notifications = widget.notifications;
   bool isExpanded = false;
 
   // void add(Notif value) {
@@ -173,7 +166,10 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    notifications = widget.notifications;
+    TextTheme textTheme = Theme.of(context)
+        .textTheme
+        .apply(bodyColor: colorScheme.onPrimaryContainer);
+    // notifications = widget.notifications;
     // print(widget.notifications);
     Widget titlePreview(Notif notif) {
       return Padding(
@@ -182,20 +178,15 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
           children: [
             Text(
               "${notif.title}  ",
-              style: TextStyle(
+              style: textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: colorScheme.onPrimaryContainer,
               ),
               overflow: TextOverflow.ellipsis,
             ),
             Expanded(
               child: Text(
                 notif.content,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: colorScheme.onPrimaryContainer,
-                ),
+                style: textTheme.bodyMedium,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -227,9 +218,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     "Latest Notifications",
-                    style: TextStyle(
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    style: textTheme.labelLarge,
                   ),
                 ),
               ),
@@ -243,7 +232,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                           ? Icons.keyboard_arrow_up_outlined
                           : Icons.keyboard_arrow_down_outlined,
                       size: 16,
-                      color: colorScheme.onSecondaryContainer),
+                      color: colorScheme.onPrimaryContainer),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.primary.withOpacity(0.05),
                   ),

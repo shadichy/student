@@ -51,7 +51,7 @@ final class MainNavigators {
 }
 
 final class HelpPages {
-  static MdviewerPage mdviewer = MdviewerPage();
+  static MDViewerPage mdViewer = MDViewerPage();
 }
 
 final class InfoPages {

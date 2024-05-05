@@ -39,13 +39,15 @@ dependencies:
   google_fonts: ^6.1.0
   expandable: ^5.0.1
   intl: ^0.19.0
-  web: ^0.5.0
-  sheet: 1.0.0-pre
+  sheet: ^1.0.0
   draggable_bottom_sheet: ^1.0.2
   bitcount: ^0.3.0
   flutter_svg: ^2.0.10+1
   http: ^1.2.1
+  two_dimensional_scrollables: ^0.2.1
   # sheet: ^0.0.4+1
+  system_theme: ^2.3.1
+  scroll_snap_list: ^0.9.1
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +59,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+  web: ^0.5.0
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +76,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/thanglonguni.png
+    - assets/images/thanglonguni_dark.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

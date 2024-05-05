@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:student/core/configs.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 // import 'package:student/core/databases/teachers.dart';
@@ -10,8 +11,8 @@ import 'package:student/core/databases/user.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/connect.dart';
 // import 'package:google_fonts/google_fonts.dart';
-import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/pages/init/main.dart';
+import 'package:system_theme/system_theme.dart';
 
 class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
@@ -36,50 +37,64 @@ class _StudentAppState extends State<StudentApp> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.red,
-      brightness: Brightness.light,
-    );
-    Color bgColor = colorScheme.primary.withOpacity(0.05);
-    Color textColor = colorScheme.onSurface;
-    ThemeData baseTheme = ThemeData(
-      colorScheme: colorScheme,
-      useMaterial3: true,
-      splashColor: bgColor,
-      hoverColor: bgColor,
-      focusColor: bgColor,
-      highlightColor: bgColor,
-      // scaffoldBackgroundColor: colorScheme.surface,
-      cardTheme: CardTheme(
-        color: bgColor,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
-    ThemeData buildTheme() {
-      return baseTheme.copyWith(
-          textTheme:
-              // GoogleFonts.getTextTheme(
-              //   "Varela Round",
-              //   baseTheme.textTheme,
-              // )
-              baseTheme.textTheme.apply(
-            displayColor: textColor,
-            bodyColor: textColor,
+    ThemeData buildTheme(Brightness brightness) {
+      ColorScheme colorScheme = ColorScheme.fromSeed(
+        seedColor: AppConfig().getConfig<bool>("theme.systemTheme") == true
+            ? SystemTheme.accentColor.accent
+            : Color(
+                AppConfig().getConfig<int>("theme.accentColor") ??
+                    Colors.deepOrange.value,
+              ),
+        brightness: brightness,
+      );
+      Color bgColor = colorScheme.primary.withOpacity(0.05);
+      Color textColor = colorScheme.onSurface;
+      ThemeData baseTheme = ThemeData(
+        colorScheme: colorScheme,
+        useMaterial3: true,
+        splashColor: bgColor,
+        hoverColor: bgColor,
+        focusColor: bgColor,
+        highlightColor: bgColor,
+        // scaffoldBackgroundColor: colorScheme.surface,
+        cardTheme: CardTheme(
+          color: bgColor,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          bottomNavigationBarTheme: baseTheme.bottomNavigationBarTheme.copyWith(
-              backgroundColor: colorScheme.primary.withOpacity(0.08)));
+        ),
+      );
+      return baseTheme.copyWith(
+        textTheme: baseTheme.textTheme.apply(
+          displayColor: textColor,
+          bodyColor: textColor,
+        ),
+      );
     }
 
     initialize();
-    m3SeededColor(baseTheme.colorScheme.primary);
+    // m3SeededColor(baseTheme.colorScheme.primary);
 
     return MaterialApp(
       title: 'Student',
-      theme: buildTheme(),
-      home: initialized ? const App() : const Initializer(),
+      theme: buildTheme(Brightness.light),
+      darkTheme: buildTheme(Brightness.dark),
+      themeMode: ThemeMode.values[
+          AppConfig().getConfig<bool>("theme.systemTheme") == true
+              ? 0
+              : AppConfig().getConfig<int>("theme.themeMode") ?? 1],
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            systemNavigationBarColor: /* colorScheme.primary.withOpacity(0.08) */
+                Colors.transparent,
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness:
+                Theme.of(context).brightness == Brightness.light
+                    ? Brightness.dark
+                    : Brightness.light,
+          ),
+          child: initialized ? const App() : const Initializer()),
       // home: const App(),
     );
   }
@@ -87,7 +102,11 @@ class _StudentAppState extends State<StudentApp> {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPrefs.initialize();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  await SharedPrefs.initialize();
+  await AppConfig().initialize();
+  if (AppConfig().getConfig<bool>("theme.systemTheme") == true) {
+    await SystemTheme.accentColor.load();
+  }
   runApp(const RestartWidget(child: StudentApp()));
 }

@@ -34,7 +34,7 @@ class TimetableTopBar extends StatelessWidget {
           Options.search,
           iconColor: colorScheme.onSurface,
           iconSize: 20,
-          // backgroundColor: colorScheme.secondaryContainer,
+          // backgroundColor: colorScheme.primaryContainer,
           // padding: const EdgeInsets.all(8),
         ),
       ],

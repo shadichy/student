@@ -122,6 +122,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
           color: colorScheme.onSurface,
         ),
         ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 16),
           itemBuilder: ((context, index) {
             return TimetableUpcomingCardAlt(classStamps[index]);

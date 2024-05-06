@@ -69,8 +69,9 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
               children: [
                 Text(
                   "Reminders",
-                  style: textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 IconOption(
                   Options.add(
@@ -89,55 +90,68 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                     }),
                   ),
                   padding: EdgeInsets.zero,
-                  iconSize: 24,
+                  iconSize: 32,
                   iconColor: colorScheme.primary,
                 )
               ],
             ),
           ),
           // list of reminders
-          ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            itemBuilder: ((context, index) {
-              Map<String, dynamic> data = reminders[index];
-              return ReminderCard(
-                Duration(
-                  minutes: data["duration"] is int
-                      ? data["duration"]
-                      : int.tryParse("${data['duration']}") ?? 0,
+
+          if (reminders.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Press + button to add new reminder",
+                style: textTheme.bodySmall?.apply(
+                  color: colorScheme.onSurface.withOpacity(0.5),
                 ),
-                disabled: data["disabled"] is bool
-                    ? data["disabled"]
-                    : bool.tryParse("${data['disabled']}") ?? false,
-                vibrate: data["vibrate"] is bool
-                    ? data["vibrate"]
-                    : bool.tryParse("${data['vibrate']}") ?? true,
-                alarmMode: AlarmMode.values[data["alarmMode"] is int
-                    ? data["alarmMode"]
-                    : int.tryParse("${data['alarmMode']}") ?? 0],
-                alarm: data["alarm"] as String?,
-                action: ((actionType, value) {
-                  switch (actionType) {
-                    case ActionType.change:
-                      reminderChange(index, value!);
-                      break;
-                    case ActionType.delete:
-                      reminderDelete(index);
-                      break;
-                  }
-                }),
-              );
-            }),
-            separatorBuilder: ((context, index) {
-              return const Divider(
-                color: Colors.transparent,
-                height: 8,
-              );
-            }),
-            itemCount: reminders.length,
-            // scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-          ),
+              ),
+            )
+          else
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              itemBuilder: ((context, index) {
+                Map<String, dynamic> data = reminders[index];
+                return ReminderCard(
+                  Duration(
+                    minutes: data["duration"] is int
+                        ? data["duration"]
+                        : int.tryParse("${data['duration']}") ?? 0,
+                  ),
+                  disabled: data["disabled"] is bool
+                      ? data["disabled"]
+                      : bool.tryParse("${data['disabled']}") ?? false,
+                  vibrate: data["vibrate"] is bool
+                      ? data["vibrate"]
+                      : bool.tryParse("${data['vibrate']}") ?? true,
+                  alarmMode: AlarmMode.values[data["alarmMode"] is int
+                      ? data["alarmMode"]
+                      : int.tryParse("${data['alarmMode']}") ?? 0],
+                  alarm: data["alarm"] as String?,
+                  action: ((actionType, value) {
+                    switch (actionType) {
+                      case ActionType.change:
+                        reminderChange(index, value!);
+                        break;
+                      case ActionType.delete:
+                        reminderDelete(index);
+                        break;
+                    }
+                  }),
+                );
+              }),
+              separatorBuilder: ((context, index) {
+                return const Divider(
+                  color: Colors.transparent,
+                  height: 8,
+                );
+              }),
+              itemCount: reminders.length,
+              // scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+            ),
           // ReminderCard(Duration(minutes: 30), action: (actionType) {}),
           //reminder default sound
           Opt(
@@ -150,12 +164,16 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
           // silence after
           // snooze length
           Container(
-            padding: const EdgeInsets.all(16).copyWith(top: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(
+              top: 32,
+              bottom: 8,
+            ),
             alignment: Alignment.centerLeft,
             child: Text(
               "Notification",
-              style:
-                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           // notification sound
@@ -179,6 +197,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                 headerBuilder: (context, b) =>
                     const SubPage(label: "Notification priority"),
                 body: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     String dataID = "notif.${expansionNotifPrior[index].key}";
                     return Opt(

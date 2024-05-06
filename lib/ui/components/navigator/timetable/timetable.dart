@@ -141,14 +141,23 @@ class TimetableBox extends StatelessWidget {
                       (() {
                         int current = now.difference(date).inSeconds;
                         int startAt = 0;
-                        while (current > classTimeStamps[startAt][0] &&
-                            startAt < classTimeStamps.length - 1) {
+                        while (current > classTimeStamps[startAt][0]) {
                           startAt++;
                         }
-                        startAt--;
-                        double diff = (current - classTimeStamps[startAt][0]) /
-                            (classTimeStamps[startAt][1] -
-                                classTimeStamps[startAt][0]);
+                        if (startAt >= classTimeStamps.length) {
+                          startAt = classTimeStamps.length - 1;
+                          if (current > classTimeStamps[startAt][1]) {
+                            return classTimeStamps.length;
+                          }
+                        } else {
+                          startAt--;
+                        }
+                        double diff = (current > classTimeStamps[startAt][1] &&
+                                current < classTimeStamps[startAt][0])
+                            ? 1
+                            : ((current - classTimeStamps[startAt][0]) /
+                                (classTimeStamps[startAt][1] -
+                                    classTimeStamps[startAt][0]));
                         return diff + startAt;
                       })() -
                   2,

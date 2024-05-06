@@ -17,7 +17,7 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
       body: SingleChildScrollView(
         child: Column(children: [
           const HeadLabel("Miscellaneous"),
-          // timetable label`
+          // timetable label
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -25,8 +25,9 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
               children: [
                 Text(
                   "Timetable",
-                  style: textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -36,7 +37,14 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
             label: "Start week on",
             desc: "Sunday",
             buttonType: ButtonType.select,
-            action: ((context) {}),
+            action: ((context) {
+              showDialog<int>(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog();
+                },
+              ).then((value) => null);
+            }),
           )
         ]),
       ),

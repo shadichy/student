@@ -27,11 +27,12 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
       SectionLabel(
         widget.headingLabel,
         Options.add("", (BuildContext context) {}),
-        fontWeight: FontWeight.w900,
-        textStyle: textTheme.titleLarge,
-        color: colorScheme.onSurface,
+        // fontWeight: FontWeight.w300,
+        textStyle: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        color: colorScheme.onPrimaryContainer,
       ),
       ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
           return SubPage(
             label: widget.options[index].label,
@@ -52,7 +53,7 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
         separatorBuilder: ((context, index) {
           return const Divider(
             color: Colors.transparent,
-            height: 8,
+            height: 4,
           );
         }),
         itemCount: widget.options.length,

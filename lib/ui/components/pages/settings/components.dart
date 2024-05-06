@@ -47,41 +47,17 @@ class SubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    Widget mainText = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(label, style: textTheme.titleLarge),
-        if (desc is String) Text(desc!, style: textTheme.titleSmall)
-      ],
+    return ListTile(
+      minVerticalPadding: 12,
+      title: Text(label, style: textTheme.bodyLarge),
+      subtitle: desc != null ? Text(desc!, style: textTheme.bodyMedium) : null,
+      leading: icon,
+      onTap: target != null
+          ? () => Options.goto(context, target!)
+          : action != null
+              ? () => action!(context)
+              : null,
     );
-    Widget content = Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 4,
-      ),
-      height: 64,
-      child: icon != null
-          ? Row(children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: icon,
-              ),
-              mainText
-            ])
-          : mainText,
-    );
-    return (target != null || action != null)
-        ? InkWell(
-            onTap: () {
-              target != null
-                  ? Options.goto(context, target!)
-                  : action!(context);
-            },
-            child: content,
-          )
-        : content;
   }
 }
 
@@ -143,49 +119,22 @@ class _OptState extends State<Opt> {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextTheme textTheme = Theme.of(context).textTheme;
-    textTheme = widget.disabled
-        ? textTheme.apply(bodyColor: colorScheme.onSurface.withOpacity(0.38))
-        : textTheme;
+    TextTheme textTheme = Theme.of(context).textTheme.apply(
+        bodyColor:
+            widget.disabled ? colorScheme.onSurface.withOpacity(0.38) : null);
 
-    Widget mainTexts = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          widget.label,
-          style: textTheme.titleLarge,
-        ),
-        if (widget.desc is String)
-          Text(
-            widget.desc!,
-            style: textTheme.titleSmall,
-          )
-      ],
-    );
-
-    Widget rendered = widget.icon != null
-        ? Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: widget.icon,
-            ),
-            mainTexts
-          ])
-        : mainTexts;
-
-    Widget mainContent = Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 4,
-      ),
-      height: 64,
-      child: widget.buttonType == ButtonType.switcher
+    return ListTile(
+      // contentPadding: const EdgeInsets.symmetric(vertical: 8),
+      minVerticalPadding: 12,
+      title: Text(widget.label, style: textTheme.bodyLarge),
+      subtitle: widget.desc != null
+          ? Text(widget.desc!, style: textTheme.bodyMedium)
+          : null,
+      leading: widget.icon,
+      trailing: widget.buttonType == ButtonType.switcher
           ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                rendered,
                 if (widget.switcherType == SwitcherType.extended)
                   SizedBox(
                     height: 48,
@@ -201,38 +150,33 @@ class _OptState extends State<Opt> {
                 )
               ],
             )
-          : rendered,
-    );
-
-    Widget mainInkBox = InkWell(
-      onTap: () {
-        switch (widget.buttonType) {
-          case ButtonType.page:
-            Options.goto(context, widget.target!);
-            break;
-          case ButtonType.select:
-            widget.action!(context);
-            break;
-          case ButtonType.switcher:
-            switch (widget.switcherType) {
-              case SwitcherType.extended:
-                if (widget.action != null) {
-                  widget.action!(context);
-                } else {
+          : null,
+      onTap: widget.disabled
+          ? null
+          : () {
+              switch (widget.buttonType) {
+                case ButtonType.page:
                   Options.goto(context, widget.target!);
-                }
-                break;
-              default:
-                switcherChangeState(!switcherDefaultValue!);
-                break;
-            }
-            break;
-        }
-      },
-      child: mainContent,
+                  break;
+                case ButtonType.select:
+                  widget.action!(context);
+                  break;
+                case ButtonType.switcher:
+                  switch (widget.switcherType) {
+                    case SwitcherType.extended:
+                      if (widget.action != null) {
+                        widget.action!(context);
+                      } else {
+                        Options.goto(context, widget.target!);
+                      }
+                      break;
+                    default:
+                      switcherChangeState(!switcherDefaultValue!);
+                      break;
+                  }
+                  break;
+              }
+            },
     );
-
-    return widget.disabled ? mainContent : mainInkBox;
-    // };
   }
 }

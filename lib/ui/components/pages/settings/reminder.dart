@@ -177,25 +177,28 @@ class _ReminderCardState extends State<ReminderCard> {
                     padding: const EdgeInsets.all(4),
                     width: MediaQuery.of(context).size.width / 2,
                     height: _iconSize + 8,
-                    child: Row(children: [
-                      Icon(
-                        Icons.notifications_active,
-                        size: _iconSize,
-                        color: alarmMode != AlarmMode.silent
-                            ? colorScheme.onPrimaryContainer
-                            : colorScheme.onSurface.withOpacity(0.1),
-                      ),
-                      const VerticalDivider(
-                        width: 2,
-                        color: Colors.transparent,
-                      ),
-                      Text(
-                        ["Default", "Silent", alarm ?? ""][alarmMode.index],
-                        style: textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                      ),
-                    ]),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.notifications_active,
+                          size: _iconSize,
+                          color: alarmMode != AlarmMode.silent
+                              ? colorScheme.onPrimaryContainer
+                              : colorScheme.onSurface.withOpacity(0.1),
+                        ),
+                        const VerticalDivider(
+                          width: 2,
+                          color: Colors.transparent,
+                        ),
+                        Text(
+                          ["Default", "Silent", alarm ?? ""][alarmMode.index],
+                          style: textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const VerticalDivider(

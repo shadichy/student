@@ -128,7 +128,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
         // SectionLabel(
         //   "Next-up classes",
         //   Options.forward("", (BuildContext context) {}),
-        //   fontWeight: FontWeight.w900,
+        //   fontWeight: FontWeight.w300,
         //   fontSize: 20,
         //   color: colorScheme.onSurface,
         // ),

@@ -46,15 +46,10 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SingleChildScrollView(
         child: Column(children: [
           const HeadLabel("Settings"),
-          ListView.separated(
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: ((context, index) => subPages[index]),
-            separatorBuilder: ((context, index) {
-              return const Divider(
-                height: 8,
-                color: Colors.transparent,
-              );
-            }),
             itemCount: subPages.length,
           ),
         ]),

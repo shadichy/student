@@ -67,8 +67,9 @@ class _UpdatedNewsState extends State<UpdatedNews> {
         SectionLabel(
           "Tài liệu mới cập nhật",
           Options.forward("", (BuildContext context) {}),
-          fontWeight: FontWeight.w900,
-          textStyle: textTheme.titleLarge,
+          // fontWeight: FontWeight.w300,
+          textStyle:
+              textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           color: colorScheme.onPrimaryContainer,
         ),
         SizedBox(

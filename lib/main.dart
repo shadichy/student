@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
@@ -17,12 +18,51 @@ import 'package:system_theme/system_theme.dart';
 class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
 
+  static void action(BuildContext context, AppAction action) {
+    context.findAncestorStateOfType<_StudentAppState>()?.action(action);
+  }
+
   @override
   State<StudentApp> createState() => _StudentAppState();
 }
 
 class _StudentAppState extends State<StudentApp> {
   bool initialized = SharedPrefs.getString("user") is String;
+
+  Key key = UniqueKey();
+
+  late Color seed;
+  late int mode;
+  late String? font;
+
+  void action(AppAction action) {
+    setState(() {
+      switch (action) {
+        case AppAction.init:
+          initialized = SharedPrefs.getString("user") is String;
+          break;
+        case AppAction.reload:
+          setTheme();
+          break;
+      }
+    });
+  }
+
+  void setTheme() {
+    bool useSystem = AppConfig().getConfig<bool>("theme.systemTheme") == true;
+    seed = useSystem
+        ? SystemTheme.accentColor.accent
+        : Color(AppConfig().getConfig<int>("theme.accentColor") ??
+            Colors.deepOrange.value);
+    mode = useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
+    font = useSystem ? null : AppConfig().getConfig<int>("theme.appFont");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setTheme();
+  }
 
   Future<void> initialize() async {
     if (initialized) {
@@ -39,12 +79,7 @@ class _StudentAppState extends State<StudentApp> {
   Widget build(BuildContext context) {
     ThemeData buildTheme(Brightness brightness) {
       ColorScheme colorScheme = ColorScheme.fromSeed(
-        seedColor: AppConfig().getConfig<bool>("theme.systemTheme") == true
-            ? SystemTheme.accentColor.accent
-            : Color(
-                AppConfig().getConfig<int>("theme.accentColor") ??
-                    Colors.deepOrange.value,
-              ),
+        seedColor: seed,
         brightness: brightness,
       );
       Color bgColor = colorScheme.primary.withOpacity(0.05);
@@ -66,7 +101,10 @@ class _StudentAppState extends State<StudentApp> {
         ),
       );
       return baseTheme.copyWith(
-        textTheme: baseTheme.textTheme.apply(
+        textTheme: (font != null
+                ? GoogleFonts.getTextTheme(font!, baseTheme.textTheme)
+                : baseTheme.textTheme)
+            .apply(
           displayColor: textColor,
           bodyColor: textColor,
         ),
@@ -74,17 +112,15 @@ class _StudentAppState extends State<StudentApp> {
     }
 
     initialize();
-    // m3SeededColor(baseTheme.colorScheme.primary);
 
-    return MaterialApp(
-      title: 'Student',
-      theme: buildTheme(Brightness.light),
-      darkTheme: buildTheme(Brightness.dark),
-      themeMode: ThemeMode.values[
-          AppConfig().getConfig<bool>("theme.systemTheme") == true
-              ? 0
-              : AppConfig().getConfig<int>("theme.themeMode") ?? 1],
-      home: AnnotatedRegion<SystemUiOverlayStyle>(
+    return KeyedSubtree(
+      key: key,
+      child: MaterialApp(
+        title: 'Student',
+        theme: buildTheme(Brightness.light),
+        darkTheme: buildTheme(Brightness.dark),
+        themeMode: ThemeMode.values[mode],
+        home: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
             systemNavigationBarColor: /* colorScheme.primary.withOpacity(0.08) */
                 Colors.transparent,
@@ -94,8 +130,9 @@ class _StudentAppState extends State<StudentApp> {
                     ? Brightness.dark
                     : Brightness.light,
           ),
-          child: initialized ? const App() : const Initializer()),
-      // home: const App(),
+          child: initialized ? const App() : const Initializer(),
+        ),
+      ),
     );
   }
 }
@@ -108,5 +145,5 @@ void main() async {
   if (AppConfig().getConfig<bool>("theme.systemTheme") == true) {
     await SystemTheme.accentColor.load();
   }
-  runApp(const RestartWidget(child: StudentApp()));
+  runApp(const StudentApp());
 }

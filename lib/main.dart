@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 // import 'package:student/core/databases/teachers.dart';
@@ -16,12 +17,36 @@ import 'package:student/ui/pages/init/main.dart';
 class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
 
+  static void action(BuildContext context, AppAction action) {
+    context.findAncestorStateOfType<_StudentAppState>()?.action(action);
+  }
+
   @override
   State<StudentApp> createState() => _StudentAppState();
 }
 
 class _StudentAppState extends State<StudentApp> {
   bool initialized = SharedPrefs.getString("user") is String;
+
+  Key key = UniqueKey();
+
+  static dynamic getter<T>(String g, T defaultValue) =>
+      jsonDecode(SharedPrefs.getString("config") ?? "{}")[g] ?? defaultValue;
+
+  Color color = getter("theme.colorPalette", Colors.red.value);
+
+  void action(AppAction action) {
+    setState(() {
+      switch (action) {
+        case AppAction.init:
+          initialized = SharedPrefs.getString("user") is String;
+          break;
+        case AppAction.reload:
+          color = getter<int>("theme.colorPalette", Colors.red.value);
+          break;
+      }
+    });
+  }
 
   Future<void> initialize() async {
     if (initialized) {
@@ -34,10 +59,9 @@ class _StudentAppState extends State<StudentApp> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  ThemeData buildTheme(Color color) {
     ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.red,
+      seedColor: color,
       brightness: Brightness.light,
     );
     Color bgColor = colorScheme.primary.withOpacity(0.05);
@@ -58,28 +82,32 @@ class _StudentAppState extends State<StudentApp> {
         ),
       ),
     );
-    ThemeData buildTheme() {
-      return baseTheme.copyWith(
-        textTheme:
-            // GoogleFonts.getTextTheme(
-            //   "Varela Round",
-            //   baseTheme.textTheme,
-            // )
-            baseTheme.textTheme.apply(
-          displayColor: textColor,
-          bodyColor: textColor,
-        ),
-      );
-    }
+    return baseTheme.copyWith(
+      textTheme:
+          // GoogleFonts.getTextTheme(
+          //   "Varela Round",
+          //   baseTheme.textTheme,
+          // )
+          baseTheme.textTheme.apply(
+        displayColor: textColor,
+        bodyColor: textColor,
+      ),
+    );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     initialize();
-    m3SeededColor(baseTheme.colorScheme.primary);
+    m3SeededColor(buildTheme(color).colorScheme.primary);
 
-    return MaterialApp(
-      title: 'Student',
-      theme: buildTheme(),
-      home: initialized ? const App() : const Initializer(),
-      // home: const App(),
+    return KeyedSubtree(
+      key: key,
+      child: MaterialApp(
+        title: 'Student',
+        theme: buildTheme(color),
+        home: initialized ? const App() : const Initializer(),
+        // home: const App(),
+      ),
     );
   }
 }
@@ -87,5 +115,5 @@ class _StudentAppState extends State<StudentApp> {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.initialize();
-  runApp(RestartWidget(child: const StudentApp()));
+  runApp(const RestartWidget(child: StudentApp()));
 }

@@ -5,23 +5,23 @@ import 'package:student/ui/components/pages/event_detail.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-class SubjectPage extends StatelessWidget implements TypicalPage {
+class SubjectCoursePage extends StatelessWidget implements TypicalPage {
   @override
-  Icon get icon => const Icon(Symbols.subject);
+  Icon get icon => const Icon(Symbols.library_books);
 
   @override
-  String get title => subject.name;
+  String get title => course.courseID;
 
-  final Subject subject;
-  const SubjectPage(this.subject, {super.key});
+  final SubjectCourse course;
+  const SubjectCoursePage(this.course, {super.key});
 
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
     // TextTheme textTheme = Theme.of(context).textTheme;
     return const EventPage(
-      label: "Thông tin môn học",
-      title: "Ngôn ngữ lập trình",
+      label: "Thông tin khoá học",
+      title: "NNLAPTRINH.8.1_BT",
       children: [],
     );
   }

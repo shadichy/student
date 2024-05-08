@@ -28,7 +28,7 @@ final class StudyPlan {
   }
 
   late final DateTime startDate; // must be start of week
-  late final List<SemesterPlan> table;
+  late final Iterable<SemesterPlan> table;
 
   // static List<DayType> _full(DayType type) => List.generate(7, (_) => type);
 
@@ -52,21 +52,19 @@ final class StudyPlan {
     table = MiscFns.listType<Map<String, dynamic>>(parsedInfo["plan"] as List)
         .asMap()
         .map((l, s) {
-          return MapEntry(
-            l,
-            SemesterPlan(
-              currentSemester: TLUSemester.values[l],
-              timetable: MiscFns.listType<List>(s["week"] as List).map((w) {
-                return MiscFns.listType<int>(w)
-                    .map((i) => DayType.values[i])
-                    .toList();
-              }).toList(),
-              studyWeeks: MiscFns.listType<int>(s["studyWeek"] as List),
-              startDate: MiscFns.epoch(s["startDate"] as int),
-            ),
-          );
-        })
-        .values
-        .toList();
+      return MapEntry(
+        l,
+        SemesterPlan(
+          currentSemester: TLUSemester.values[l],
+          timetable: MiscFns.listType<List>(s["week"] as List).map((w) {
+            return MiscFns.listType<int>(w)
+                .map((i) => DayType.values[i])
+                .toList();
+          }).toList(),
+          studyWeeks: MiscFns.listType<int>(s["studyWeek"] as List),
+          startDate: MiscFns.epoch(s["startDate"] as int),
+        ),
+      );
+    }).values;
   }
 }

@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:student/ui/components/navigator/navigator.dart';
 
-class ToolsTimetableGeneratorPage extends StatelessWidget
-    implements TypicalPage {
+class InfoMajorPage extends StatelessWidget implements TypicalPage {
   @override
-  Icon get icon => const Icon(Symbols.calendar_add_on);
+  Icon get icon => const Icon(Symbols.architecture);
 
   @override
-  String get title => "Công cụ tạo lập thời khoá biểu";
+  String get title => "Chuyên ngành đào tạo";
 
-  const ToolsTimetableGeneratorPage({super.key});
+  const InfoMajorPage({super.key});
 
   @override
   Widget build(BuildContext context) {

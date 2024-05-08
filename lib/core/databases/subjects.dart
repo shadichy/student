@@ -5,6 +5,7 @@ import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/misc/iterable_extensions.dart';
 
 final class Subjects {
   Subjects._instance();
@@ -12,13 +13,13 @@ final class Subjects {
   factory Subjects() {
     return _subjectsInstance;
   }
-  late final List<BaseSubject> _subjects;
+  late final Iterable<BaseSubject> _subjects;
 
   BaseSubject? getSubject(String id) =>
-      _subjects.firstWhere((BaseSubject s) => s.subjectID == id);
+      _subjects.firstWhereIf((_) => _.subjectID == id);
 
   BaseSubject? getSubjectAlt(String id) =>
-      _subjects.firstWhere((BaseSubject s) => s.subjectAltID == id);
+      _subjects.firstWhereIf((_) => _.subjectAltID == id);
 
   Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("subjects");
@@ -27,7 +28,7 @@ final class Subjects {
       await SharedPrefs.setString("subjects", rawInfo);
     }
 
-    List<Map<String, dynamic>> parsedInfo = [];
+    Iterable<Map<String, dynamic>> parsedInfo = [];
 
     try {
       parsedInfo = jsonDecode(rawInfo);
@@ -35,16 +36,14 @@ final class Subjects {
       throw Exception("Failed to parse subjects info JSON from cache! $e");
     }
 
-    _subjects = parsedInfo.map<BaseSubject>(
-      (json) {
-        return BaseSubject(
-          subjectID: json["subjectID"] as String,
-          subjectAltID: json["subjectAltID"] as String,
-          name: json["name"] as String,
-          cred: json["cred"] as int,
-          dependencies: MiscFns.listType<String>(json["dependencies"] as List),
-        );
-      },
-    ).toList();
+    _subjects = parsedInfo.map<BaseSubject>((json) {
+      return BaseSubject(
+        subjectID: json["subjectID"] as String,
+        subjectAltID: json["subjectAltID"] as String,
+        name: json["name"] as String,
+        cred: json["cred"] as int,
+        dependencies: MiscFns.listType<String>(json["dependencies"] as List),
+      );
+    });
   }
 }

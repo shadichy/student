@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
@@ -24,7 +25,7 @@ class HomeTopBar extends StatelessWidget {
             ),
             tileColor: colorScheme.primary.withOpacity(0.05),
             leading: Icon(
-              Icons.search_outlined,
+              Symbols.search,
               color: colorScheme.onSurface,
               size: 20,
             ),
@@ -50,7 +51,7 @@ class HomeTopBar extends StatelessWidget {
         //         child: Row(
         //           children: [
         //             Icon(
-        //               const Icon(Icons.search_outlined),
+        //               const Icon(Symbols.search),
         //               color: colorScheme.onSurfaceVariant,
         //               size: 20,
         //             ),
@@ -92,8 +93,8 @@ class HomeTopBar extends StatelessWidget {
           width: 32,
           child: IconOption(
             Option(
-              const Icon(Icons.menu_outlined),
-              "",
+              'drawer',
+              const Icon(Symbols.menu),
               (context) => Scaffold.of(context).openDrawer(),
             ),
             iconSize: 20,

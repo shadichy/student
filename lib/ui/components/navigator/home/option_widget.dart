@@ -26,7 +26,7 @@ class _OptionIconWidgetsState extends State<OptionIconWidgets> {
         ),
       ),
       IconOption(
-        Options.add("", (BuildContext context) {}),
+        Options.add((BuildContext context) {}),
         padding: const EdgeInsets.all(8),
         iconColor: colorScheme.onPrimaryContainer,
         backgroundColor: colorScheme.surface,

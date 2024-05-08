@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/pages/chunked_list.dart';
+import 'package:student/misc/iterable_extensions.dart';
 
 class SvgIcon extends StatelessWidget {
   final Color primary, container, tertiary;
@@ -44,7 +44,8 @@ class PaletteSelector extends StatefulWidget {
 class _PaletteSelectorState extends State<PaletteSelector> {
   @override
   Widget build(BuildContext context) {
-    Iterable<List<Color>> colors = Colors.accents.chunked(4);
+    Iterable<Iterable<Color>> colors =
+        [...Colors.primaries, ...Colors.accents].chunked(4);
 
     Widget previewBox(Color color) {
       Widget content = Container(

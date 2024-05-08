@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NotificationDetailPage extends StatelessWidget {
-  const NotificationDetailPage({super.key});
+class SubjectCoursePreviewPage extends StatelessWidget {
+  const SubjectCoursePreviewPage({super.key});
 
   @override
   Widget build(BuildContext context) {

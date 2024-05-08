@@ -15,7 +15,7 @@ class BaseSubject {
   });
 
   // SubjectCourse? getCourse(String courseID) {
-  //   return courses.firstWhere(
+  //   return courses.firstWhereIf(
   //     (SubjectCourse course) => course.classID == courseID,
   //   );
   // }

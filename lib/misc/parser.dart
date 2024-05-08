@@ -2,9 +2,13 @@ import 'package:student/core/presets.dart';
 import 'package:student/core/semester/functions.dart';
 
 extension MergeLT on SubjectCourse {
-  void mergeLT(SubjectCourse? lt) {
-    if (lt is! SubjectCourse) return;
-    intCourse |= SubjectCourse.matrixIterate(lt.timestamp);
+  SubjectCourse mergeLT(SubjectCourse? lt) {
+    if (lt is! SubjectCourse) return this;
+    return SubjectCourse(
+      courseID: courseID,
+      subjectID: subjectID,
+      timestamp: [...lt.timestamp, ...timestamp],
+    );
   }
 }
 
@@ -183,13 +187,15 @@ class SampleTimetableData {
     return input;
   }
 
-  int _add0(int i, int n) => i << n;
-  int _add1(int i, int n) => (i << (n + 1)) + (2 << n) - 1;
+  // int _add0(int i, int n) => i << n;
+  // int _add1(int i, int n) => (i << (n + 1)) + (2 << n) - 1;
+  int _toStamp(int s, int e) => ((2 << (e - s)) - 1) << (s - 1);
 
   int _toBits(String str) {
     if (str == "0-0") return 0;
     List<int> e = str.split("-").map(int.parse).toList(growable: false);
-    return _add0(_add1(0, e[1] - e[0]), 13 - e[1]);
+    return _toStamp(e[0], e[1]);
+    // return _add0(_add1(0, e[1] - e[0]), e[0] - 1);
   }
 
   String _teacherToID(String str) {
@@ -222,7 +228,7 @@ class SampleTimetableData {
         timestamp: timestamp,
       );
       if (_btMatch.hasMatch(id)) {
-        tmpClass.mergeLT(_classesLT[id.replaceFirst(_btMatch, '')]);
+        tmpClass = tmpClass.mergeLT(_classesLT[id.replaceFirst(_btMatch, '')]);
       }
       tmpClasses.add(tmpClass);
     });

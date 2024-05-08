@@ -73,7 +73,7 @@ class TimetableBox extends StatelessWidget {
       );
     }
 
-    List<TableViewCell> headRow = <Widget>[
+    List<Widget> headRow = [
       headRowBuilder("Week", "$week"),
       ...shortDayOfWeek.asMap().map((i, d) {
         Widget content = headRowBuilder(
@@ -93,7 +93,7 @@ class TimetableBox extends StatelessWidget {
                 ),
         );
       }).values,
-    ].map((e) => TableViewCell(child: e)).toList();
+    ];
 
     Widget firstColBuilder(int stamp) {
       return Positioned(
@@ -118,7 +118,7 @@ class TimetableBox extends StatelessWidget {
       );
     }
 
-    TableViewCell inColBuilder(List<Widget> children, index) {
+    TableViewCell inColBuilder(Iterable<Widget> children, index) {
       Widget content = Stack(
         children: [
           ...children,
@@ -140,18 +140,16 @@ class TimetableBox extends StatelessWidget {
               top: _cellSize *
                       (() {
                         int current = now.difference(date).inSeconds;
+                        if (current >
+                            classTimeStamps[classTimeStamps.length - 1][1]) {
+                          return classTimeStamps.length;
+                        }
                         int startAt = 0;
                         while (current > classTimeStamps[startAt][0]) {
                           startAt++;
+                          if (startAt == classTimeStamps.length) break;
                         }
-                        if (startAt >= classTimeStamps.length) {
-                          startAt = classTimeStamps.length - 1;
-                          if (current > classTimeStamps[startAt][1]) {
-                            return classTimeStamps.length;
-                          }
-                        } else {
-                          startAt--;
-                        }
+                        if (startAt > 0) startAt--;
                         double diff = (current > classTimeStamps[startAt][1] &&
                                 current < classTimeStamps[startAt][0])
                             ? 1
@@ -210,7 +208,14 @@ class TimetableBox extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                showBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container();
+                  },
+                );
+              },
               radius: 12,
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -236,32 +241,23 @@ class TimetableBox extends StatelessWidget {
 
     // print(timetableMap);
 
-    List<TableViewCell> restCols =
+    Iterable<TableViewCell> restCols =
         List.generate(7, (i) => inColBuilder(timetableMap[i], i));
 
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * .75,
-      decoration: BoxDecoration(
-          border: Border.all(
-        width: 1,
-        color: colorScheme.outlineVariant,
-      )),
-      child: TableView.list(
-        pinnedColumnCount: 1,
-        pinnedRowCount: 1,
-        columnBuilder: (c) => builder(
-          c == 0 ? _headerCellSize : _cellSize,
-        ),
-        rowBuilder: (r) => builder(
-          r == 0 ? _headerCellSize : _cellSize * classTimeStamps.length,
-        ),
-        cells: [
-          headRow,
-          [firstCols, ...restCols],
-          // ...firstCols.map((e) => [e, ...restCols]),
-        ],
+    return TableView.list(
+      pinnedColumnCount: 1,
+      pinnedRowCount: 1,
+      columnBuilder: (c) => builder(
+        c == 0 ? _headerCellSize : _cellSize,
       ),
+      rowBuilder: (r) => builder(
+        r == 0 ? _headerCellSize : _cellSize * classTimeStamps.length,
+      ),
+      cells: [
+        List.generate(headRow.length, (_) => TableViewCell(child: headRow[_])),
+        [firstCols, ...restCols],
+        // ...firstCols.map((e) => [e, ...restCols]),
+      ],
     );
   }
 }

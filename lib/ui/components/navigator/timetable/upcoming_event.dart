@@ -1,8 +1,9 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
-import 'package:student/ui/components/navigator/upcoming_event.dart';
-import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
+import 'package:student/ui/components/pages/event.dart';
+import 'package:student/ui/components/pages/event_preview.dart';
 
 class TimetableUpcomingCardAlt extends StatelessWidget {
   final UpcomingEvent upcomingEvent;
@@ -160,7 +161,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
           showBottomSheet(
             context: context,
             builder: ((BuildContext context) {
-              return NextupClassSheet(widget.nextupClass);
+              return UpcomingEventSheet(widget.nextupClass);
             }),
           );
         },
@@ -180,7 +181,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                 ),
               ),
               child: Text(
-                widget.nextupClass.classId,
+                widget.nextupClass.courseId,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -206,22 +207,22 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                     ),
                   ),
                   textTile(
-                    Icons.meeting_room_outlined,
+                    Symbols.meeting_room,
                     "Room",
                     widget.nextupClass.room,
                   ),
                   textTile(
-                    Icons.alarm_outlined,
+                    Symbols.alarm,
                     "Time",
                     "${MiscFns.timeFormat(widget.nextupClass.startTime)} - ${MiscFns.timeFormat(widget.nextupClass.endTime)}",
                   ),
                   textTile(
-                    Icons.event_outlined,
+                    Symbols.event,
                     "Date",
                     MiscFns.timeFormat(widget.nextupClass.startTime),
                   ),
                   textTile(
-                    Icons.person_outlined,
+                    Symbols.person,
                     "Teacher",
                     widget.nextupClass.teacher,
                   ),

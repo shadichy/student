@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 
 class Notif {
@@ -115,8 +116,8 @@ class _NotifExpandState extends State<NotifExpand> {
               onPressed: changeState,
               icon: Icon(
                   isExpanded
-                      ? Icons.keyboard_arrow_up_outlined
-                      : Icons.keyboard_arrow_down_outlined,
+                      ? Symbols.keyboard_arrow_up
+                      : Symbols.keyboard_arrow_down,
                   size: 16,
                   color: colorScheme.onPrimaryContainer),
               style: IconButton.styleFrom(
@@ -208,7 +209,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                 ),
                 padding: const EdgeInsets.all(4),
                 child: Icon(
-                  Icons.notifications_outlined,
+                  Symbols.notifications,
                   color: colorScheme.onPrimaryContainer,
                   size: 16,
                 ),
@@ -229,8 +230,8 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
                   onPressed: changeState,
                   icon: Icon(
                       isExpanded
-                          ? Icons.keyboard_arrow_up_outlined
-                          : Icons.keyboard_arrow_down_outlined,
+                          ? Symbols.keyboard_arrow_up
+                          : Symbols.keyboard_arrow_down,
                       size: 16,
                       color: colorScheme.onPrimaryContainer),
                   style: IconButton.styleFrom(
@@ -249,7 +250,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
           ),
           ...notifications.map(
             (Notif n) => isExpanded ? NotifExpand(n) : titlePreview(n),
-          )
+          ),
         ],
       ),
     );

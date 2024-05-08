@@ -1,9 +1,11 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 // import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
+import 'package:student/misc/misc_functions.dart';
 // import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
-import 'package:student/ui/components/navigator/timetable/timetable.dart';
+import 'package:student/ui/components/pages/learning/timetable.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
@@ -62,6 +64,15 @@ class _TimetableWidgetState extends State<TimetableWidget> {
     //   ]);
     // }
 
+    DateTime now = DateTime.now();
+    int weekday = now.weekday % 7;
+    DateTime firstDoW = now.subtract(Duration(days: weekday));
+    DateTime lastDoW = now.add(Duration(days: 6 - weekday));
+
+    String dateFormat(DateTime date) {
+      return MiscFns.timeFormat(date, format: "dd/MM");
+    }
+
     Widget topBar = Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(16),
@@ -76,8 +87,8 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconOption(
             Option(
-              const Icon(Icons.keyboard_arrow_left_outlined),
-              "",
+              'left',
+              const Icon(Symbols.keyboard_arrow_left),
               (BuildContext context) {},
             ),
             iconSize: 28,
@@ -87,20 +98,19 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           Expanded(
             child: Text(
-              "${11}/${11}/${1111} - ${11}/${11}/${1111}",
+              "${dateFormat(firstDoW)} - ${dateFormat(lastDoW)}",
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onPrimaryContainer,
-                fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
           IconOption(
             Option(
-              const Icon(Icons.keyboard_arrow_right_outlined),
-              "",
+              'right',
+              const Icon(Symbols.keyboard_arrow_right),
               (BuildContext context) {},
             ),
             iconSize: 28,
@@ -136,7 +146,17 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       // child:
     );
 
-    Widget mainContent = TimetableBox(widget.timetableData);
+    Widget mainContent = Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * .75,
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: colorScheme.outlineVariant,
+        ),
+      ),
+      child: TimetableBox(widget.timetableData),
+    );
 
     // Widget detailPane = Padding(
     //   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -194,13 +214,13 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       children: [
         SectionLabel(
           "Thời khoá biểu",
-          Options.forward("", (context) {}),
+          Options.forward(Options.timetable.target),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,
         ),
         ClickableCard(
-          target: () {},
+          target: () => Options.timetable.target(context),
           variant: CardVariant.outlined,
           color: Colors.transparent,
           child: Column(children: [

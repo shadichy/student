@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/options.dart';
 
@@ -23,7 +24,7 @@ class _SchoolSearchBarState extends State<SchoolSearchBar> {
         ),
         tileColor: colorScheme.primary.withOpacity(0.1),
         leading: Icon(
-          Icons.search_outlined,
+          Symbols.search,
           color: colorScheme.onPrimaryContainer,
           size: 20,
         ),

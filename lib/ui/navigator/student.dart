@@ -1,13 +1,15 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/quick_navigators.dart';
 import 'package:student/ui/components/navigator/student/glance_widget.dart';
 import 'package:student/ui/components/navigator/student/topbar_widget.dart';
 
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/with_appbar.dart';
 
-class StudentPage extends StatelessWidget {
+class StudentPage extends StatelessWidget implements TypicalPage {
   StudentPage({super.key});
+
   late final bool hasData = [].isNotEmpty;
 
   @override
@@ -29,15 +31,21 @@ class StudentPage extends StatelessWidget {
           studentGPA: '1.1',
           studentCred: 24,
         ),
-        OptionLabelWidgets([
-          Options.user,
-          Options.student_finance,
-          Options.study_program,
-          Options.study_results,
-          Options.settings,
-          Options.help,
+        const OptionLabelWidgets([
+          "student",
+          "finance",
+          "program",
+          "results",
+          "settings",
+          "help",
         ], headingLabel: "Settings"),
       ],
     );
   }
+
+  @override
+  Icon get icon => const Icon(Symbols.person);
+
+  @override
+  String get title => "Student";
 }

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
@@ -12,8 +13,8 @@ class SchoolTopBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Option(
-          const Icon(Icons.sort_outlined),
-          "",
+          'drawer',
+          const Icon(Symbols.sort),
           (context) => Scaffold.of(context).openDrawer(),
         ),
         Options.notifications,

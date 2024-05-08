@@ -21,52 +21,51 @@ class _UpdatedNewsState extends State<UpdatedNews> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
-    List<Widget> mainContent = widget.news.map<Widget>(
-      (URL u) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Card.outlined(
-            child: InkWell(
-              onTap: () {},
-              borderRadius: BorderRadius.circular(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width * 0.56,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        u.url,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
-                        height: 140,
-                      ),
+    List<Widget> mainContent = List.generate(widget.news.length, (i) {
+      URL u = widget.news[i];
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Card.outlined(
+          child: InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width * 0.56,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      u.url,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                      height: 140,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      u.label,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.titleMedium?.apply(
-                        color: colorScheme.onPrimaryContainer,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    u.label,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.titleMedium?.apply(
+                      color: colorScheme.onPrimaryContainer,
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
-        );
-      },
-    ).toList();
+        ),
+      );
+    });
     return Column(
       children: [
         SectionLabel(
           "Tài liệu mới cập nhật",
-          Options.forward("", (BuildContext context) {}),
+          Options.forward((BuildContext context) {}),
           // fontWeight: FontWeight.w300,
           textStyle:
               textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),

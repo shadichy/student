@@ -1,7 +1,8 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/upcoming_event.dart';
-import 'package:student/ui/components/navigator/upcoming_event.dart';
+import 'package:student/ui/components/pages/event.dart';
 
 class HomeNextupClassWidget extends StatefulWidget {
   final SampleTimetableData timetableData;
@@ -13,80 +14,80 @@ class HomeNextupClassWidget extends StatefulWidget {
 
 class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
   List<NextupClassView> classStamps = [
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'TIENGVIETTH(THANHNHAC).1',
+    NextupClassView.manual(
+      courseId: 'TIENGVIETTH(THANHNHAC).1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -105,7 +106,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Icon(
-          Icons.done_outlined,
+          Symbols.done,
           color: colorScheme.onSurface,
           size: 32,
         ),
@@ -127,7 +128,7 @@ class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
       children: [
         // SectionLabel(
         //   "Next-up classes",
-        //   Options.forward("", (BuildContext context) {}),
+        //   Options.forward((BuildContext context) {}),
         //   fontWeight: FontWeight.w300,
         //   fontSize: 20,
         //   color: colorScheme.onSurface,

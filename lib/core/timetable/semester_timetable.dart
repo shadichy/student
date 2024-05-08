@@ -36,10 +36,11 @@ final class SemesterTimetable {
 
   Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("userTimetable");
-    SemesterPlan currentPlan = StudyPlan().table[currentSemester.index];
+    SemesterPlan currentPlan =
+        StudyPlan().table.toList()[currentSemester.index];
     startDate = currentPlan.startDate;
     if (rawInfo is String) {
-      List<Map<String, dynamic>> parsedInfo = jsonDecode(rawInfo);
+      Iterable<Map<String, dynamic>> parsedInfo = jsonDecode(rawInfo);
       timetable = parsedInfo.map((w) {
         return WeekTimetable(
           MiscFns.listType<Map<String, dynamic>>(
@@ -65,6 +66,7 @@ final class SemesterTimetable {
         .learningCourseIDs
         .map((id) => InStudyCourses().getCourse(id)!)
         .toList();
+
     timetable = currentPlan.timetable
         .asMap()
         .map<int, WeekTimetable>((w, p) {

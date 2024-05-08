@@ -1,7 +1,8 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
-import 'package:student/ui/components/navigator/upcoming_event.dart';
+import 'package:student/ui/components/pages/event_preview.dart';
+import 'package:student/ui/components/pages/event.dart';
 
 enum CardState { ring, silent }
 
@@ -67,7 +68,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
           showBottomSheet(
             context: context,
             builder: ((BuildContext context) {
-              return NextupClassSheet(widget.nextupClass);
+              return UpcomingEventSheet(widget.nextupClass);
             }),
           );
         },
@@ -91,7 +92,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                         ),
                       ),
                       Icon(
-                        Icons.alarm_outlined,
+                        Symbols.alarm,
                         color: colorScheme.onPrimaryContainer,
                         size: 18,
                       ),
@@ -107,7 +108,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                     ],
                   ),
                   Text(
-                    widget.nextupClass.classId,
+                    widget.nextupClass.courseId,
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -140,9 +141,8 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
             IconButton(
               onPressed: () => switchState(!state),
               padding: const EdgeInsets.all(8),
-              icon: Icon(state
-                  ? Icons.notifications_active_outlined
-                  : Icons.notifications_outlined),
+              icon: Icon(
+                  state ? Symbols.notifications_active : Symbols.notifications),
             )
           ],
         ),

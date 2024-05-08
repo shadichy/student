@@ -15,8 +15,13 @@ final class AppConfig {
   Map<String, dynamic> data = {};
 
   Future<void> initialize() async {
-    String rawInfo = SharedPrefs.getString("config") ?? "{}";
-    data = jsonDecode(rawInfo) ?? {};
+    String? rawInfo = SharedPrefs.getString("config");
+    if (rawInfo is! String) {
+      await SharedPrefs.setString("studyPlan", defaultConfig.toString());
+      data = defaultConfig;
+    } else {
+      data = jsonDecode(rawInfo) ?? defaultConfig;
+    }
   }
 
   Future<void> _write() async {
@@ -46,3 +51,21 @@ final class AppConfig {
     }
   }
 }
+
+Map<String, dynamic> defaultConfig = {
+  'notif.reminders': [
+    {"duration": 30},
+    {"duration": 60},
+  ],
+  'notif.reminder': true,
+  'notif.topEvents': true,
+  'notif.miscEvents': true,
+  'notif.impNotif': true,
+  'notif.clubNotif': true,
+  'notif.miscNotif': true,
+  'notif.appNotif': true,
+  'theme.themeMode': 1,
+  'theme.accentColor': 4294198070, // color red
+  'settings.language': 'vi',
+  'misc.startWeekday': 1,
+};

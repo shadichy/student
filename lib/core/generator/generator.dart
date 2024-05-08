@@ -3,22 +3,11 @@ import 'package:student/core/semester/functions.dart';
 
 class SampleTimetable {
   final List<SubjectCourse> classes;
-  late final BigInt intMatrix;
-  late final int length;
-  SampleTimetable({required this.classes}) {
-    length = classes.length;
-    intMatrix = matrixIterate(classes);
-    // for (SubjectCourse c in classes) {
-    //   intMatrix |= c.intCourse;
-    // }
-  }
-  static BigInt matrixIterate(List<SubjectCourse> stamps) {
-    BigInt foldedStamp = BigInt.zero;
-    for (SubjectCourse c in stamps) {
-      foldedStamp |= c.intCourse;
-    }
-    return foldedStamp;
-  }
+  final BigInt intMatrix;
+  final int length;
+  SampleTimetable({required this.classes})
+      : length = classes.length,
+        intMatrix = classes.fold(BigInt.zero, (f, _) => f = _.intCourse);
 }
 
 class SubjectFilter {

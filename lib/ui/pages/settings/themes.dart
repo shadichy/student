@@ -1,12 +1,24 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
+import 'package:student/ui/components/pages/settings/searchable_selector_dialog.dart';
 import 'package:student/ui/components/pages/settings/svg_theme.dart';
 import 'package:student/ui/components/pages/settings/theme_preview.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
+import 'package:student/ui/connect.dart';
 import 'package:system_theme/system_theme.dart';
 
-class SettingsThemesPage extends StatefulWidget {
+import 'package:student/ui/components/navigator/navigator.dart';
+
+class SettingsThemesPage extends StatefulWidget implements TypicalPage {
+  @override
+  Icon get icon => const Icon(Symbols.contrast_circle);
+
+  @override
+  String get title => "Giao diện";
+
   const SettingsThemesPage({super.key});
 
   @override
@@ -15,12 +27,11 @@ class SettingsThemesPage extends StatefulWidget {
 
 class _SettingsThemesPageState extends State<SettingsThemesPage> {
   bool useSystem = AppConfig().getConfig<bool>("theme.systemTheme") ?? false;
-  int? colorCode = AppConfig().getConfig<bool>("theme.systemTheme") == true
+  late int? colorCode = useSystem
       ? SystemTheme.accentColor.accent.value
       : AppConfig().getConfig<int>("theme.accentColor");
-  bool darkMode = AppConfig().getConfig<int>("theme.themeMode") == 2;
-  String currentFont =
-      AppConfig().getConfig<String>("theme.appFont") ?? "Roboto";
+  late bool darkMode = AppConfig().getConfig<int>("theme.themeMode") == 2;
+  late String? currentFont = AppConfig().getConfig<String>("theme.appFont");
 
   void switchUseSystem(bool newState) {
     setState(() {
@@ -47,60 +58,100 @@ class _SettingsThemesPageState extends State<SettingsThemesPage> {
     setState(() {
       currentFont = fontName;
     });
-    AppConfig().setConfig("theme.appFont", fontName);
+    AppConfig()
+        .setConfig("theme.appFont", fontName == "System" ? null : fontName);
   }
 
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    // TextTheme textTheme = Theme.of(context).textTheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
 
-    Brightness brightness =
-        AppConfig().getConfig<bool>("theme.systemTheme") == true
-            ? Theme.of(context).brightness
-            : Brightness.values[darkMode ? 0 : 1];
+    Brightness brightness = useSystem
+        ? Theme.of(context).brightness
+        : Brightness.values[darkMode ? 0 : 1];
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(children: [
-          const HeadLabel("Themes"),
-          if (defaultTargetPlatform.supportsAccentColor)
-            Opt(
-              label: "System theme",
-              desc: "Use theme provided by system",
-              buttonType: ButtonType.switcher,
-              switcherDefaultValue: useSystem,
-              switcherAction: switchUseSystem,
-            ),
-          ThemePreviewBox((colorCode is int
-              ? ColorScheme.fromSeed(
-                  seedColor: Color(colorCode!),
-                  brightness: brightness,
-                )
-              : colorScheme.copyWith(
-                  brightness: brightness,
-                ))),
-          // disabled: useSystem,
-          PaletteSelector(useSystem ? null : changePalette),
+    return SettingsBase(
+      label: "Themes",
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          StudentApp.action(context, AppAction.reload);
+        }
+      },
+      children: [
+        if (defaultTargetPlatform.supportsAccentColor)
           Opt(
-            label: "Dark mode",
-            desc: "Use dark theme",
+            label: "System theme",
+            desc: "Use theme provided by system",
             buttonType: ButtonType.switcher,
-            switcherDefaultValue: darkMode,
-            switcherAction: setDarkMode,
-            disabled: useSystem,
+            switcherDefaultValue: useSystem,
+            switcherAction: switchUseSystem,
           ),
-          Opt(
-            label: "Font",
-            desc: "Change the app font",
-            buttonType: ButtonType.select,
-            action: (context) {
-              //
-            },
-            disabled: useSystem,
-          ),
-        ]),
-      ),
+        ThemePreviewBox((colorCode is int
+            ? ColorScheme.fromSeed(
+                seedColor: Color(colorCode!),
+                brightness: brightness,
+              )
+            : colorScheme.copyWith(
+                brightness: brightness,
+              ))),
+        // disabled: useSystem,
+        PaletteSelector(useSystem ? null : changePalette),
+        Opt(
+          label: "Dark mode",
+          desc: "Use dark theme",
+          buttonType: ButtonType.switcher,
+          switcherDefaultValue: darkMode,
+          switcherAction: setDarkMode,
+          disabled: useSystem,
+        ),
+        Opt(
+          label: "Font",
+          desc: currentFont ?? "System",
+          buttonType: ButtonType.select,
+          action: (context) {
+            showDialog<String>(
+              context: context,
+              builder: (context) {
+                List<String> availableFonts = GoogleFonts.asMap().keys.toList();
+                List<String> fontList = ["System", ...availableFonts];
+                return SearchableSelectorDialog(
+                  title: Text(
+                    "Select font",
+                    style: textTheme.bodyMedium,
+                  ),
+                  hintText: "Search font",
+                  items: fontList,
+                  itemBuilder: (context, item) {
+                    return Row(children: [
+                      SizedBox(
+                        width: 48,
+                        child: Text(
+                          "ABC",
+                          textAlign: TextAlign.right,
+                          style: (item == "System")
+                              ? null
+                              : GoogleFonts.getFont(item),
+                        ),
+                      ),
+                      Text(" \u2022 $item"),
+                    ]);
+                  },
+                  searchMethod: (query, items) {
+                    String k = query.toLowerCase();
+                    return items.skip(1).where((_) {
+                      return _.toLowerCase().contains(k);
+                    }).toList();
+                  },
+                );
+              },
+            ).then((font) {
+              if (font != null) setFont(font);
+            });
+          },
+          disabled: useSystem,
+        ),
+      ],
     );
   }
 }

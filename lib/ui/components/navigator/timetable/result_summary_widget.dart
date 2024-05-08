@@ -19,7 +19,7 @@ class _ResultSummaryWidgetState extends State<ResultSummaryWidget> {
       children: [
         SectionLabel(
           "Kết quả học tập kì trước",
-          Options.forward("", (context) {}),
+          Options.forward((context) {}),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

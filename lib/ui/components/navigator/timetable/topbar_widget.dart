@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
@@ -14,8 +15,8 @@ class TimetableTopBar extends StatelessWidget {
       children: [
         IconOption(
           Option(
-            const Icon(Icons.menu_outlined),
-            "",
+            'drawer',
+            const Icon(Symbols.menu),
             (context) => Scaffold.of(context).openDrawer(),
           ),
           iconColor: colorScheme.onSurface,

@@ -1,14 +1,15 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/school/glance_widget.dart';
 import 'package:student/ui/components/navigator/school/searchbar_widget.dart';
 import 'package:student/ui/components/navigator/school/topbar_widget.dart';
 import 'package:student/ui/components/navigator/school/updated_news.dart';
 
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/navigator/quick_navigators.dart';
 import 'package:student/ui/components/with_appbar.dart';
 
-class SchoolPage extends StatelessWidget {
+class SchoolPage extends StatelessWidget implements TypicalPage {
   SchoolPage({super.key});
   late final bool hasData = [].isNotEmpty;
 
@@ -42,12 +43,12 @@ class SchoolPage extends StatelessWidget {
             "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
           ),
         ]),
-        OptionLabelWidgets([
-          Options.notifications,
-          Options.study_program,
-          Options.study_results,
-          Options.user,
-          Options.help,
+        const OptionLabelWidgets([
+          "notif",
+          "program",
+          "results",
+          "student",
+          "help",
         ]),
         Padding(
           padding: const EdgeInsets.all(16),
@@ -75,4 +76,10 @@ class SchoolPage extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  Icon get icon => const Icon(Symbols.school);
+
+  @override
+  String get title => "School";
 }

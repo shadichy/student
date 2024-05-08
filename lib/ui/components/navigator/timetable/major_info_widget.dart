@@ -19,7 +19,7 @@ class _MajorInfoWidgetState extends State<MajorInfoWidget> {
       children: [
         SectionLabel(
           "Thông tin ngành học",
-          Options.forward("", (context) {}),
+          Options.forward((context) {}),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

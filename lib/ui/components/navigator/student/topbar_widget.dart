@@ -14,29 +14,27 @@ class StudentTopBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Option(
+          'theme',
           SvgIcon(
             primary: colorScheme.primaryContainer,
             container: colorScheme.primary,
             tertiary: colorScheme.tertiary,
             size: 24,
           ),
-          "",
           (context) {
             Options.goto(context, const SettingsThemesPage());
           },
         ),
         Options.notifications,
-      ]
-          .map(
-            (Option o) => IconOption(
-              o,
-              iconColor: colorScheme.onPrimaryContainer,
-              iconSize: 24,
-              // padding: const EdgeInsets.all(8),
-              // backgroundColor: colorScheme.primaryContainer,
-            ),
-          )
-          .toList(),
+      ].map((Option o) {
+        return IconOption(
+          o,
+          iconColor: colorScheme.onPrimaryContainer,
+          iconSize: 24,
+          // padding: const EdgeInsets.all(8),
+          // backgroundColor: colorScheme.primaryContainer,
+        );
+      }).toList(),
     );
   }
 }

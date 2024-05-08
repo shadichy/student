@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
@@ -5,11 +6,11 @@ import 'package:student/ui/components/navigator/home/upcoming_event_widget.dart'
 import 'package:student/ui/components/navigator/home/notification.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
-import 'package:student/ui/components/options.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/quick_navigators.dart';
 import 'package:student/ui/components/with_appbar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget implements TypicalPage {
   HomePage({super.key});
 
   final List<Notif> notifs = [
@@ -47,12 +48,12 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
         // ]),
         if (hasNotif) HomeNotifWidget(notifs),
         HomeNextupClassWidget(SampleTimetableData.from2dList([])),
-        OptionLabelWidgets([
-          Options.settings,
-          Options.study_program,
-          Options.study_results,
-          Options.student_finance,
-          Options.help,
+        const OptionLabelWidgets([
+          "settings",
+          "program",
+          "results",
+          "finance",
+          "help",
         ]),
         const Divider(
           color: Colors.transparent,
@@ -71,4 +72,10 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
       ],
     );
   }
+
+  @override
+  Icon get icon => const Icon(Symbols.home);
+
+  @override
+  String get title => "Home";
 }

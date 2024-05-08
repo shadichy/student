@@ -1,25 +1,52 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/options.dart';
 
-class HeadLabel extends StatelessWidget {
+class SettingsBase extends StatelessWidget {
   final String label;
-  const HeadLabel(this.label, {super.key});
+  final void Function(bool)? onPopInvoked;
+  final List<Widget> children;
+  const SettingsBase({
+    super.key,
+    required this.label,
+    required this.children,
+    this.onPopInvoked,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 120,
-        bottom: 32,
-        left: 16,
-        right: 16,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Symbols.arrow_back, size: 28),
+        ),
       ),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.displaySmall,
-        textAlign: TextAlign.left,
-        overflow: TextOverflow.ellipsis,
+      body: PopScope(
+        onPopInvoked: onPopInvoked,
+        child: SingleChildScrollView(
+          child: Column(children: [
+            Container(
+              padding: const EdgeInsets.only(
+                top: 64,
+                bottom: 32,
+                left: 16,
+                right: 16,
+              ),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.displaySmall,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            ...children,
+          ]),
+        ),
       ),
     );
   }
@@ -35,6 +62,7 @@ class SubPage extends StatelessWidget {
   final Widget? target;
   final void Function(BuildContext context)? action;
   final Widget? icon;
+  final double? minVerticalPadding;
   const SubPage({
     super.key,
     required this.label,
@@ -42,14 +70,15 @@ class SubPage extends StatelessWidget {
     this.target,
     this.action,
     this.icon,
+    this.minVerticalPadding,
   });
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return ListTile(
-      minVerticalPadding: 12,
-      title: Text(label, style: textTheme.bodyLarge),
+      minVerticalPadding: minVerticalPadding ?? 12,
+      title: Text(label, style: textTheme.titleLarge),
       subtitle: desc != null ? Text(desc!, style: textTheme.bodyMedium) : null,
       leading: icon,
       onTap: target != null
@@ -126,7 +155,7 @@ class _OptState extends State<Opt> {
     return ListTile(
       // contentPadding: const EdgeInsets.symmetric(vertical: 8),
       minVerticalPadding: 12,
-      title: Text(widget.label, style: textTheme.bodyLarge),
+      title: Text(widget.label, style: textTheme.titleLarge),
       subtitle: widget.desc != null
           ? Text(widget.desc!, style: textTheme.bodyMedium)
           : null,

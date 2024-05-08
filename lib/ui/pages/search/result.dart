@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class NotificationDetailPage extends StatelessWidget {
-  const NotificationDetailPage({super.key});
+class SearchResultPage extends StatelessWidget {
+  final String query;
+  const SearchResultPage(this.query, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
   }
 }
-

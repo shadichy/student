@@ -12,4 +12,11 @@ extension IterableExtensions<E> on Iterable<E> {
       if (chunk.length < chunkSize) return;
     }
   }
+
+  E? firstWhereIf(bool Function(E element) test, {E? fallback}) {
+    for (E element in this) {
+      if (test(element)) return element;
+    }
+    return fallback;
+  }
 }

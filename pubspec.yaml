@@ -48,6 +48,7 @@ dependencies:
   # sheet: ^0.0.4+1
   system_theme: ^2.3.1
   scroll_snap_list: ^0.9.1
+  material_symbols_icons: ^4.2741.0
 
 dev_dependencies:
   flutter_test:

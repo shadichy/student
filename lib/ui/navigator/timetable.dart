@@ -1,15 +1,18 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
 import 'package:student/misc/parser.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event_widget.dart';
 import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
 
 import 'package:student/ui/components/with_appbar.dart';
 
-class TimetablePage extends StatelessWidget {
+class TimetablePage extends StatelessWidget implements TypicalPage {
   TimetablePage({super.key});
+
   late final bool hasData = [].isNotEmpty;
 
   @override
@@ -60,4 +63,10 @@ class TimetablePage extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  Icon get icon => const Icon(Symbols.calendar_month);
+
+  @override
+  String get title => "Timetable";
 }

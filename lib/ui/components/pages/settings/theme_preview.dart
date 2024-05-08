@@ -27,7 +27,7 @@ class ThemePreviewBox extends StatelessWidget {
       width: width,
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       child: Row(
-        children: preview.map((strPic) {
+        children: List.generate(preview.length, (_) {
           double baseWidth = width / 2 - 24;
           return Container(
             decoration: BoxDecoration(
@@ -43,10 +43,10 @@ class ThemePreviewBox extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
-              child: SvgPicture.string(strPic),
+              child: SvgPicture.string(preview[_]),
             ),
           );
-        }).toList(),
+        }),
       ),
     );
   }

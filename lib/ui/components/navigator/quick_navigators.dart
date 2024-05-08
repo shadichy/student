@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/routing.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class OptionLabelWidgets extends StatefulWidget {
-  final List<Option> options;
+  // final List<Option> options;
+  final List<String> routes;
   final String headingLabel;
   const OptionLabelWidgets(
-    this.options, {
+    this.routes, {
     super.key,
     this.headingLabel = "Quick actions",
   });
@@ -26,43 +29,25 @@ class _OptionLabelWidgetsState extends State<OptionLabelWidgets> {
     List<Widget> content = [
       SectionLabel(
         widget.headingLabel,
-        Options.add("", (BuildContext context) {}),
+        Options.add((BuildContext context) {}),
         // fontWeight: FontWeight.w300,
         textStyle: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         color: colorScheme.onPrimaryContainer,
       ),
-      ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: ((context, index) {
-          return SubPage(
-            label: widget.options[index].label,
-            action: widget.options[index].target,
-            icon: widget.options[index].icon is Icon
-                ? Icon(
-                    (widget.options[index].icon as Icon).icon,
-                    size: 28,
-                  )
-                : widget.options[index].icon is ImageIcon
-                    ? ImageIcon(
-                        (widget.options[index].icon as ImageIcon).image,
-                        size: 28,
-                      )
-                    : widget.options[index].icon,
-          );
-        }),
-        separatorBuilder: ((context, index) {
-          return const Divider(
-            color: Colors.transparent,
-            height: 4,
-          );
-        }),
-        itemCount: widget.options.length,
-        shrinkWrap: true,
-      ),
+      ...List.generate(widget.routes.length, (index) {
+        TypicalPage t = Routing.getRoute(widget.routes[index])!;
+        return SubPage(
+          label: t.title,
+          target: t,
+          icon: Icon(t.icon.icon, size: 28),
+          minVerticalPadding: 16,
+        );
+      }),
       SizedBox(
         width: 220,
         child: TextOption(
-          Options.add("Thêm shortcut", (BuildContext context) {}),
+          Options.add((BuildContext context) {}),
+          label: "Thêm shortcut",
           margin: const EdgeInsets.symmetric(vertical: 8),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           color: colorScheme.onPrimaryContainer,

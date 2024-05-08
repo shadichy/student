@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 
@@ -131,8 +132,8 @@ class _ReminderCardState extends State<ReminderCard> {
                 height: _iconSize + 8,
                 child: IconOption(
                   Option(
-                    const Icon(Icons.delete),
-                    "Delete",
+                    'delete',
+                    const Icon(Symbols.delete),
                     (context) => widget.action(ActionType.delete, null),
                   ),
                   padding: EdgeInsets.zero,
@@ -152,8 +153,8 @@ class _ReminderCardState extends State<ReminderCard> {
                   height: _iconSize + 8,
                   child: IconOption(
                     Option(
-                      const Icon(Icons.vibration_outlined),
-                      "Vibrate",
+                      'vibrate',
+                      const Icon(Symbols.vibration),
                       (context) => vibrateChangeState(!vibrate),
                     ),
                     padding: EdgeInsets.zero,
@@ -181,7 +182,7 @@ class _ReminderCardState extends State<ReminderCard> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.notifications_active,
+                          Symbols.notifications_active,
                           size: _iconSize,
                           color: alarmMode != AlarmMode.silent
                               ? colorScheme.onPrimaryContainer

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
@@ -40,14 +41,16 @@ class _StudentGlanceState extends State<StudentGlance> {
         color: colorScheme.primaryContainer,
       ),
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Row(children: [
-            Container(
-              width: 60,
-              height: 60,
-              margin: const EdgeInsets.only(left: 16),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Container(
+              width: 72,
+              height: 72,
+              margin: const EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -55,40 +58,25 @@ class _StudentGlanceState extends State<StudentGlance> {
                   width: 2.0,
                 ),
               ),
-              child: Container(
-                margin: const EdgeInsets.all(4),
-                height: 72,
-                width: 72,
-                clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: widget.studentPicture,
+              child: CircleAvatar(
+                backgroundImage: widget.studentPicture.image,
               ),
             ),
-            const VerticalDivider(
-              color: Colors.transparent,
-              width: 20,
+            title: Text(
+              widget.studentFullName,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.titleLarge!.copyWith(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.studentFullName,
-                  style: textTheme.titleLarge!.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "# ${widget.studentCode}",
-                  style: textTheme.titleMedium!.apply(
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                ),
-              ],
-            )
-          ]),
+            subtitle: Text(
+              "# ${widget.studentCode}",
+              style: textTheme.titleMedium!.apply(
+                color: colorScheme.onPrimaryContainer,
+              ),
+            ),
+          ),
           const Divider(
             color: Colors.transparent,
             height: 8,
@@ -126,7 +114,7 @@ class _StudentGlanceState extends State<StudentGlance> {
             height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ...[
                 Options.notifications,
@@ -143,8 +131,8 @@ class _StudentGlanceState extends State<StudentGlance> {
               ),
               IconOption(
                 Option(
-                  const Icon(Icons.logout_outlined),
-                  "Logout",
+                  'logout',
+                  const Icon(Symbols.logout),
                   (BuildContext context) {},
                 ),
                 // margin: const EdgeInsets.only(right: 16),
@@ -159,7 +147,7 @@ class _StudentGlanceState extends State<StudentGlance> {
           //   width: 160,
           //   child: TextOption(
           //     Option(
-          //       const Icon(Icons.logout_outlined),
+          //       const Icon(Symbols.logout),
           //       "Logout",
           //       (BuildContext context) {},
           //     ),

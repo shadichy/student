@@ -1,4 +1,6 @@
 // import 'package:flutter/material.dart';
+import 'package:student/core/databases/subjects.dart';
+import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/semester/functions.dart';
 
 // class NextupClass {
@@ -40,33 +42,44 @@ class UpcomingEvent {
 }
 
 class NextupClassView extends UpcomingEvent {
-  final String classId;
-  final String classDesc;
-  final String teacher;
-  final String room;
+  final CourseTimeStamp stamp;
+  final String courseId;
+
+  String get classDesc => eventLabel;
+  String get teacher => heldBy!;
+  String get room => location!;
   // more info required, including ca, teacher id, subject id, kì học, tuần thứ n
 
-  NextupClassView({
-    required this.classId,
-    required this.classDesc,
-    required this.teacher,
+  // should be init'd like
+  NextupClassView(this.stamp)
+      : courseId = stamp.courseID,
+        super(
+          eventLabel: Subjects().getSubjectAlt(stamp.courseID)!.name,
+          location: stamp.room,
+          heldBy: Teachers().getTeacher(stamp.teacherID)!,
+          startTime: DateTime.now(),
+          endTime: DateTime.now(),
+        );
+
+  NextupClassView.manual({
+    required this.courseId,
+    required String classDesc,
+    required String teacher,
     required super.startTime,
     required super.endTime,
-    required this.room,
-  }) : super(
+    required String room,
+  })  : stamp = CourseTimeStamp(
+          intStamp: 0,
+          dayOfWeek: 0,
+          courseID: courseId,
+          teacherID: teacher,
+          room: room,
+          timeStampType: TimeStampType.offline,
+        ),
+        super(
           eventLabel: classDesc,
           location: room,
           heldBy: teacher,
-        );
-
-  NextupClassView.fromStamp(CourseTimeStamp stamp)
-      : this(
-          classId: stamp.courseID,
-          classDesc: "",
-          startTime: DateTime.now(),
-          endTime: DateTime.now(),
-          room: stamp.room,
-          teacher: '',
         );
 }
 

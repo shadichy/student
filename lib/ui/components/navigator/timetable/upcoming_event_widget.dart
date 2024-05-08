@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student/misc/parser.dart';
-import 'package:student/ui/components/navigator/upcoming_event.dart';
+import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
@@ -16,80 +16,80 @@ class TimetableUpcomingWidget extends StatefulWidget {
 
 class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
   List<NextupClassView> classStamps = [
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.1',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.1',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.2',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.2',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.3',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.3',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.4',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.4',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.5',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.5',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.6',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.6',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.7',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.7',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.8',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.8',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.9',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.9',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       room: 'A709',
     ),
-    NextupClassView(
-      classId: 'NNLAPTRINH.8.10',
+    NextupClassView.manual(
+      courseId: 'NNLAPTRINH.8.10',
       classDesc: 'Ngôn ngữ lập trình',
       teacher: 'Nguyễn Huyền Châu',
       startTime: DateTime.now(),
@@ -116,7 +116,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
       children: [
         SectionLabel(
           "Môn học tiếp theo",
-          Options.forward("", (BuildContext context) {}),
+          Options.forward((BuildContext context) {}),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,
@@ -145,7 +145,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
         //     children: [
         //       IconOption(
         //         Option(
-        //           const Icon(Icons.keyboard_double_arrow_left_outlined),
+        //           const Icon(Symbols.keyboard_double_arrow_left),
         //           "",
         //           (context) => changeClass(0),
         //         ),
@@ -157,7 +157,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
         //       ),
         //       IconOption(
         //         Option(
-        //           const Icon(Icons.keyboard_arrow_left_outlined),
+        //           const Icon(Symbols.keyboard_arrow_left),
         //           "",
         //           (context) => changeClass(index - 1),
         //         ),
@@ -178,7 +178,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
         //       ),
         //       IconOption(
         //         Option(
-        //           const Icon(Icons.keyboard_arrow_right_outlined),
+        //           const Icon(Symbols.keyboard_arrow_right),
         //           "",
         //           (context) => changeClass(index + 1),
         //         ),
@@ -190,7 +190,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
         //       ),
         //       IconOption(
         //         Option(
-        //           const Icon(Icons.keyboard_double_arrow_right_outlined),
+        //           const Icon(Symbols.keyboard_double_arrow_right),
         //           "",
         //           (context) => changeClass(classStamps.length - 1),
         //         ),

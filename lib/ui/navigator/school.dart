@@ -46,7 +46,7 @@ class SchoolPage extends StatelessWidget implements TypicalPage {
         const OptionLabelWidgets([
           "notif",
           "program",
-          "results",
+          "learning_result",
           "student",
           "help",
         ]),

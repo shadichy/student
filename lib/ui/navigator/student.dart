@@ -35,7 +35,7 @@ class StudentPage extends StatelessWidget implements TypicalPage {
           "student",
           "finance",
           "program",
-          "results",
+          "learning_result",
           "settings",
           "help",
         ], headingLabel: "Settings"),

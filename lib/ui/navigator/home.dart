@@ -51,7 +51,7 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
         const OptionLabelWidgets([
           "settings",
           "program",
-          "results",
+          "learning_result",
           "finance",
           "help",
         ]),

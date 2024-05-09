@@ -5,7 +5,6 @@ import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:currency_converter/Currency.dart';
 import 'package:student/core/configs.dart';
-import 'package:student/misc/iterable_extensions.dart';
 
 // makes preset database
 final class SPBasics {
@@ -17,7 +16,7 @@ final class SPBasics {
 
   late final List<List<int>> _studyTimeStamps;
   late final List<String> _onlineClassTypes;
-  late final int _creditPrice _creditPrice;
+  late final int _creditPrice;
   late final Currency _currency;
 
   List<List<int>> get classTimeStamps => _studyTimeStamps;
@@ -47,7 +46,10 @@ final class SPBasics {
     _onlineClassTypes =
         MiscFns.listType<String>(parsedInfo["onlineClassTypes"] as List);
     _creditPrice = parsedInfo["creditPrice"] as int;
-    String cr = (parsedInfo["currency"] == null ? defaultConfig["currency"] : parsedInfo["currency"] as String).toLowerCase();
-    _currency = Currency.values.firstWhereIf((_)=>_.name==cr);
+    String cr = (parsedInfo["currency"] == null
+            ? defaultConfig["currency"]
+            : parsedInfo["currency"] as String)
+        .toLowerCase();
+    _currency = Currency.values.firstWhere((_) => _.name == cr);
   }
 }

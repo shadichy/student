@@ -176,7 +176,7 @@ class _ReminderCardState extends State<ReminderCard> {
                       maxWidth: MediaQuery.of(context).size.width / 2,
                     ),
                     padding: const EdgeInsets.all(4),
-                    width: MediaQuery.of(context).size.width / 2,
+                    // width: MediaQuery.of(context).size.width / 2,
                     height: _iconSize + 8,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

@@ -4,11 +4,11 @@ import 'package:student/core/configs.dart';
 import 'package:student/misc/parser.dart';
 
 abstract final class Server {
-  static const String url = env["fetchUrl"]!;
+  static final String _url = env["fetchUrl"]!;
   static Future<String> fetch(String endpoint) async {
-    final res = await http.get(Uri.parse("$url/$endpoint"));
+    final res = await http.get(Uri.parse("$_url/$endpoint"));
     if (res.statusCode != 200) {
-      throw Exception("Failed to fetch from $url/$endpoint!");
+      throw Exception("Failed to fetch from $_url/$endpoint!");
     }
     return res.body;
   }

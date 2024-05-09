@@ -72,4 +72,4 @@ Map<String, dynamic> defaultConfig = {
 
 Map<String, String> env = {
   'fetchUrl': 'https://example.com', 
-}
+};

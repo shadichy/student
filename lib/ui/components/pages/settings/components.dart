@@ -1,3 +1,4 @@
+
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/options.dart';
@@ -12,6 +13,12 @@ class SettingsBase extends StatelessWidget {
     required this.children,
     this.onPopInvoked,
   });
+
+  final double _kToolbarMaxHeight = 160;
+  final double _kToolbarMinHeight = 64;
+
+  final double _kTitleMaxPadding = 56;
+  final double _kTitleMinPadding = 16;
 
   @override
   Widget build(BuildContext context) {
@@ -51,30 +58,49 @@ class SettingsBase extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-          // toolbarHeight: height,
-          expandedHeight: 160,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Colors.transparent,
-          shadowColor: colorScheme.shadow,
-          floating: true,
-          pinned: true,
-          leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(Symbols.arrow_back, size: 28)
-        ),
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              label,
-              style: Theme.of(context).textTheme.displaySmall,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
+              toolbarHeight: _kToolbarMinHeight,
+              expandedHeight: _kToolbarMaxHeight,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              surfaceTintColor: Colors.transparent,
+              shadowColor: colorScheme.shadow,
+              floating: true,
+              pinned: true,
+              snap: true,
+              leading: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Symbols.arrow_back, size: 28),
+              ),
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  // print(MediaQuery.of(context).size.height);
+                  // print((constraints.biggest.height - _kToolbarMinHeight) /
+                  // (_kToolbarMaxHeight - _kToolbarMinHeight));
+                  return FlexibleSpaceBar(
+                    // collapseMode: CollapseMode.none,
+                    titlePadding: EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: _kTitleMaxPadding -
+                          (_kTitleMaxPadding - _kTitleMinPadding) *
+                              (constraints.biggest.height -
+                                  _kToolbarMinHeight) /
+                              (_kToolbarMaxHeight - _kToolbarMinHeight),
+                    ),
+                    centerTitle: false,
+                    stretchModes: const [StretchMode.fadeTitle],
+                    title: Text(
+                      label,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ),
-        SliverList(delegate: SliverChildListDelegate([Column(children: children)])),
+            SliverList(
+              delegate: SliverChildListDelegate([Column(children: children)]),
+            ),
           ],
         ),
       ),

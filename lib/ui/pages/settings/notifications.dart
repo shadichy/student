@@ -4,7 +4,6 @@ import 'package:student/core/configs.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/reminder.dart';
 
@@ -82,24 +81,23 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              IconOption(
-                Options.add(
-                  (context) => showTimePicker(
-                    context: context,
-                    initialTime: const TimeOfDay(hour: 0, minute: 0),
-                  ).then((time) {
-                    if (time == null) return;
-                    reminderAdd({
-                      "duration": Duration(
-                        hours: time.hour,
-                        minutes: time.minute,
-                      ).inMinutes
-                    });
-                  }),
-                ),
+              IconButton(
+                icon: const Icon(Symbols.alarm_add),
                 padding: EdgeInsets.zero,
-                iconSize: 32,
-                iconColor: colorScheme.primary,
+                iconSize: 28,
+                color: colorScheme.primary,
+                onPressed: () => showTimePicker(
+                  context: context,
+                  initialTime: const TimeOfDay(hour: 0, minute: 0),
+                ).then((time) {
+                  if (time == null) return;
+                  reminderAdd({
+                    "duration": Duration(
+                      hours: time.hour,
+                      minutes: time.minute,
+                    ).inMinutes
+                  });
+                }),
               )
             ],
           ),
@@ -110,7 +108,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              "Press + button to add new reminder",
+              "Press the add button on the top right to add new reminder",
               style: textTheme.bodySmall?.apply(
                 color: colorScheme.onSurface.withOpacity(0.5),
               ),

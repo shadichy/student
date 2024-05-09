@@ -8,6 +8,6 @@ abstract final class SharedPrefs {
 
   static String? getString(String key) => _prefs.getString(key);
 
-  static Future<void> setString(String key, String value) async =>
-      await _prefs.setString(key, value);
+  static Future<void> setString(String key, Object? value) async =>
+      value != null ? await _prefs.setString(key, value.toString()) : _prefs.remove(key);
 }

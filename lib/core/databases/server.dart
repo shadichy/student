@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/configs.dart';
 import 'package:student/misc/parser.dart';
 
 abstract final class Server {
-  static const String url = "";
+  static const String url = env["fetchUrl"]!;
   static Future<String> fetch(String endpoint) async {
     final res = await http.get(Uri.parse("$url/$endpoint"));
     if (res.statusCode != 200) {

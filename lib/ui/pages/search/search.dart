@@ -19,6 +19,9 @@ class SearchPage extends StatefulWidget implements TypicalPage {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(),
+      // body: ListView.builder(),
+    );
   }
 }

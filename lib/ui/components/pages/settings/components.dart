@@ -15,8 +15,9 @@ class SettingsBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
+      /* appBar: AppBar(
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -24,10 +25,10 @@ class SettingsBase extends StatelessWidget {
           },
           icon: const Icon(Symbols.arrow_back, size: 28),
         ),
-      ),
+      ), */
       body: PopScope(
         onPopInvoked: onPopInvoked,
-        child: SingleChildScrollView(
+        /* child: SingleChildScrollView(
           child: Column(children: [
             Container(
               padding: const EdgeInsets.only(
@@ -46,6 +47,35 @@ class SettingsBase extends StatelessWidget {
             ),
             ...children,
           ]),
+        ), */
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+          // toolbarHeight: height,
+          expandedHeight: 160,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
+          shadowColor: colorScheme.shadow,
+          floating: true,
+          pinned: true,
+          leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Symbols.arrow_back, size: 28)
+        ),
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text(
+              label,
+              style: Theme.of(context).textTheme.displaySmall,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+        SliverList(delegate: SliverChildListDelegate([Column(children: children)])),
+          ],
         ),
       ),
     );

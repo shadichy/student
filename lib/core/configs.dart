@@ -17,7 +17,7 @@ final class AppConfig {
   Future<void> initialize() async {
     String? rawInfo = SharedPrefs.getString("config");
     if (rawInfo is! String) {
-      await SharedPrefs.setString("studyPlan", defaultConfig.toString());
+      await SharedPrefs.setString("studyPlan", defaultConfig);
       data = defaultConfig;
     } else {
       data = jsonDecode(rawInfo) ?? defaultConfig;
@@ -28,9 +28,9 @@ final class AppConfig {
     await SharedPrefs.setString("config", jsonEncode(data));
   }
 
-  void setConfig(String id, dynamic value) {
+  void setConfig(String id, Object? value) {
     data[id] =
-        (value is num || value is bool || value is Iterable || value is String)
+        (value is num || value is bool || value is Iterable || value is String || value == null)
             ? value
             : value.toString();
     _write();
@@ -69,3 +69,7 @@ Map<String, dynamic> defaultConfig = {
   'settings.language': 'vi',
   'misc.startWeekday': 1,
 };
+
+Map<String, String> env = {
+  'fetchUrl': 'https://example.com', 
+}

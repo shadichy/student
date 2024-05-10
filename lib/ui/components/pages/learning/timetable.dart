@@ -191,7 +191,7 @@ class TimetableBox extends StatelessWidget {
     List<List<Widget>> timetableMap = List.generate(7, (index) => []);
 
     for (SubjectCourse c in timetable.classes) {
-      for (CourseTimeStamp s in c.timestamp) {
+      for (CourseTimestamp s in c.timestamp) {
         int classStartsAt = 0;
         while (s.intStamp & (1 << classStartsAt) == 0) {
           classStartsAt++;

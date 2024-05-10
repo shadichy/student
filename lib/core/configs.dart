@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 // import 'package:student/core/databases/server.dart';
+import 'package:currency_converter/currency.dart';
+import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 // import 'package:student/core/databases/user.dart';
 // import 'package:student/misc/misc_functions.dart';
@@ -29,10 +31,13 @@ final class AppConfig {
   }
 
   void setConfig(String id, Object? value) {
-    data[id] =
-        (value is num || value is bool || value is Iterable || value is String || value == null)
-            ? value
-            : value.toString();
+    data[id] = (value is num ||
+            value is bool ||
+            value is Iterable ||
+            value is String ||
+            value == null)
+        ? value
+        : value.toString();
     _write();
   }
 
@@ -65,11 +70,12 @@ Map<String, dynamic> defaultConfig = {
   'notif.miscNotif': true,
   'notif.appNotif': true,
   'theme.themeMode': 1,
-  'theme.accentColor': 4294198070, // color red
+  'theme.accentColor': Colors.red.value,
   'settings.language': 'vi',
-  'misc.startWeekday': 1,
+  'misc.startWeekday': DateTime.monday,
+  'misc.currency': Currency.vnd.name,
 };
 
 Map<String, String> env = {
-  'fetchUrl': 'https://example.com', 
+  'fetchUrl': 'https://example.com',
 };

@@ -3,33 +3,32 @@ import 'package:student/ui/components/option.dart';
 
 class SectionLabel extends StatelessWidget {
   final String label;
-  final Option? option;
+  final Widget? icon;
+  final void Function()? target;
+  final String? route;
   final FontWeight? fontWeight;
   final TextStyle? textStyle;
   final Color? color;
   final Color? backgroundColor;
   const SectionLabel(
-    this.label,
-    this.option, {
+    this.label, {
+    this.route,
+    this.icon,
+    this.target,
     super.key,
     this.textStyle,
     this.fontWeight,
     this.color,
     this.backgroundColor,
-  });
+  }) : assert(
+            (icon == null && target == null) ||
+                (icon != null && target != null),
+            'missing target for icon');
 
   @override
   Widget build(BuildContext context) {
-    Color fColor = color ?? Colors.transparent;
-    Color fBackgroundColor = backgroundColor ?? Colors.transparent;
-
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: 8,
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -43,14 +42,24 @@ class SectionLabel extends StatelessWidget {
               fontWeight: fontWeight,
               // fontStyle: FontStyle.normal,
               // fontSize: fontSize,
-              color: fColor,
+              color: color,
             ),
           ),
-          if (option is Option)
+          if (route != null)
             IconOption(
-              option!,
-              backgroundColor: fBackgroundColor,
-              iconColor: fColor,
+              route!,
+              backgroundColor: backgroundColor,
+              color: color,
+              iconSize: 28,
+            ),
+          if (icon is Icon)
+            IconButton(
+              icon: icon!,
+              onPressed: target,
+              style: IconButton.styleFrom(
+                backgroundColor: backgroundColor,
+              ),
+              color: color,
               iconSize: 28,
               // padding: const EdgeInsets.all(8),
             ),

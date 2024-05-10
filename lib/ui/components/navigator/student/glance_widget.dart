@@ -1,7 +1,7 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/options.dart';
+import 'package:student/core/routing.dart';
+import 'package:student/ui/connect.dart';
 
 class StudentGlance extends StatefulWidget {
   final Image studentPicture;
@@ -117,28 +117,30 @@ class _StudentGlanceState extends State<StudentGlance> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ...[
-                Options.notifications,
-                Options.user,
-                Options.help,
+                Routing.notif,
+                Routing.student,
+                Routing.help,
               ].map(
-                (Option opt) => IconOption(
-                  opt,
+                (opt) => IconButton(
+                  icon: opt.icon,
+                  onPressed: () => Routing.goto(context, opt),
                   // margin: const EdgeInsets.only(right: 16),
                   padding: const EdgeInsets.all(8),
-                  iconColor: colorScheme.onPrimary,
-                  backgroundColor: colorScheme.primary,
+                  color: colorScheme.onPrimary,
+                  style: IconButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                  ),
                 ),
               ),
-              IconOption(
-                Option(
-                  'logout',
-                  const Icon(Symbols.logout),
-                  (BuildContext context) {},
-                ),
+              IconButton(
+                icon: const Icon(Symbols.logout),
+                onPressed: () => StudentApp.action(context, AppAction.deinit),
                 // margin: const EdgeInsets.only(right: 16),
                 padding: const EdgeInsets.all(12),
-                iconColor: colorScheme.onSecondary,
-                backgroundColor: colorScheme.secondary,
+                color: colorScheme.onSecondary,
+                style: IconButton.styleFrom(
+                  backgroundColor: colorScheme.secondary,
+                ),
                 iconSize: 24,
               ),
             ],

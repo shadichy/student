@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class ResultSummaryWidget extends StatefulWidget {
@@ -19,7 +18,7 @@ class _ResultSummaryWidgetState extends State<ResultSummaryWidget> {
       children: [
         SectionLabel(
           "Kết quả học tập kì trước",
-          Options.forward((context) {}),
+          route: 'learning_result',
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

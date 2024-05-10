@@ -85,7 +85,7 @@ class _PaletteSelectorState extends State<PaletteSelector> {
         itemBuilder: (context, index) => colorRow[index],
         itemCount: colorRow.length,
         itemSize: MediaQuery.of(context).size.width,
-        onItemFocus: (index) {},
+        onItemFocus: (_) {},
         padding: const EdgeInsets.symmetric(vertical: 16),
         shrinkWrap: true,
         scrollPhysics:

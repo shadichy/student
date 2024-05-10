@@ -23,7 +23,10 @@ class _HomeNotifWidgetState extends State<HomeNotifWidget> {
         // shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(16.0),
       ),
-      child: NotifExpandableBox(widget.notifications),
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 100),
+        child: NotifExpandableBox(widget.notifications),
+      ),
     );
   }
 }

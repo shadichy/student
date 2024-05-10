@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:currency_converter/Currency.dart';
+import 'package:currency_converter/currency.dart';
 import 'package:student/core/configs.dart';
 
 // makes preset database
@@ -47,7 +47,7 @@ final class SPBasics {
         MiscFns.listType<String>(parsedInfo["onlineClassTypes"] as List);
     _creditPrice = parsedInfo["creditPrice"] as int;
     String cr = (parsedInfo["currency"] == null
-            ? defaultConfig["currency"]
+            ? defaultConfig["misc.currency"]
             : parsedInfo["currency"] as String)
         .toLowerCase();
     _currency = Currency.values.firstWhere((_) => _.name == cr);

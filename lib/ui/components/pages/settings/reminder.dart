@@ -1,6 +1,5 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/option.dart';
 
 enum AlarmMode { follow, silent, custom }
 
@@ -130,15 +129,12 @@ class _ReminderCardState extends State<ReminderCard> {
               SizedBox(
                 width: _iconSize + 8,
                 height: _iconSize + 8,
-                child: IconOption(
-                  Option(
-                    'delete',
-                    const Icon(Symbols.delete),
-                    (context) => widget.action(ActionType.delete, null),
-                  ),
+                child: IconButton(
+                  icon: const Icon(Symbols.delete),
+                  onPressed: () => widget.action(ActionType.delete, null),
                   padding: EdgeInsets.zero,
                   iconSize: _iconSize,
-                  iconColor: colorScheme.onPrimaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ],
@@ -151,15 +147,12 @@ class _ReminderCardState extends State<ReminderCard> {
                 SizedBox(
                   width: _iconSize + 8,
                   height: _iconSize + 8,
-                  child: IconOption(
-                    Option(
-                      'vibrate',
-                      const Icon(Symbols.vibration),
-                      (context) => vibrateChangeState(!vibrate),
-                    ),
+                  child: IconButton(
+                    icon: const Icon(Symbols.vibration),
+                    onPressed: () => vibrateChangeState(!vibrate),
                     padding: EdgeInsets.zero,
                     iconSize: _iconSize,
-                    iconColor: vibrate
+                    color: vibrate
                         ? colorScheme.onPrimaryContainer
                         : colorScheme.onSurface.withOpacity(0.1),
                   ),

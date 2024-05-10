@@ -57,15 +57,15 @@ final class InStudyCourses {
         SubjectCourse course = SubjectCourse(
           courseID: courseID,
           subjectID: s.subjectID,
-          timestamp: (c["timestamp"] as List).map<CourseTimeStamp>(
+          timestamp: (c["timestamp"] as List).map<CourseTimestamp>(
             (s) {
-              CourseTimeStamp stamp = CourseTimeStamp(
+              CourseTimestamp stamp = CourseTimestamp(
                 courseID: courseID,
                 intStamp: s["intStamp"] as int,
                 dayOfWeek: s["dayOfWeek"] as int,
                 teacherID: s["teacherID"] as String,
                 room: s["room"] as String,
-                timeStampType: TimeStampType.values[s["timeStampType"] as int],
+                timestampType: TimeStampType.values[s["timestampType"] as int],
               );
 
               Routing.addRoute(

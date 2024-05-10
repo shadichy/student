@@ -1,7 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/options.dart';
 
 class TimetableTopBar extends StatelessWidget {
   const TimetableTopBar({super.key});
@@ -13,13 +12,10 @@ class TimetableTopBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconOption(
-          Option(
-            'drawer',
-            const Icon(Symbols.menu),
-            (context) => Scaffold.of(context).openDrawer(),
-          ),
-          iconColor: colorScheme.onSurface,
+        IconButton(
+          icon: const Icon(Symbols.menu),
+          onPressed: Scaffold.of(context).openDrawer,
+          color: colorScheme.onSurface,
           iconSize: 20,
           // padding: const EdgeInsets.all(8),
         ),
@@ -32,8 +28,8 @@ class TimetableTopBar extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         IconOption(
-          Options.search,
-          iconColor: colorScheme.onSurface,
+          'search',
+          color: colorScheme.onSurface,
           iconSize: 20,
           // backgroundColor: colorScheme.primaryContainer,
           // padding: const EdgeInsets.all(8),

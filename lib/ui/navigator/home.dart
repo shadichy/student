@@ -48,7 +48,7 @@ Vestibulum sed dignissim odio. Praesent et lobortis nisi, in tincidunt orci. In 
         // ]),
         if (hasNotif) HomeNotifWidget(notifs),
         HomeNextupClassWidget(SampleTimetableData.from2dList([])),
-        const OptionLabelWidgets([
+        OptionLabelWidgets(title, const [
           "settings",
           "program",
           "learning_result",

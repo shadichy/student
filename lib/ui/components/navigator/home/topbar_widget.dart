@@ -1,7 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/option.dart';
-import 'package:student/ui/components/options.dart';
+import 'package:student/core/routing.dart';
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({super.key});
@@ -19,7 +18,7 @@ class HomeTopBar extends StatelessWidget {
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             dense: true,
-            onTap: () => Options.search.target(context),
+            onTap: () => Routing.goto(context, Routing.search),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -76,12 +75,15 @@ class HomeTopBar extends StatelessWidget {
         SizedBox(
           height: 32,
           width: 32,
-          child: IconOption(
-            Options.notifications,
+          child: IconButton(
+            icon: Routing.notif.icon,
+            onPressed: () => Routing.goto(context, Routing.notif),
             iconSize: 20,
             padding: EdgeInsets.zero,
-            iconColor: colorScheme.onSurface,
-            backgroundColor: colorScheme.surface,
+            color: colorScheme.onSurface,
+            style: IconButton.styleFrom(
+              backgroundColor: colorScheme.surface,
+            ),
           ),
         ),
         const VerticalDivider(
@@ -91,16 +93,15 @@ class HomeTopBar extends StatelessWidget {
         SizedBox(
           height: 32,
           width: 32,
-          child: IconOption(
-            Option(
-              'drawer',
-              const Icon(Symbols.menu),
-              (context) => Scaffold.of(context).openDrawer(),
-            ),
+          child: IconButton(
+            icon: const Icon(Symbols.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
             iconSize: 20,
             padding: EdgeInsets.zero,
-            iconColor: colorScheme.onSurface,
-            backgroundColor: colorScheme.surface,
+            color: colorScheme.onSurface,
+            style: IconButton.styleFrom(
+              backgroundColor: colorScheme.surface,
+            ),
           ),
         ),
       ],

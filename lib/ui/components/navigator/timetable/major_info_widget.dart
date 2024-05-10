@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class MajorInfoWidget extends StatefulWidget {
@@ -19,7 +18,7 @@ class _MajorInfoWidgetState extends State<MajorInfoWidget> {
       children: [
         SectionLabel(
           "Thông tin ngành học",
-          Options.forward((context) {}),
+          route: 'major',
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

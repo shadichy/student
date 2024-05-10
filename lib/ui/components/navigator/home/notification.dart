@@ -96,7 +96,7 @@ class _NotifExpandState extends State<NotifExpand> {
                 textBox(
                   widget.notification.content,
                   style: contentStyle,
-                  maxLines: isExpanded ? 8 : 1,
+                  maxLines: isExpanded ? 2 : 1,
                 ),
                 if (isExpanded)
                   InkWell(

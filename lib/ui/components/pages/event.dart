@@ -27,6 +27,7 @@ import 'package:student/core/semester/functions.dart';
 // }
 class UpcomingEvent {
   final String eventLabel;
+  final String? eventDesc;
   final DateTime startTime;
   final DateTime endTime;
   final String? location;
@@ -34,6 +35,7 @@ class UpcomingEvent {
 
   UpcomingEvent({
     required this.eventLabel,
+    this.eventDesc,
     required this.startTime,
     required this.endTime,
     this.location,
@@ -42,7 +44,7 @@ class UpcomingEvent {
 }
 
 class NextupClassView extends UpcomingEvent {
-  final CourseTimeStamp stamp;
+  final CourseTimestamp stamp;
   final String courseId;
 
   String get classDesc => eventLabel;
@@ -68,13 +70,13 @@ class NextupClassView extends UpcomingEvent {
     required super.startTime,
     required super.endTime,
     required String room,
-  })  : stamp = CourseTimeStamp(
+  })  : stamp = CourseTimestamp(
           intStamp: 0,
           dayOfWeek: 0,
           courseID: courseId,
           teacherID: teacher,
           room: room,
-          timeStampType: TimeStampType.offline,
+          timestampType: TimeStampType.offline,
         ),
         super(
           eventLabel: classDesc,

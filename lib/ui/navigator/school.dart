@@ -22,7 +22,7 @@ class SchoolPage extends StatelessWidget implements TypicalPage {
       body: [
         // const SchoolTopBar(),
         SchoolGlance(AssetImage(
-          "assets/images/thanglonguni${Theme.of(context).brightness == Brightness.light ? '' : "_dark"}.png",
+          "assets/images/wide_logo${Theme.of(context).brightness == Brightness.light ? '' : "_dark"}.png",
         )),
         const SchoolSearchBar(),
         const UpdatedNews([
@@ -43,7 +43,7 @@ class SchoolPage extends StatelessWidget implements TypicalPage {
             "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
           ),
         ]),
-        const OptionLabelWidgets([
+        OptionLabelWidgets(title, const [
           "notif",
           "program",
           "learning_result",

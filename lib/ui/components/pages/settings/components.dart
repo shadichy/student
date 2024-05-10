@@ -1,7 +1,6 @@
-
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/ui/components/options.dart';
+import 'package:student/core/routing.dart';
 
 class SettingsBase extends StatelessWidget {
   final String label;
@@ -138,7 +137,7 @@ class SubPage extends StatelessWidget {
       subtitle: desc != null ? Text(desc!, style: textTheme.bodyMedium) : null,
       leading: icon,
       onTap: target != null
-          ? () => Options.goto(context, target!)
+          ? () => Routing.goto(context, target!)
           : action != null
               ? () => action!(context)
               : null,
@@ -241,7 +240,7 @@ class _OptState extends State<Opt> {
           : () {
               switch (widget.buttonType) {
                 case ButtonType.page:
-                  Options.goto(context, widget.target!);
+                  Routing.goto(context, widget.target!);
                   break;
                 case ButtonType.select:
                   widget.action!(context);
@@ -252,7 +251,7 @@ class _OptState extends State<Opt> {
                       if (widget.action != null) {
                         widget.action!(context);
                       } else {
-                        Options.goto(context, widget.target!);
+                        Routing.goto(context, widget.target!);
                       }
                       break;
                     default:

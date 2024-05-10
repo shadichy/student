@@ -2,11 +2,11 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 // import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
+import 'package:student/core/routing.dart';
 import 'package:student/misc/misc_functions.dart';
 // import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/pages/learning/timetable.dart';
-import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
@@ -85,16 +85,13 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       ),
       child: Row(
         children: [
-          IconOption(
-            Option(
-              'left',
-              const Icon(Symbols.keyboard_arrow_left),
-              (BuildContext context) {},
-            ),
+          IconButton(
+            icon: const Icon(Symbols.keyboard_arrow_left),
+            onPressed: () {},
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
-            iconColor: colorScheme.onPrimaryContainer,
+            color: colorScheme.onPrimaryContainer,
           ),
           Expanded(
             child: Text(
@@ -107,16 +104,13 @@ class _TimetableWidgetState extends State<TimetableWidget> {
               ),
             ),
           ),
-          IconOption(
-            Option(
-              'right',
-              const Icon(Symbols.keyboard_arrow_right),
-              (BuildContext context) {},
-            ),
+          IconButton(
+            icon: const Icon(Symbols.keyboard_arrow_right),
+            onPressed: () {},
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
-            iconColor: colorScheme.onPrimaryContainer,
+            color: colorScheme.onPrimaryContainer,
           ),
         ],
       ),
@@ -214,7 +208,8 @@ class _TimetableWidgetState extends State<TimetableWidget> {
       children: [
         SectionLabel(
           "Thời khoá biểu",
-          Options.forward(Options.timetable.target),
+          icon: const Icon(Symbols.arrow_forward),
+          target: () => Routing.goto(context, Routing.timetable),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

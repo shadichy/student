@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/interpolator.dart';
-import 'package:student/ui/components/option.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/reminder.dart';
 

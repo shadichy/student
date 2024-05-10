@@ -19,10 +19,10 @@ class SubjectCoursePage extends StatelessWidget implements TypicalPage {
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
     // TextTheme textTheme = Theme.of(context).textTheme;
-    return const EventPage(
+    return EventPage(
       label: "Thông tin khoá học",
-      title: "NNLAPTRINH.8.1_BT",
-      children: [],
+      title: title,
+      children: const [],
     );
   }
 }

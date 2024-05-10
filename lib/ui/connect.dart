@@ -8,7 +8,7 @@ import 'package:student/ui/app.dart';
 import 'package:student/ui/pages/init/main.dart';
 import 'package:system_theme/system_theme.dart';
 
-enum AppAction { init, reload }
+enum AppAction { init, reload, deinit }
 
 class StudentApp extends StatefulWidget {
   const StudentApp({super.key});
@@ -39,6 +39,10 @@ class _StudentAppState extends State<StudentApp> {
           break;
         case AppAction.reload:
           setTheme();
+          break;
+        case AppAction.deinit:
+          SharedPrefs.setString("user", null);
+          initialized = false;
           break;
       }
     });

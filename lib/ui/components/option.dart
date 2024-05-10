@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/routing.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/options.dart';
 
@@ -98,18 +99,18 @@ class _TextOptionState extends State<TextOption> {
 }
 
 class IconOption extends StatefulWidget {
-  final Option option;
+  final String route;
   final double iconSize;
   final double? splashRadius;
-  final Color? iconColor;
+  final Color? color;
   final Color? backgroundColor;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry? padding;
 
   const IconOption(
-    this.option, {
+    this.route, {
     super.key,
-    this.iconColor,
+    this.color,
     this.backgroundColor,
     this.iconSize = 32,
     this.margin = EdgeInsets.zero,
@@ -124,23 +125,11 @@ class IconOption extends StatefulWidget {
 class _IconOptionState extends State<IconOption> {
   @override
   Widget build(BuildContext context) {
-    Widget optionIcon = widget.option.icon is Icon
-        ? Icon(
-            (widget.option.icon as Icon).icon,
-            color: widget.iconColor,
-            size: widget.iconSize,
-          )
-        : widget.option.icon is ImageIcon
-            ? ImageIcon(
-                (widget.option.icon as ImageIcon).image,
-                color: widget.iconColor,
-                size: widget.iconSize,
-              )
-            : widget.option.icon;
+    TypicalPage target = Routing.getRoute(widget.route)!;
     Widget optionWidget = IconButton(
       iconSize: widget.iconSize,
-      color: widget.iconColor,
-      onPressed: () => widget.option.target(context),
+      color: widget.color,
+      onPressed: () => Routing.goto(context, target),
       padding: widget.padding,
       // color: widget.backgroundColor
       style: IconButton.styleFrom(
@@ -149,7 +138,7 @@ class _IconOptionState extends State<IconOption> {
         // elevation: 0,
         // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      icon: optionIcon,
+      icon: target.icon,
       splashRadius: widget.splashRadius,
     );
     // Widget optionWidget =

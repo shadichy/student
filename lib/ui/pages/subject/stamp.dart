@@ -16,31 +16,33 @@ class SubjectStampPage extends StatelessWidget implements TypicalPage {
     'Fri',
     'Sat'
   ];
+  final String _title;
   @override
   Icon get icon => const Icon(Symbols.event);
 
   @override
-  String get title =>
-      "${stamp.room} \u2022 ${shortDayOfWeek[stamp.dayOfWeek]} C${((){
-        int classStartsAt = 0;
-        while (stamp.intStamp & (1 << classStartsAt) == 0) {
-          classStartsAt++;
-        }
-        int classLength = stamp.intStamp.bitCount();
-        return "${classStartsAt+1}-${classStartsAt+classLength}";
-      })()} ${stamp.courseID}${stamp.courseType == null ? "" : "_${stamp.courseType!.name}"}";
+  String get title => _title;
 
-  final CourseTimeStamp stamp;
-  const SubjectStampPage(this.stamp, {super.key});
+  final CourseTimestamp stamp;
+  SubjectStampPage(this.stamp, {super.key})
+      : _title =
+            "${stamp.room} \u2022 ${shortDayOfWeek[stamp.dayOfWeek]} C${(() {
+          int classStartsAt = 0;
+          while (stamp.intStamp & (1 << classStartsAt) == 0) {
+            classStartsAt++;
+          }
+          int classLength = stamp.intStamp.bitCount();
+          return "${classStartsAt + 1}-${classStartsAt + classLength}";
+        })()} ${stamp.courseID}${stamp.courseType == null ? "" : "_${stamp.courseType!.name}"}";
 
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
     // TextTheme textTheme = Theme.of(context).textTheme;
-    return const EventPage(
+    return EventPage(
       label: "Thông tin lớp học",
-      title: "A709 \u2022 C3 \u2022 NNLAPTRINH.8.1_BT",
-      children: [],
+      title: title,
+      children: const [],
     );
   }
 }

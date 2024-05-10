@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:student/core/routing.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
-import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableUpcomingWidget extends StatefulWidget {
@@ -116,7 +117,8 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
       children: [
         SectionLabel(
           "Môn học tiếp theo",
-          Options.forward((BuildContext context) {}),
+          icon: const Icon(Symbols.arrow_forward),
+          target: () => Routing.goto(context, Routing.upcoming),
           fontWeight: FontWeight.bold,
           textStyle: textTheme.titleMedium,
           color: colorScheme.onSurface,

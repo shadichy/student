@@ -38,6 +38,7 @@ class WithAppbar extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: height,
           elevation: 0,
           scrolledUnderElevation: 4,

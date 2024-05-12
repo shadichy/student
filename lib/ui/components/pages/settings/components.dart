@@ -16,8 +16,8 @@ class SettingsBase extends StatelessWidget {
   final double _kToolbarMaxHeight = 160;
   final double _kToolbarMinHeight = 64;
 
-  final double _kTitleMaxPadding = 56;
-  final double _kTitleMinPadding = 16;
+  final double _kTitleMaxPadding = 40;
+  final double _kTitleMinPadding = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,34 +67,37 @@ class SettingsBase extends StatelessWidget {
               pinned: true,
               snap: true,
               leading: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: Navigator.of(context).pop,
                 icon: const Icon(Symbols.arrow_back, size: 28),
               ),
-              flexibleSpace: LayoutBuilder(
-                builder: (context, constraints) {
-                  // print(MediaQuery.of(context).size.height);
-                  // print((constraints.biggest.height - _kToolbarMinHeight) /
-                  // (_kToolbarMaxHeight - _kToolbarMinHeight));
-                  return FlexibleSpaceBar(
-                    // collapseMode: CollapseMode.none,
-                    titlePadding: EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: _kTitleMaxPadding -
-                          (_kTitleMaxPadding - _kTitleMinPadding) *
-                              (constraints.biggest.height -
-                                  _kToolbarMinHeight) /
-                              (_kToolbarMaxHeight - _kToolbarMinHeight),
-                    ),
-                    centerTitle: false,
-                    stretchModes: const [StretchMode.fadeTitle],
-                    title: Text(
-                      label,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                },
+              flexibleSpace: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // print(MediaQuery.of(context).size.height);
+                    // print((constraints.biggest.height - _kToolbarMinHeight) /
+                    // (_kToolbarMaxHeight - _kToolbarMinHeight));
+                    return FlexibleSpaceBar(
+                      // collapseMode: CollapseMode.none,
+                      titlePadding: EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: _kTitleMaxPadding -
+                            (_kTitleMaxPadding - _kTitleMinPadding) *
+                                (constraints.biggest.height -
+                                    _kToolbarMinHeight) /
+                                (_kToolbarMaxHeight - _kToolbarMinHeight),
+                      ),
+                      centerTitle: false,
+                      stretchModes: const [StretchMode.fadeTitle],
+                      title: Text(
+                        label,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             SliverList(

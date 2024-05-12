@@ -1,4 +1,4 @@
-import 'package:student/core/presets.dart';
+import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 
 extension MergeLT on SubjectCourse {
@@ -16,10 +16,10 @@ class SampleTimetableData {
   late final List<Subject> subjects;
   late final Map<String, SubjectCourse> _classesLT;
   late final Map<String, String> _teacherByIds;
-  final RegExp _ltMatch = RegExp(r"/_LT$/");
-  final RegExp _btMatch = RegExp(r"/\.[0-9]_BT$/");
-  final dynamic input;
-  SampleTimetableData.from2dList(this.input) {
+  Map<String, String> get teacherByIds => _teacherByIds;
+  final RegExp _ltMatch = RegExp(r"_LT$");
+  final RegExp _btMatch = RegExp(r"\.[0-9]_BT$");
+  SampleTimetableData.from2dList(dynamic input) {
     if (input is! List) {
       throw Exception("input source is not 2d array");
     }
@@ -28,7 +28,7 @@ class SampleTimetableData {
     _teacherByIds = {};
     Map<String, Map<String, dynamic>> tmpTkb = {};
     Map<String, Map<String, List<CourseTimestamp>>> tmpTkbLT = {};
-    // Map<String, List<ClassTimeStamp>> tmpClassesLT = {};
+    // Map<String, List<ClassTimestamp>> tmpClassesLT = {};
 
     for (List<String> mon in input) {
       String subjectID = mon[1];
@@ -40,23 +40,29 @@ class SampleTimetableData {
       int cred = int.parse(mon[7]);
       String teacherID = _teacherToID(mon[8]);
 
-      if (!onlineClass.contains(classRoom)) {
+      if (!SPBasics().onlineClass.contains(classRoom)) {
         dayOfWeek = int.parse(mon[4]) % 7;
         classStamp = _toBits(mon[5]);
       }
 
+      bool hasLTMatch = _ltMatch.hasMatch(classID);
+      bool hasBTMatch = _btMatch.hasMatch(classID);
       CourseTimestamp stamp = CourseTimestamp(
-        intStamp: onlineClass.contains(classRoom) ? 0 : classStamp,
-        dayOfWeek: dayOfWeek,
-        courseID: classID,
-        teacherID: teacherID,
-        room: classRoom,
-        timestampType: onlineClass.contains(classRoom)
-            ? TimeStampType.online
-            : TimeStampType.offline,
-      );
+          intStamp: SPBasics().onlineClass.contains(classRoom) ? 0 : classStamp,
+          dayOfWeek: dayOfWeek,
+          courseID: classID,
+          teacherID: teacherID,
+          room: classRoom,
+          timestampType: SPBasics().onlineClass.contains(classRoom)
+              ? TimestampType.online
+              : TimestampType.offline,
+          courseType: hasLTMatch
+              ? CourseType.course
+              : hasBTMatch
+                  ? CourseType.subcourse
+                  : null);
 
-      if (_ltMatch.hasMatch(classID)) {
+      if (hasLTMatch) {
         classID = classID.replaceFirst(_ltMatch, '');
         if (!tmpTkbLT.containsKey(subjectID)) {
           tmpTkbLT[subjectID] = <String, List<CourseTimestamp>>{};
@@ -87,12 +93,15 @@ class SampleTimetableData {
       tmpTkb[subjectID]?["classes"]?[classID].add(stamp);
     }
 
-    tmpTkbLT.forEach((subjectID, classes) => classes
-        .forEach((classID, timestamp) => _classesLT[classID] = SubjectCourse(
-              subjectID: subjectID,
-              courseID: classID,
-              timestamp: timestamp,
-            )));
+    tmpTkbLT.forEach(
+      (subjectID, classes) => classes.forEach(
+        (classID, timestamp) => _classesLT[classID] = SubjectCourse(
+          subjectID: subjectID,
+          courseID: classID,
+          timestamp: timestamp,
+        ),
+      ),
+    );
 
     // tmpClassesLT.forEach((classID, timestamp) => _classesLT[classID] = SubjectClass(
     //       subjectID: subjectID,
@@ -100,16 +109,26 @@ class SampleTimetableData {
     //       timestamp: timestamp,
     //     ));
 
-    tmpTkb.forEach((String subjectID, subjectInfo) => subjects.add(Subject(
-          subjectID: subjectID,
-          name: subjectInfo["name"].toString(),
-          cred: subjectInfo["cred"],
-          courses: _mapToClass(subjectID, subjectInfo["classes"]),
-          subjectAltID: subjectID,
-          dependencies: [],
-        )));
+    tmpTkb.forEach(
+      (String subjectID, subjectInfo) {
+        List<SubjectCourse> courses =
+            _mapToClass(subjectID, subjectInfo["classes"]);
+        return subjects.add(
+          Subject(
+            subjectID: subjectID,
+            name: subjectInfo["name"].toString(),
+            cred: subjectInfo["cred"],
+            courses: courses,
+            subjectAltID: courses[0]
+                .courseID
+                .replaceFirst(RegExp(r"(\.[0-9])+(_[LB]T)?$"), ''),
+            dependencies: [],
+          ),
+        );
+      },
+    );
   }
-  SampleTimetableData.fromObject(this.input) {
+  SampleTimetableData.fromObject(Object input) {
     if (input is! Map<String, dynamic>) {
       throw Exception("input source is not JSON object");
     }
@@ -117,7 +136,10 @@ class SampleTimetableData {
     Map<String, Map<String, dynamic>> tmpTkb = {};
     Map<String, Map<String, List<CourseTimestamp>>> tmpTkbLT = {};
 
-    input.forEach((subjectID, Map<String, dynamic> subjectInfo) {
+    input.forEach((subjectID, subjectInfo) {
+      if (subjectInfo is! Map<String, dynamic>) {
+        throw Exception("input source is not JSON object");
+      }
       if (subjectInfo["classes"] is! Map<String, List>) {
         throw Exception("input source is not JSON object");
       }
@@ -128,18 +150,18 @@ class SampleTimetableData {
           ?.forEach((classID, List<Map<String, dynamic>> classInfo) {
         List<CourseTimestamp> stampList = classInfo
             .map((stamp) => CourseTimestamp(
-                  intStamp: onlineClass.contains(stamp["room"])
+                  intStamp: SPBasics().onlineClass.contains(stamp["room"])
                       ? 0
                       : _toBits(stamp["ca"]),
-                  dayOfWeek: onlineClass.contains(stamp["room"])
+                  dayOfWeek: SPBasics().onlineClass.contains(stamp["room"])
                       ? 0
                       : (int.parse(stamp["dayOfWeek"]) - 1),
                   courseID: classID,
                   teacherID: stamp['teacherID'],
                   room: stamp["room"],
-                  timestampType: onlineClass.contains(stamp["room"])
-                      ? TimeStampType.online
-                      : TimeStampType.offline,
+                  timestampType: SPBasics().onlineClass.contains(stamp["room"])
+                      ? TimestampType.online
+                      : TimestampType.offline,
                 ))
             .toList();
         if (_ltMatch.hasMatch(classID)) {
@@ -220,7 +242,7 @@ class SampleTimetableData {
     List<SubjectCourse> tmpClasses = [];
     info.forEach((classID, timestamp) {
       if (_btMatch.hasMatch(id)) {
-        classID = classID.replaceFirst(RegExp(r"/_BT$/"), '');
+        classID = classID.replaceFirst(RegExp(r"_BT$"), '');
       }
       SubjectCourse tmpClass = SubjectCourse(
         subjectID: id,

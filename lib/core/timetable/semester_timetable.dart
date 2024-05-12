@@ -9,16 +9,31 @@ import 'package:student/misc/misc_functions.dart';
 
 class WeekTimetable {
   final DateTime startDate; // must be start of week
-  final List<EventTimestamp> timestamps;
+  List<EventTimestamp> _timestamps;
+  List<EventTimestamp> get timestamps => _timestamps;
   final int? weekNo;
-  WeekTimetable(this.timestamps, {required this.startDate, this.weekNo});
+  WeekTimetable(List<EventTimestamp> timestamps,
+      {required this.startDate, this.weekNo})
+      : _timestamps = timestamps;
+
+  void addStamps(Iterable<EventTimestamp> timestamp) {
+    _timestamps.addAll(timestamp);
+  }
+
+  void setStamps(List<EventTimestamp> timestamp) {
+    _timestamps = timestamp;
+  }
+
+  Map<String, dynamic> toJson() => toMap();
+
+  Map<String, dynamic> toMap() => {
+        'startDate': (startDate.millisecondsSinceEpoch / 1000).floor(),
+        'timestamps': _timestamps,
+        'weekNo': weekNo,
+      };
 
   @override
-  String toString() => ({
-        'startDate': (startDate.millisecondsSinceEpoch / 1000).floor(),
-        'timestamps': timestamps,
-        'weekNo': weekNo,
-      }).toString();
+  String toString() => toMap.toString();
 }
 
 final class SemesterTimetable {
@@ -43,14 +58,14 @@ final class SemesterTimetable {
     List<EventTimestamp> timestamps = [];
     if (week < _timetable.length) {
       timestamps.addAll(startDay == 0
-          ? _timetable[week].timestamps
+          ? _timetable[week]._timestamps
           : [
               ..._timetable[week]
-                  .timestamps
+                  ._timestamps
                   .where((_) => _.dayOfWeek >= startDay),
               if (week + 1 < _timetable.length)
                 ..._timetable[week + 1]
-                    .timestamps
+                    ._timestamps
                     .where((_) => _.dayOfWeek < startDay)
             ]);
     }
@@ -61,7 +76,77 @@ final class SemesterTimetable {
     );
   }
 
-  Future<void> update(dynamic info) async {
+  void _modify(
+      List<EventTimestamp> timestamp,
+      List<DateTime> days,
+      void Function(
+        WeekTimetable currentWeek,
+        Iterable<EventTimestamp> targetEvents,
+      ) modifier) {
+    for (DateTime day in days) {
+      int daysDiff = day.difference(_startDate).inDays;
+      int week = (daysDiff / 7).floor();
+      int doW = daysDiff % 7;
+      while (_timetable.length < week + 1) {
+        _timetable.add(WeekTimetable([],
+            startDate: startDate.add(Duration(days: 7 * week))));
+      }
+      Iterable<EventTimestamp> matchEvents =
+          timestamp.where((_) => _.dayOfWeek == doW);
+      WeekTimetable targetWeek = _timetable[week];
+      modifier(targetWeek, matchEvents);
+      // _timetable[week] = WeekTimetable(
+      //   startDate: targetWeek.startDate,
+      // );
+    }
+  }
+
+  void _overwrite(List<EventTimestamp> timestamp, List<DateTime> days) {
+    _modify(
+      timestamp,
+      days,
+      (c, t) => c.setStamps([
+        ...c._timestamps.where((_) {
+          for (EventTimestamp event in t) {
+            if (event.intStamp | _.intStamp != 0) return false;
+          }
+          return true;
+        }),
+        ...t,
+      ]),
+    );
+  }
+
+  void _addByDays(List<EventTimestamp> timestamp, List<DateTime> days) {
+    _modify(timestamp, days, (c, t) => c.addStamps(t));
+  }
+
+  void _addAll(List<EventTimestamp> timestamp) {
+    void add(WeekTimetable _) => _.addStamps(timestamp);
+    _timetable.forEach(add);
+  }
+
+  Future<void> update(EventTimeline event,
+      {bool override = false, List<DateTime>? days}) async {
+    if (event is CourseTimestamp) {
+      assert(!override || days != null,
+          '"days" must be specified for Course update');
+      if (override) {
+        _overwrite(event.timestamp, days!);
+      } else {
+        if (days != null) {
+          _addByDays(event.timestamp, days);
+        } else {
+          _addAll(event.timestamp);
+        }
+      }
+      // else add for everyday
+    } else if (event is SchoolEvent) {
+      days ??= event.days;
+      (override ? _overwrite : _addByDays)(event.timestamp, days);
+    } else {
+      return;
+    }
     await _write();
   }
 
@@ -90,7 +175,7 @@ final class SemesterTimetable {
                     teacherID: s["teacherID"] as String,
                     room: s["room"] as String,
                     timestampType:
-                        TimeStampType.values[s["timestampType"] as int],
+                        TimestampType.values[s["timestampType"] as int],
                     courseType: s["courseType"] == null
                         ? null
                         : CourseType.values[s["courseType"] as int])

@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/routing.dart';
+import 'package:student/ui/components/option.dart';
 import 'package:student/ui/connect.dart';
 
 class StudentGlance extends StatefulWidget {
@@ -117,26 +117,24 @@ class _StudentGlanceState extends State<StudentGlance> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ...[
-                Routing.notif,
-                Routing.student,
-                Routing.help,
+                'notif',
+                'student',
+                'help',
               ].map(
-                (opt) => IconButton(
-                  icon: opt.icon,
-                  onPressed: () => Routing.goto(context, opt),
+                (opt) => IconOption(
+                  opt,
+                  // onPressed: () => Routing.goto(context, opt),
                   // margin: const EdgeInsets.only(right: 16),
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
                   color: colorScheme.onPrimary,
-                  style: IconButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                  ),
+                  backgroundColor: colorScheme.primary,
                 ),
               ),
               IconButton(
                 icon: const Icon(Symbols.logout),
                 onPressed: () => StudentApp.action(context, AppAction.deinit),
                 // margin: const EdgeInsets.only(right: 16),
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 color: colorScheme.onSecondary,
                 style: IconButton.styleFrom(
                   backgroundColor: colorScheme.secondary,

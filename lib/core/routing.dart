@@ -19,6 +19,7 @@ import 'package:student/ui/pages/learning/status.dart';
 import 'package:student/ui/pages/learning/timetable.dart';
 import 'package:student/ui/pages/notification/detail.dart';
 import 'package:student/ui/pages/notification/notification.dart';
+import 'package:student/ui/pages/school/article.dart';
 import 'package:student/ui/pages/school/new_papers.dart';
 // import 'package:student/ui/pages/notification/preview.dart';
 import 'package:student/ui/pages/search/result.dart';
@@ -107,6 +108,7 @@ abstract class Routing {
       (_) => SearchResultPage(_);
   static Widget Function(int) get notif_detail =>
       (_) => const NotificationDetailPage();
+  static Widget Function(String) get article => (_) => SchoolArticlePage(_);
   static Widget Function(String) get quick_action_edit =>
       (_) => SettingsQuickActionPage(_);
 }

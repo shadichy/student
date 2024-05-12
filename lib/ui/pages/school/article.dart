@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 
-class SearchResultPage extends StatelessWidget implements TypicalPage {
-  final String query;
-  const SearchResultPage(this.query, {super.key});
+class SchoolArticlePage extends StatelessWidget implements TypicalPage {
+  final String url;
+  const SchoolArticlePage(this.url, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,8 @@ class SearchResultPage extends StatelessWidget implements TypicalPage {
   }
 
   @override
-  Icon get icon => const Icon(Symbols.search);
+  Icon get icon => const Icon(Symbols.article);
 
   @override
-  String get title => "Result of $query";
+  String get title => "Article of $url";
 }

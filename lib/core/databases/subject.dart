@@ -19,4 +19,17 @@ class BaseSubject {
   //     (SubjectCourse course) => course.classID == courseID,
   //   );
   // }
+
+  Map<String, dynamic> toJson() => toMap();
+
+  Map<String, dynamic> toMap() => {
+        'subjectID': subjectID,
+        'subjectAltID': subjectAltID,
+        'name': name,
+        'cred': cred,
+        'dependencies': dependencies,
+      };
+
+  @override
+  String toString() => toMap.toString();
 }

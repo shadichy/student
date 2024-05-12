@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/databases/subjects.dart';
+import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/pages/init/main.dart';
@@ -68,11 +71,13 @@ class _StudentAppState extends State<StudentApp> {
   Future<void> initialize() async {
     if (!initialized) return;
     await User().initialize();
-    // await Teachers().initialize();
-    // await Subjects().initialize();
+    await SPBasics().initialize();
+    await Teachers().initialize();
+    await Subjects().initialize();
     // await StudyPlan().initialize();
     // await InStudyCourses().initialize();
     // await SemesterTimetable().initialize();
+    // await NotificationsGet().initialize();
   }
 
   @override

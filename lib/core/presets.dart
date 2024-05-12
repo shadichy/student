@@ -1,4 +1,4 @@
-const List<List<int>> classTimeStamps = [
+const List<List<int>> classTimestamps = [
   [25200, 28200],
   [28800, 31800],
   [33000, 36000],

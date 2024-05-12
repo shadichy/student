@@ -1,7 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/pages/event_preview.dart';
 import 'package:student/ui/components/pages/event.dart';
 
 enum CardState { ring, silent }
@@ -65,12 +64,12 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
       ),
       child: InkWell(
         onTap: () {
-          showBottomSheet(
-            context: context,
-            builder: ((BuildContext context) {
-              return UpcomingEventSheet(widget.nextupClass);
-            }),
-          );
+          // showBottomSheet(
+          //   context: context,
+          //   builder: ((BuildContext context) {
+          //     return UpcomingEventSheet(widget.nextupClass);
+          //   }),
+          // );
         },
         borderRadius: BorderRadius.circular(8.0),
         child: Row(

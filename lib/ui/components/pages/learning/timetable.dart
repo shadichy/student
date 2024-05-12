@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
-import 'package:student/core/presets.dart';
 import 'package:student/misc/misc_functions.dart';
 // import 'package:student/misc/misc_variables.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
@@ -106,7 +106,7 @@ class TimetableBox extends StatelessWidget {
           child: Text(
             "${MiscFns.timeFormat(
               date.add(
-                Duration(seconds: classTimeStamps[stamp][0]),
+                Duration(seconds: SPBasics().classTimestamps[stamp][0]),
               ),
             )}\nC${stamp + 1}",
             style: textTheme.labelLarge!.copyWith(
@@ -123,7 +123,7 @@ class TimetableBox extends StatelessWidget {
         children: [
           ...children,
           ...List.generate(
-            classTimeStamps.length - 1,
+            SPBasics().classTimestamps.length - 1,
             (index) => Positioned(
               width: _cellSize,
               height: 1,
@@ -141,21 +141,28 @@ class TimetableBox extends StatelessWidget {
                       (() {
                         int current = now.difference(date).inSeconds;
                         if (current >
-                            classTimeStamps[classTimeStamps.length - 1][1]) {
-                          return classTimeStamps.length;
+                            SPBasics().classTimestamps[
+                                SPBasics().classTimestamps.length - 1][1]) {
+                          return SPBasics().classTimestamps.length;
                         }
                         int startAt = 0;
-                        while (current > classTimeStamps[startAt][0]) {
+                        while (
+                            current > SPBasics().classTimestamps[startAt][0]) {
                           startAt++;
-                          if (startAt == classTimeStamps.length) break;
+                          if (startAt == SPBasics().classTimestamps.length) {
+                            break;
+                          }
                         }
                         if (startAt > 0) startAt--;
-                        double diff = (current > classTimeStamps[startAt][1] &&
-                                current < classTimeStamps[startAt][0])
+                        double diff = (current >
+                                    SPBasics().classTimestamps[startAt][1] &&
+                                current <
+                                    SPBasics().classTimestamps[startAt][0])
                             ? 1
-                            : ((current - classTimeStamps[startAt][0]) /
-                                (classTimeStamps[startAt][1] -
-                                    classTimeStamps[startAt][0]));
+                            : ((current -
+                                    SPBasics().classTimestamps[startAt][0]) /
+                                (SPBasics().classTimestamps[startAt][1] -
+                                    SPBasics().classTimestamps[startAt][0]));
                         return diff + startAt;
                       })() -
                   2,
@@ -175,18 +182,18 @@ class TimetableBox extends StatelessWidget {
             : Container(
                 color: colorScheme.primary.withOpacity(0.05),
                 width: _cellSize,
-                // height: _cellSize * classTimeStamps.length,
+                // height: _cellSize * SPBasics().classTimestamps.length,
                 child: content,
               ),
       );
     }
 
     TableViewCell firstCols = inColBuilder(
-      List.generate(classTimeStamps.length, firstColBuilder),
+      List.generate(SPBasics().classTimestamps.length, firstColBuilder),
       7,
     );
     // print(
-    // "$_cellSize,${classTimeStamps[classTimeStamps.length - 1][1] - classTimeStamps[0][0]},${now.difference(date).inSeconds},${now.difference(date).inSeconds - classTimeStamps[0][0]}, ${((now.difference(date).inSeconds - classTimeStamps[0][0]) / (classTimeStamps[classTimeStamps.length - 1][1] - classTimeStamps[0][0]))},${_cellSize * classTimeStamps.length * ((now.difference(date).inSeconds - classTimeStamps[0][0]) / (classTimeStamps[classTimeStamps.length - 1][1] - classTimeStamps[0][0]))}");
+    // "$_cellSize,${SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]},${now.difference(date).inSeconds},${now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]}, ${((now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]) / (SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]))},${_cellSize * SPBasics().classTimestamps.length * ((now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]) / (SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]))}");
 
     List<List<Widget>> timetableMap = List.generate(7, (index) => []);
 
@@ -251,7 +258,9 @@ class TimetableBox extends StatelessWidget {
         c == 0 ? _headerCellSize : _cellSize,
       ),
       rowBuilder: (r) => builder(
-        r == 0 ? _headerCellSize : _cellSize * classTimeStamps.length,
+        r == 0
+            ? _headerCellSize
+            : _cellSize * SPBasics().classTimestamps.length,
       ),
       cells: [
         List.generate(headRow.length, (_) => TableViewCell(child: headRow[_])),

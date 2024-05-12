@@ -9,7 +9,7 @@ final class Teachers {
   factory Teachers() {
     return _teachersInstance;
   }
-  
+
   late final Map<String, String> _teachers;
   String? getTeacher(String id) => _teachers[id];
 
@@ -23,7 +23,8 @@ final class Teachers {
     Map<String, String> parsedInfo = {};
 
     try {
-      parsedInfo = jsonDecode(rawInfo);
+      parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
+          .map((key, value) => MapEntry(key, value as String));
     } catch (e) {
       throw Exception("Failed to parse teachers info JSON from cache! $e");
     }

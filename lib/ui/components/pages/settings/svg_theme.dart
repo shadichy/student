@@ -90,6 +90,8 @@ class _PaletteSelectorState extends State<PaletteSelector> {
         shrinkWrap: true,
         scrollPhysics:
             widget.action != null ? null : const NeverScrollableScrollPhysics(),
+        duration: 300,
+        curve: Curves.easeInOut,
       ),
     );
   }

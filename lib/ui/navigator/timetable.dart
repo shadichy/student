@@ -27,28 +27,28 @@ class TimetablePage extends StatelessWidget implements TypicalPage {
             SubjectCourse(
               courseID: "classID1",
               subjectID: "subjectID1",
-              timestamp: const [
+              timestamp: [
                 CourseTimestamp(
                   intStamp: 123,
                   dayOfWeek: 4,
                   courseID: "classID1",
                   teacherID: "teacherID",
                   room: "A929",
-                  timestampType: TimeStampType.offline,
+                  timestampType: TimestampType.offline,
                 )
               ],
             ),
             SubjectCourse(
               courseID: "classID2",
               subjectID: "subjectID2",
-              timestamp: const [
+              timestamp: [
                 CourseTimestamp(
                   intStamp: 132,
                   dayOfWeek: 5,
                   courseID: "classID2",
                   teacherID: "teacherID",
                   room: "B666",
-                  timestampType: TimeStampType.offline,
+                  timestampType: TimestampType.offline,
                 )
               ],
             ),

@@ -10,7 +10,7 @@ class Initializer extends StatelessWidget {
   Widget build(BuildContext context) {
     SharedPrefs.setString(
       "user",
-      '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":2,"schoolYear":36,"passed":[],"learning":[]}',
+      '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":1,"schoolYear":36,"passed":[],"learning":[]}',
     ).then((_) => StudentApp.action(context, AppAction.init));
     return const Scaffold();
   }

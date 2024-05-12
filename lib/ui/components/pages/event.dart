@@ -4,7 +4,7 @@ import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/semester/functions.dart';
 
 // class NextupClass {
-//   late final ClassTimeStamp stamp;
+//   late final ClassTimestamp stamp;
 //   late final String room;
 //   NextupClass(this.stamp) {
 //     room = stamp.room;
@@ -76,7 +76,7 @@ class NextupClassView extends UpcomingEvent {
           courseID: courseId,
           teacherID: teacher,
           room: room,
-          timestampType: TimeStampType.offline,
+          timestampType: TimestampType.offline,
         ),
         super(
           eventLabel: classDesc,
@@ -87,7 +87,7 @@ class NextupClassView extends UpcomingEvent {
 
   //  {
   //   startStamp = 0;
-  //   if (onlineClass.contains(room)) {
+  //   if (SPBasics().onlineClass.contains(room)) {
   //     endStamp = 0;
   //     // startStampUnix = 0;
   //     // endStampUnix = 0;
@@ -104,7 +104,7 @@ class NextupClassView extends UpcomingEvent {
   //     }
   //     tmpDint >>= 1;
   //  }
-  // startStampUnix = classTimeStamps[startStamp][0];
-  // endStampUnix = classTimeStamps[endStamp][1];
+  // startStampUnix = SPBasics().classTimestamps[startStamp][0];
+  // endStampUnix = SPBasics().classTimestamps[endStamp][1];
   // day = dates[dayOfWeek];
   // }

@@ -36,9 +36,7 @@ class LearningTimetablePage extends StatelessWidget implements TypicalPage {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: Navigator.of(context).pop,
           icon: const Icon(Symbols.arrow_back, size: 28),
         ),
         title: Text(
@@ -48,18 +46,37 @@ class LearningTimetablePage extends StatelessWidget implements TypicalPage {
           style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
         ),
         actions: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: ["K1N3", "${lastDoW.year}"].map((e) {
-              return Text(
-                e,
-                style:
-                    textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-              );
-            }).toList(),
+          InkWell(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(
+                    "Week 1 ",
+                    style: textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  Icon(
+                    Symbols.arrow_drop_down,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ],
+              ),
+            ),
           ),
           const VerticalDivider(
-            width: 16,
+            width: 8,
+            color: Colors.transparent,
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Symbols.date_range,
+              color: colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const VerticalDivider(
+            width: 8,
             color: Colors.transparent,
           )
         ],
@@ -74,28 +91,28 @@ class LearningTimetablePage extends StatelessWidget implements TypicalPage {
             SubjectCourse(
               courseID: "classID1",
               subjectID: "subjectID1",
-              timestamp: const [
+              timestamp: [
                 CourseTimestamp(
                   intStamp: 123,
                   dayOfWeek: 4,
                   courseID: "classID1",
                   teacherID: "teacherID",
                   room: "A929",
-                  timestampType: TimeStampType.offline,
+                  timestampType: TimestampType.offline,
                 )
               ],
             ),
             SubjectCourse(
               courseID: "classID2",
               subjectID: "subjectID2",
-              timestamp: const [
+              timestamp: [
                 CourseTimestamp(
                   intStamp: 132,
                   dayOfWeek: 5,
                   courseID: "classID2",
                   teacherID: "teacherID",
                   room: "B666",
-                  timestampType: TimeStampType.offline,
+                  timestampType: TimestampType.offline,
                 )
               ],
             ),

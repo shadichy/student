@@ -1,8 +1,10 @@
-import 'package:student/core/presets.dart';
+import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/misc/iterable_extensions.dart';
+import 'package:student/misc/misc_functions.dart';
 
-enum TimeStampType { offline, online }
+enum TimestampType { offline, online }
 
 enum CourseType { course, subcourse }
 
@@ -13,25 +15,38 @@ class EventTimestamp {
   final String? location;
   final String? heldBy;
 
-  const EventTimestamp({
+  EventTimestamp({
     required this.eventName,
-    this.intStamp = -1, // all day
+    int intStamp = -1, // all day
     required this.dayOfWeek,
     this.location,
     this.heldBy,
-  });
+  }) : intStamp = intStamp.toUnsigned(SPBasics().classTimestamps.length);
 
-  @override
-  String toString() => ({
+  EventTimestamp.fromJson(Map<String, dynamic> jsonData)
+      : this(
+          eventName: jsonData["eventName"] as String,
+          intStamp: jsonData["intStamp"] as int,
+          dayOfWeek: jsonData["dayOfWeek"] as int,
+          heldBy: jsonData["heldBy"],
+          location: jsonData["location"],
+        );
+
+  Map<String, dynamic> toJson() => toMap();
+
+  Map<String, dynamic> toMap() => {
         'eventName': eventName,
         'intStamp': intStamp,
         'dayOfWeek': dayOfWeek,
         'location': location,
         'heldBy': heldBy,
-      }).toString();
+      };
+
+  @override
+  String toString() => toMap.toString();
 }
 
-class CourseTimestamp extends EventTimestamp {
+final class CourseTimestamp extends EventTimestamp {
   // final int intStamp;
   // late int startStamp;
   // late final int startStampUnix;
@@ -42,9 +57,9 @@ class CourseTimestamp extends EventTimestamp {
   String get courseID => eventName;
   String get teacherID => heldBy!;
   String get room => location!;
-  final TimeStampType timestampType;
+  final TimestampType timestampType;
   final CourseType? courseType; // LT and BT
-  const CourseTimestamp({
+  CourseTimestamp({
     required super.intStamp,
     required super.dayOfWeek,
     required String courseID,
@@ -58,8 +73,21 @@ class CourseTimestamp extends EventTimestamp {
           heldBy: teacherID,
         );
 
+  CourseTimestamp.fromJson(Map<String, dynamic> jsonData, [String? courseID])
+      : this(
+          courseID: courseID ?? (jsonData["courseID"] as String),
+          intStamp: jsonData["intStamp"] as int,
+          dayOfWeek: jsonData["dayOfWeek"] as int,
+          teacherID: jsonData["teacherID"] as String,
+          room: jsonData["room"] as String,
+          timestampType: TimestampType.values[jsonData["timestampType"] as int],
+          courseType: jsonData["courseType"] == null
+              ? null
+              : CourseType.values[jsonData["courseType"]],
+        );
+
   @override
-  String toString() => ({
+  Map<String, dynamic> toMap() => {
         'intStamp': intStamp,
         'dayOfWeek': dayOfWeek,
         'courseID': courseID,
@@ -67,7 +95,7 @@ class CourseTimestamp extends EventTimestamp {
         'room': room,
         'timestampType': timestampType.index,
         'courseType': courseType?.index,
-      }).toString();
+      };
 }
 
 class EventTimeline {
@@ -91,27 +119,39 @@ class EventTimeline {
         intEvent = timestamp.fold(BigInt.zero, (f, _) {
           return f |
               (BigInt.from(_.intStamp) <<
-                  (_.dayOfWeek * classTimeStamps.length));
+                  (_.dayOfWeek * SPBasics().classTimestamps.length));
         });
 
   int get length => timestamp.length;
+
+  Map<String, dynamic> toJson() => toMap();
+
+  Map<String, dynamic> toMap() => {
+        'label': label,
+        'timestamp': timestamp,
+        'heldBy': heldBy,
+        'locations': locations,
+      };
+
+  @override
+  String toString() => toMap.toString();
 }
 
-class SchoolEvent extends EventTimeline {
+final class SchoolEvent extends EventTimeline {
   final String? title;
   final String? desc;
-  final DateTime startDate;
+  final List<DateTime> days;
 
   SchoolEvent({
     required super.label,
     required super.timestamp,
     String? title,
     this.desc,
-    required this.startDate,
+    required this.days,
   }) : title = title ?? label;
 }
 
-class SubjectCourse extends EventTimeline {
+final class SubjectCourse extends EventTimeline {
   final String subjectID;
   final List<CourseTimestamp> _timestamp;
 
@@ -128,10 +168,37 @@ class SubjectCourse extends EventTimeline {
     required this.subjectID,
     required List<CourseTimestamp> timestamp,
   })  : _timestamp = timestamp,
-        super(label: courseID, timestamp: []);
+        super(
+          label: courseID,
+          timestamp: timestamp,
+        );
+
+  SubjectCourse.fromJson(Map<String, dynamic> jsonData,
+      [String? courseID, String? subjectID])
+      : this(
+          courseID: courseID ?? (jsonData["courseID"] as String),
+          subjectID: subjectID ??
+              Subjects()
+                  .getSubjectAlt(courseID ?? (jsonData["courseID"] as String))
+                  ?.subjectID ??
+              (jsonData["subjectID"] as String),
+          timestamp: MiscFns.listType<Map<String, dynamic>>(
+                  jsonData["timestamp"] as List)
+              .map((_) => CourseTimestamp.fromJson(_, courseID))
+              .toList(),
+        );
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'subjectID': subjectID,
+        'courseID': courseID,
+        'teachers': teachers,
+        'rooms': rooms,
+        'timestamp': timestamp,
+      };
 }
 
-class Subject extends BaseSubject {
+final class Subject extends BaseSubject {
   final List<SubjectCourse> courses;
 
   const Subject({
@@ -155,9 +222,35 @@ class Subject extends BaseSubject {
   SubjectCourse? getCourse(String courseID) {
     return courses.firstWhereIf((_) => _.courseID == courseID);
   }
+
+  BaseSubject toBase() => BaseSubject(
+      subjectID: subjectID,
+      subjectAltID: subjectAltID,
+      name: name,
+      cred: cred,
+      dependencies: dependencies);
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'subjectID': subjectID,
+        'subjectAltID': subjectAltID,
+        'name': name,
+        'cred': cred,
+        'dependencies': dependencies,
+        'courses': courses,
+      };
 }
 
 extension BaseSubjectExtension on BaseSubject {
   Subject toSubject(List<SubjectCourse> courses) =>
       Subject.fromBase(this, courses);
+
+  // @override
+  // String toString() => ({
+  //       'subjectID': subjectID,
+  //       'subjectAltID': subjectAltID,
+  //       'name': name,
+  //       'cred': cred,
+  //       'dependencies': dependencies,
+  //     }).toString();
 }

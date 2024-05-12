@@ -28,22 +28,26 @@ final class Subjects {
       await SharedPrefs.setString("subjects", rawInfo);
     }
 
-    Iterable<Map<String, dynamic>> parsedInfo = [];
+    Map<String, Map<String, dynamic>> parsedInfo = {};
 
     try {
-      parsedInfo = jsonDecode(rawInfo);
+      parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
+          .map((key, value) => MapEntry(key, value as Map<String, dynamic>));
     } catch (e) {
       throw Exception("Failed to parse subjects info JSON from cache! $e");
     }
 
-    _subjects = parsedInfo.map<BaseSubject>((json) {
-      return BaseSubject(
-        subjectID: json["subjectID"] as String,
-        subjectAltID: json["subjectAltID"] as String,
-        name: json["name"] as String,
-        cred: json["cred"] as int,
-        dependencies: MiscFns.listType<String>(json["dependencies"] as List),
+    _subjects = parsedInfo.map<String, BaseSubject>((key, value) {
+      return MapEntry(
+        key,
+        BaseSubject(
+          subjectID: key,
+          subjectAltID: value["subjectAltID"] as String,
+          name: value["name"] as String,
+          cred: value["cred"] as int,
+          dependencies: MiscFns.listType<String>(value["dependencies"] as List),
+        ),
       );
-    });
+    }).values;
   }
 }

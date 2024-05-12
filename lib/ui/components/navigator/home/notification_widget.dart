@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/notification/notification.dart';
 import 'package:student/ui/components/navigator/home/notification.dart';
 
 class HomeNotifWidget extends StatefulWidget {
@@ -23,10 +24,7 @@ class _HomeNotifWidgetState extends State<HomeNotifWidget> {
         // shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(16.0),
       ),
-      child: AnimatedSize(
-        duration: const Duration(milliseconds: 100),
-        child: NotifExpandableBox(widget.notifications),
-      ),
+      child: NotifExpandableBox(widget.notifications),
     );
   }
 }

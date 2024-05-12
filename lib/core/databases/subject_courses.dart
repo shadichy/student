@@ -8,6 +8,7 @@ import 'package:student/core/databases/user.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/iterable_extensions.dart';
+import 'package:student/misc/misc_functions.dart';
 
 final class InStudyCourses {
   InStudyCourses._instance();
@@ -38,7 +39,9 @@ final class InStudyCourses {
     Map<String, List<Map<String, dynamic>>> parsedInfo = {};
 
     try {
-      parsedInfo = jsonDecode(rawInfo);
+      parsedInfo = parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
+          .map((key, value) => MapEntry(
+              key, MiscFns.listType<Map<String, dynamic>>(value as List)));
     } catch (e) {
       throw Exception(
           "Failed to parse inStudyCourses info JSON from cache! $e");
@@ -59,14 +62,14 @@ final class InStudyCourses {
           subjectID: s.subjectID,
           timestamp: (c["timestamp"] as List).map<CourseTimestamp>(
             (s) {
-              CourseTimestamp stamp = CourseTimestamp(
-                courseID: courseID,
-                intStamp: s["intStamp"] as int,
-                dayOfWeek: s["dayOfWeek"] as int,
-                teacherID: s["teacherID"] as String,
-                room: s["room"] as String,
-                timestampType: TimeStampType.values[s["timestampType"] as int],
-              );
+              CourseTimestamp stamp = CourseTimestamp.fromJson(s, courseID);
+              //   courseID: courseID,
+              //   intStamp: s["intStamp"] as int,
+              //   dayOfWeek: s["dayOfWeek"] as int,
+              //   teacherID: s["teacherID"] as String,
+              //   room: s["room"] as String,
+              //   timestampType: TimestampType.values[s["timestampType"] as int],
+              // );
 
               Routing.addRoute(
                 "stamp_${courseID}_${stamp.dayOfWeek}_${stamp.intStamp}",

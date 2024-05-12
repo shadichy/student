@@ -1,9 +1,9 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/notification/notification.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
 import 'package:student/ui/components/navigator/home/upcoming_event_widget.dart';
-import 'package:student/ui/components/navigator/home/notification.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
 import 'package:student/ui/components/navigator/navigator.dart';

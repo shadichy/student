@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student/core/routing.dart';
+import 'package:student/ui/components/option.dart';
+import 'package:student/ui/components/pages/settings/svg_theme.dart';
 
 class StudentTopBar extends StatelessWidget {
   const StudentTopBar({super.key});
@@ -10,18 +12,25 @@ class StudentTopBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Routing.themes,
-        Routing.notif,
-      ].map((o) {
-        return IconButton(
-          icon: o.icon,
-          onPressed: () => Routing.goto(context, o),
+        IconButton(
+          icon: SvgIcon(
+            primary: colorScheme.primaryContainer,
+            container: colorScheme.primary,
+            tertiary: colorScheme.tertiary,
+            size: 24,
+          ),
+          onPressed: () => Routing.goto(context, Routing.themes),
           color: colorScheme.onPrimaryContainer,
           iconSize: 24,
           // padding: const EdgeInsets.all(8),
           // backgroundColor: colorScheme.primaryContainer,
-        );
-      }).toList(),
+        ),
+        IconOption(
+          'notif',
+          color: colorScheme.onPrimaryContainer,
+          iconSize: 24,
+        ),
+      ],
     );
   }
 }

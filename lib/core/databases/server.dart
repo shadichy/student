@@ -1,14 +1,23 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:student/core/databases/user.dart';
-import 'package:student/core/configs.dart';
-import 'package:student/misc/parser.dart';
+// import 'package:student/core/configs.dart';
+import 'package:student/core/default_configs.dart';
+import 'package:student/misc/misc_functions.dart';
 
 abstract final class Server {
-  static final String _url = env["fetchUrl"]!;
+  static final String _domain = env["fetchDomain"]!;
+  static final String _prefix = env["apiPrefix"]!;
   static Future<String> fetch(String endpoint) async {
-    final res = await http.get(Uri.parse("$_url/$endpoint"));
+    final res = await http.get(
+      Uri.http(_domain, "$_prefix/$endpoint"),
+      // headers: {
+      //   'Access-Control-Allow-Origin': '*',
+      // },
+    );
     if (res.statusCode != 200) {
-      throw Exception("Failed to fetch from $_url/$endpoint!");
+      throw Exception("Failed to fetch from $_domain/$endpoint!");
     }
     return res.body;
   }
@@ -26,6 +35,23 @@ abstract final class Server {
 
   static Future<String> getSemester(
           TLUGroup group, TLUSemester semester) async =>
-      SampleTimetableData.unifyJson(
-          await fetch("/${group.name}/${semester.name}/semester.json"));
+      await fetch("/${group.name}/${semester.name}/semester.json");
+
+  static Future<MapEntry<int, List<String>>> getNotifications(
+      DateTime startDate) async {
+    List<int> notifIdList;
+    try {
+      notifIdList = MiscFns.listType<int>(
+          jsonDecode(await fetch("/notifications/timestamps.json")));
+    } catch (e) {
+      return MapEntry(startDate.millisecondsSinceEpoch ~/ 1000, []);
+    }
+    List<String> values = [];
+    for (int _ in notifIdList.take(
+      notifIdList.indexOf((startDate.millisecondsSinceEpoch / 1000).floor()),
+    )) {
+      values.add(await fetch("/notifications/$_.json"));
+    }
+    return MapEntry(notifIdList[0], values);
+  }
 }

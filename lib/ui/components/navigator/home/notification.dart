@@ -1,13 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-
-class Notif {
-  final String title;
-  final String content;
-  final DateTime? time;
-  final void Function()? target;
-  Notif(this.title, {required this.content, this.time, this.target});
-}
+import 'package:student/core/notification/notification.dart';
 
 class NotifExpand extends StatefulWidget {
   final Notif notification;
@@ -46,10 +39,10 @@ class _NotifExpandState extends State<NotifExpand> {
       fontWeight: FontWeight.w600,
     );
 
-    String timeNote = (widget.notification.time is DateTime)
+    String timeNote = (widget.notification.uploadDate is DateTime)
         ? (<String>(Duration? d) {
             return "${d!.inHours > 0 ? "${d.inHours}h" : ""}${d.inMinutes}m";
-          })(widget.notification.time?.difference(DateTime.now()))
+          })(widget.notification.uploadDate?.difference(DateTime.now()))
         : "now";
 
     Widget textBox(String text, {TextStyle? style, int? maxLines}) {
@@ -61,74 +54,77 @@ class _NotifExpandState extends State<NotifExpand> {
       );
     }
 
-    return InkWell(
-      onTap: isExpanded ? widget.notification.target : null,
-      child: Row(
-        crossAxisAlignment:
-            isExpanded ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            width: 32,
-            height: 32,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isExpanded)
-                  textBox(
-                    timeNote,
-                    style: noteStyle,
-                  ),
-                Row(
-                  children: [
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 100),
+      child: InkWell(
+        // onTap: isExpanded ? widget.notification.target : null,
+        child: Row(
+          crossAxisAlignment:
+              isExpanded ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              width: 32,
+              height: 32,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isExpanded)
                     textBox(
-                      widget.notification.title,
-                      style: titleStyle,
+                      timeNote,
+                      style: noteStyle,
                     ),
-                    if (!isExpanded)
+                  Row(
+                    children: [
                       textBox(
-                        (" \u2022 $timeNote"),
-                        style: noteStyle,
+                        widget.notification.title,
+                        style: titleStyle,
                       ),
-                  ],
-                ),
-                textBox(
-                  widget.notification.content,
-                  style: contentStyle,
-                  maxLines: isExpanded ? 2 : 1,
-                ),
-                if (isExpanded)
-                  InkWell(
-                    onTap: widget.notification.target,
-                    child: textBox(
-                      "More...",
-                      style: linkStyle,
-                    ),
+                      if (!isExpanded)
+                        textBox(
+                          (" \u2022 $timeNote"),
+                          style: noteStyle,
+                        ),
+                    ],
                   ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: IconButton(
-              onPressed: changeState,
-              icon: Icon(
-                  isExpanded
-                      ? Symbols.keyboard_arrow_up
-                      : Symbols.keyboard_arrow_down,
-                  size: 16,
-                  color: colorScheme.onPrimaryContainer),
-              style: IconButton.styleFrom(
-                backgroundColor: colorScheme.primary.withOpacity(0.05),
+                  textBox(
+                    widget.notification.content,
+                    style: contentStyle,
+                    maxLines: isExpanded ? 2 : 1,
+                  ),
+                  if (isExpanded)
+                    InkWell(
+                      // onTap: widget.notification.target,
+                      child: textBox(
+                        "More...",
+                        style: linkStyle,
+                      ),
+                    ),
+                ],
               ),
-              splashRadius: 2,
-              iconSize: 16,
-              padding: EdgeInsets.zero,
             ),
-          )
-        ],
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: IconButton(
+                onPressed: changeState,
+                icon: Icon(
+                    isExpanded
+                        ? Symbols.keyboard_arrow_up
+                        : Symbols.keyboard_arrow_down,
+                    size: 16,
+                    color: colorScheme.onPrimaryContainer),
+                style: IconButton.styleFrom(
+                  backgroundColor: colorScheme.primary.withOpacity(0.05),
+                ),
+                splashRadius: 2,
+                iconSize: 16,
+                padding: EdgeInsets.zero,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -248,8 +244,15 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
             color: Colors.transparent,
             height: 4,
           ),
-          ...notifications.map(
-            (Notif n) => isExpanded ? NotifExpand(n) : titlePreview(n),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 100),
+            child: Column(
+              children: List.generate(notifications.length, (_) {
+                return isExpanded
+                    ? NotifExpand(notifications[_])
+                    : titlePreview(notifications[_]);
+              }),
+            ),
           ),
         ],
       ),

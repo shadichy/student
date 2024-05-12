@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 // import 'package:student/core/databases/server.dart';
-import 'package:currency_converter/currency.dart';
-import 'package:flutter/material.dart';
 import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/core/default_configs.dart';
 // import 'package:student/core/databases/user.dart';
 // import 'package:student/misc/misc_functions.dart';
 
@@ -56,26 +55,3 @@ final class AppConfig {
     }
   }
 }
-
-Map<String, dynamic> defaultConfig = {
-  'notif.reminders': [
-    {"duration": 30},
-    {"duration": 60},
-  ],
-  'notif.reminder': true,
-  'notif.topEvents': true,
-  'notif.miscEvents': true,
-  'notif.impNotif': true,
-  'notif.clubNotif': true,
-  'notif.miscNotif': true,
-  'notif.appNotif': true,
-  'theme.themeMode': 1,
-  'theme.accentColor': Colors.red.value,
-  'settings.language': 'vi',
-  'misc.startWeekday': DateTime.monday,
-  'misc.currency': Currency.vnd.name,
-};
-
-Map<String, String> env = {
-  'fetchUrl': 'https://example.com',
-};

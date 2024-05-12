@@ -1,4 +1,4 @@
-import 'package:student/core/presets.dart';
+import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 
 class SampleTimetable {
@@ -70,7 +70,7 @@ class SubjectFilter {
   BigInt _fold(List<int> org) {
     return org.fold(
       BigInt.zero,
-      (p, n) => (p << classTimeStamps.length) | BigInt.from(n),
+      (p, n) => (p << SPBasics().classTimestamps.length) | BigInt.from(n),
     );
   }
 }

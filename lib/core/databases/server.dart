@@ -9,9 +9,9 @@ import 'package:student/misc/misc_functions.dart';
 abstract final class Server {
   static final String _domain = env["fetchDomain"]!;
   static final String _prefix = env["apiPrefix"]!;
-  static Future<String> fetch(String endpoint) async {
+  static Future<T> fetch<T>(String endpoint) async {
     final res = await http.get(
-      Uri.http(_domain, "$_prefix/$endpoint"),
+      Uri.https(_domain, "$_prefix/$endpoint"),
       // headers: {
       //   'Access-Control-Allow-Origin': '*',
       // },
@@ -19,38 +19,44 @@ abstract final class Server {
     if (res.statusCode != 200) {
       throw Exception("Failed to fetch from $_domain/$endpoint!");
     }
-    return res.body;
+    try {
+      return jsonDecode(res.body) as T;
+    } catch (e) {
+      throw FormatException("Failed to parse body: ", e);
+    }
   }
 
-  static Future<String> get getStudyProgramBasics async =>
+  static Future<Map<String, dynamic>> get getStudyProgramBasics async =>
       await fetch("/basics.json");
 
-  static Future<String> get getTeachers async => await fetch("/teachers.json");
+  static Future<Map<String, dynamic>> get getTeachers async =>
+      await fetch("/teachers.json");
 
-  static Future<String> getSubjects(TLUGroup group) async =>
+  static Future<Map<String, dynamic>> getSubjects(TLUGroup group) async =>
       await fetch("/${group.name}/subjects.json");
 
-  static Future<String> getStudyPlan(TLUGroup group) async =>
+  static Future<Map<String, dynamic>> getStudyPlan(TLUGroup group) async =>
       await fetch("/${group.name}/study_plan.json");
 
-  static Future<String> getSemester(
+  static Future<Map<String, dynamic>> getSemester(
           TLUGroup group, TLUSemester semester) async =>
       await fetch("/${group.name}/${semester.name}/semester.json");
 
-  static Future<MapEntry<int, List<String>>> getNotifications(
-      DateTime startDate) async {
+  static Future<MapEntry<int, List<Iterable<Map<String, dynamic>>>>>
+      getNotifications(int startDate) async {
     List<int> notifIdList;
     try {
       notifIdList = MiscFns.listType<int>(
-          jsonDecode(await fetch("/notifications/timestamps.json")));
+          await fetch<List>("/notifications/timestamps.json"));
     } catch (e) {
-      return MapEntry(startDate.millisecondsSinceEpoch ~/ 1000, []);
+      return MapEntry(startDate, []);
     }
-    List<String> values = [];
+    List<Iterable<Map<String, dynamic>>> values = [];
     for (int _ in notifIdList.take(
-      notifIdList.indexOf((startDate.millisecondsSinceEpoch / 1000).floor()),
+      notifIdList.indexOf((startDate)),
     )) {
-      values.add(await fetch("/notifications/$_.json"));
+      values.add((await fetch<List>("/notifications/$_.json"))
+          .map((e) => e as Map<String, dynamic>));
     }
     return MapEntry(notifIdList[0], values);
   }

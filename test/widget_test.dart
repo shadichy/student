@@ -7,10 +7,9 @@
 
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:student/core/semester/functions.dart';
-// import 'dart:convert';
 // import 'dart:io';
 // import 'package:http/http.dart' as http;
-import 'package:student/core/databases/server.dart';
+// import 'package:student/core/databases/server.dart';
 // import 'package:student/core/databases/shared_prefs.dart';
 // import 'package:student/core/databases/user.dart';
 
@@ -47,6 +46,12 @@ void main() {
   //   "user",
   //   '{"id":"A47548","name":"Sadashi Ken Ichi","group":2,"semester":1,"schoolYear":36,"passed":[],"learning":[]}',
   // );
-  Server.getTeachers.then((value) => print(value));
+  // Server.getTeachers.then((value) => print(value));
   // Server.getSubjects(TLUGroup.n3).then((value) => print(value));
+  // print(jsonEncode(0));
+  // print(jsonEncode(""));
+  // print(jsonEncode(true));
+  // print(jsonEncode(5.6));
+  // print(jsonEncode(["a"]));
+  // print(jsonEncode({'a.b': 'c'}));
 }

@@ -3,11 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/databases/subject_courses.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/notification/notification.dart';
+import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/ui/app.dart';
+import 'package:student/ui/pages/init/loading.dart';
 import 'package:student/ui/pages/init/main.dart';
 import 'package:system_theme/system_theme.dart';
 
@@ -25,7 +30,11 @@ class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
-  bool initialized = SharedPrefs.getString("user") is String;
+  static bool get initStat => SharedPrefs.getString("user") != null;
+
+  bool initializeStart = initStat;
+
+  Widget mainContent = const Loading();
 
   Key key = UniqueKey();
 
@@ -37,7 +46,7 @@ class _StudentAppState extends State<StudentApp> {
     setState(() {
       switch (action) {
         case AppAction.init:
-          initialized = SharedPrefs.getString("user") is String;
+          initializeStart = initStat;
           initialize();
           break;
         case AppAction.reload:
@@ -45,7 +54,8 @@ class _StudentAppState extends State<StudentApp> {
           break;
         case AppAction.deinit:
           SharedPrefs.setString("user", null);
-          initialized = false;
+          initializeStart = false;
+          key = UniqueKey();
           break;
       }
     });
@@ -57,7 +67,7 @@ class _StudentAppState extends State<StudentApp> {
         ? SystemTheme.accentColor.accent
         : Color(AppConfig().getConfig<int>("theme.accentColor") ??
             Colors.deepOrange.value);
-    mode = useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
+    mode = useSystem ? 0 : AppConfig().getConfig<int>("them`e.themeMode") ?? 1;
     font = useSystem ? null : AppConfig().getConfig<String>("theme.appFont");
   }
 
@@ -69,15 +79,16 @@ class _StudentAppState extends State<StudentApp> {
   }
 
   Future<void> initialize() async {
-    if (!initialized) return;
+    if (!initializeStart) return;
     await User().initialize();
     await SPBasics().initialize();
     await Teachers().initialize();
     await Subjects().initialize();
-    // await StudyPlan().initialize();
-    // await InStudyCourses().initialize();
-    // await SemesterTimetable().initialize();
-    // await NotificationsGet().initialize();
+    await StudyPlan().initialize();
+    await InStudyCourses().initialize();
+    await SemesterTimetable().initialize();
+    await NotificationsGet().initialize();
+    setState(() => mainContent = const App());
   }
 
   @override
@@ -133,7 +144,7 @@ class _StudentAppState extends State<StudentApp> {
             //         ? Brightness.dark
             //         : Brightness.light,
           ),
-          child: initialized ? const App() : const Initializer(),
+          child: initializeStart ? mainContent : const Initializer(),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
@@ -22,8 +21,8 @@ final class Subjects {
       _subjects.firstWhereIf((_) => _.subjectAltID == id);
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("subjects");
-    if (rawInfo is! String) {
+    Map<String, dynamic>? rawInfo = SharedPrefs.getString("subjects");
+    if (rawInfo == null) {
       rawInfo = await Server.getSubjects(User().group);
       await SharedPrefs.setString("subjects", rawInfo);
     }
@@ -31,7 +30,7 @@ final class Subjects {
     Map<String, Map<String, dynamic>> parsedInfo = {};
 
     try {
-      parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
+      parsedInfo = rawInfo
           .map((key, value) => MapEntry(key, value as Map<String, dynamic>));
     } catch (e) {
       throw Exception("Failed to parse subjects info JSON from cache! $e");

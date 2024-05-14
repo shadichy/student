@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
@@ -14,8 +13,8 @@ final class Teachers {
   String? getTeacher(String id) => _teachers[id];
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("teachers");
-    if (rawInfo is! String) {
+    Map<String, dynamic>? rawInfo = SharedPrefs.getString("teachers");
+    if (rawInfo == null) {
       rawInfo = await Server.getTeachers;
       await SharedPrefs.setString("teachers", rawInfo);
     }
@@ -23,8 +22,7 @@ final class Teachers {
     Map<String, String> parsedInfo = {};
 
     try {
-      parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
-          .map((key, value) => MapEntry(key, value as String));
+      parsedInfo = rawInfo.map((key, value) => MapEntry(key, value as String));
     } catch (e) {
       throw Exception("Failed to parse teachers info JSON from cache! $e");
     }

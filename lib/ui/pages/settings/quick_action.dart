@@ -11,11 +11,10 @@ class SettingsQuickActionPage extends StatefulWidget implements TypicalPage {
       _SettingsQuickActionPageState();
 
   @override
-  // TODO: implement icon
+  //
   Icon get icon => throw UnimplementedError();
 
   @override
-  // TODO: implement title
   String get title => throw UnimplementedError();
 }
 

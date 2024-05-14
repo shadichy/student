@@ -27,6 +27,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
       URL u = widget.news[i];
       return SizedBox(
         width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width * 0.56 + 64,
         child: Card.outlined(
           child: InkWell(
             onTap: () {},
@@ -76,7 +77,7 @@ class _UpdatedNewsState extends State<UpdatedNews> {
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width * 0.56 + 64,
+          height: MediaQuery.of(context).size.width * 0.56 + 96,
           // padding: const EdgeInsets.symmetric(horizontal: 16),
           // child: SingleChildScrollView(
           //   scrollDirection: Axis.horizontal,

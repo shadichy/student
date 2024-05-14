@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:student/core/routing.dart';
+import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
@@ -129,12 +130,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
           itemBuilder: ((context, index) {
             return TimetableUpcomingCardAlt(classStamps[index]);
           }),
-          separatorBuilder: ((context, index) {
-            return const Divider(
-              color: Colors.transparent,
-              height: 8,
-            );
-          }),
+          separatorBuilder: ((context, index) => MWds.divider(8)),
           itemCount: classStamps.length > 2 ? 2 : classStamps.length,
           // scrollDirection: Axis.vertical,
           shrinkWrap: true,

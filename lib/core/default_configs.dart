@@ -17,9 +17,31 @@ Map<String, dynamic> defaultConfig = {
   'settings.language': 'vi',
   'misc.startWeekday': DateTime.monday,
   'misc.currency': Currency.vnd.name,
+  'opts.Home': [
+    "settings",
+    "program",
+    "learning_result",
+    "finance",
+    "help",
+  ],
+  'opts.School': [
+    "notif",
+    "program",
+    "learning_result",
+    "student",
+    "help",
+  ],
+  'opts.Student': [
+    "student",
+    "finance",
+    "program",
+    "learning_result",
+    "settings",
+    "help",
+  ],
 };
 
 Map<String, String> env = {
-  'fetchDomain': '192.168.240.1:8080',
-  'apiPrefix': 'sample_db',
+  'fetchDomain': 'raw.githubusercontent.com',
+  'apiPrefix': 'shadichydev/student/async/test/sample_db',
 };

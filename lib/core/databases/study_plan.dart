@@ -1,11 +1,11 @@
-import 'dart:convert';
-
+import 'package:flutter/widgets.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
 
-enum DayType { H, T, N, B, Q }
+enum DayType { H, T, N, B, Q, O, S, X }
 
 class SemesterPlan {
   final TLUSemester currentSemester;
@@ -33,36 +33,43 @@ final class StudyPlan {
   // static List<DayType> _full(DayType type) => List.generate(7, (_) => type);
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("studyPlan");
-    if (rawInfo is! String) {
-      rawInfo = await Server.getStudyPlan(User().group);
-      await SharedPrefs.setString("studyPlan", rawInfo);
+    Map<String, dynamic>? parsedInfo = SharedPrefs.getString("studyPlan");
+    if (parsedInfo == null) {
+      parsedInfo = await Server.getStudyPlan(User().group);
+      await SharedPrefs.setString("studyPlan", parsedInfo);
     }
 
-    Map<String, dynamic> parsedInfo = {};
+    int startDateInt = parsedInfo["startDate"];
 
-    try {
-      parsedInfo = jsonDecode(rawInfo);
-    } catch (e) {
-      throw Exception("Failed to parse studyPlan info JSON from cache! $e");
-    }
+    startDate = MiscFns.epoch(startDateInt);
 
-    startDate = MiscFns.epoch(parsedInfo["startDate"] as int);
+    int prevWeeks = 0;
 
-    table = MiscFns.listType<Map<String, dynamic>>(parsedInfo["plan"] as List)
+    table = MiscFns.listType<String>(parsedInfo["plan"] as List)
         .asMap()
         .map((l, s) {
+      List<List<DayType>> chunkedWeek = (s)
+          .characters
+          .map((_) => DayType.values[int.parse(_)])
+          .chunked(7)
+          .toList();
+      List<int> studyWeek = [];
+
+      chunkedWeek.asMap().forEach((key, value) {
+        if (!value.contains(DayType.H)) return;
+        studyWeek.add(key);
+      });
+
+      int startDate = prevWeeks * 7 * 24 * 3600 + startDateInt;
+      prevWeeks = chunkedWeek.length;
+
       return MapEntry(
         l,
         SemesterPlan(
           currentSemester: TLUSemester.values[l],
-          timetable: MiscFns.listType<List>(s["week"] as List).map((w) {
-            return MiscFns.listType<int>(w)
-                .map((i) => DayType.values[i])
-                .toList();
-          }).toList(),
-          studyWeeks: MiscFns.listType<int>(s["studyWeek"] as List),
-          startDate: MiscFns.epoch(s["startDate"] as int),
+          timetable: chunkedWeek,
+          studyWeeks: studyWeek,
+          startDate: MiscFns.epoch(startDate),
         ),
       );
     }).values;

@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/generator/generator.dart';
+import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event_widget.dart';
@@ -56,10 +57,7 @@ class TimetablePage extends StatelessWidget implements TypicalPage {
         ),
         // const ResultSummaryWidget(),
         // const MajorInfoWidget(),
-        const Divider(
-          color: Colors.transparent,
-          height: 16,
-        )
+        MWds.divider(16),
       ],
     );
   }

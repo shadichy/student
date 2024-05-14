@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/core/databases/user.dart';
+// import 'package:student/core/databases/user.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:currency_converter/currency.dart';
@@ -27,18 +25,10 @@ final class SPBasics {
   int? creditPrice(String schoolYear) => _creditPrice[schoolYear];
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("presets");
-    if (rawInfo is! String) {
-      rawInfo = await Server.getStudyProgramBasics;
-      await SharedPrefs.setString("presets", rawInfo);
-    }
-
-    Map<String, dynamic> parsedInfo = {};
-
-    try {
-      parsedInfo = jsonDecode(rawInfo);
-    } catch (e) {
-      throw Exception("Failed to parse studyPlan info JSON from cache! $e");
+    Map<String, dynamic>? parsedInfo = SharedPrefs.getString("presets");
+    if (parsedInfo == null) {
+      parsedInfo = await Server.getStudyProgramBasics;
+      await SharedPrefs.setString("presets", parsedInfo);
     }
 
     _studyTimestamps =

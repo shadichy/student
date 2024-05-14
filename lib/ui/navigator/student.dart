@@ -31,17 +31,7 @@ class StudentPage extends StatelessWidget implements TypicalPage {
           studentGPA: '1.1',
           studentCred: 24,
         ),
-        OptionLabelWidgets(
-            title,
-            const [
-              "student",
-              "finance",
-              "program",
-              "learning_result",
-              "settings",
-              "help",
-            ],
-            headingLabel: "Settings"),
+        OptionLabelWidgets(title, headingLabel: "Settings"),
       ],
     );
   }

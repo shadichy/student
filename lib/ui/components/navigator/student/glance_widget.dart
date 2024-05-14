@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/connect.dart';
 
@@ -77,10 +78,7 @@ class _StudentGlanceState extends State<StudentGlance> {
               ),
             ),
           ),
-          const Divider(
-            color: Colors.transparent,
-            height: 8,
-          ),
+          MWds.divider(8),
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Table(
@@ -109,10 +107,7 @@ class _StudentGlanceState extends State<StudentGlance> {
               }).toList(),
             ),
           ),
-          const Divider(
-            color: Colors.transparent,
-            height: 8,
-          ),
+          MWds.divider(8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract final class SharedPrefs {
@@ -6,8 +8,16 @@ abstract final class SharedPrefs {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  static String? getString(String key) => _prefs.getString(key);
+  static T? getString<T>(String key, [T? defaultValue]) {
+    try {
+      return jsonDecode(_prefs.getString(key)!);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
 
   static Future<void> setString(String key, Object? value) async =>
-      value != null ? await _prefs.setString(key, value.toString()) : _prefs.remove(key);
+      value != null
+          ? await _prefs.setString(key, jsonEncode(value))
+          : _prefs.remove(key);
 }

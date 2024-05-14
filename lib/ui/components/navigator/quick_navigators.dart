@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:student/core/configs.dart';
 import 'package:student/core/routing.dart';
+import 'package:student/misc/misc_functions.dart';
+import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/section_label.dart';
@@ -8,14 +11,15 @@ import 'package:student/ui/components/section_label.dart';
 class OptionLabelWidgets extends StatelessWidget {
   // final List<Option> options;
   final String id;
-  final List<String> routes;
+  final List<String> _routes;
   final String headingLabel;
-  const OptionLabelWidgets(
-    this.id,
-    this.routes, {
+  OptionLabelWidgets(
+    this.id, {
     super.key,
     this.headingLabel = "Quick actions",
-  });
+  }) : _routes = MiscFns.listType<String>(
+          AppConfig().getConfig<List>("opts.$id"),
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,8 @@ class OptionLabelWidgets extends StatelessWidget {
         textStyle: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         color: colorScheme.onPrimaryContainer,
       ),
-      ...List.generate(routes.length, (index) {
-        TypicalPage t = Routing.getRoute(routes[index])!;
+      ...List.generate(_routes.length, (index) {
+        TypicalPage t = Routing.getRoute(_routes[index])!;
         return SubPage(
           label: t.title,
           target: t,
@@ -57,10 +61,7 @@ class OptionLabelWidgets extends StatelessWidget {
       //     dense: true,
       //   ),
       // ),
-      const Divider(
-        height: 8,
-        color: Colors.transparent,
-      ),
+      MWds.divider(8),
       InkWell(
         borderRadius: BorderRadius.circular(32),
         onTap: () => Routing.goto(context, Routing.quick_action_edit(id)),
@@ -92,10 +93,7 @@ class OptionLabelWidgets extends StatelessWidget {
           ),
         ),
       ),
-      const Divider(
-        height: 8,
-        color: Colors.transparent,
-      ),
+      MWds.divider(8),
     ];
 
     return Padding(

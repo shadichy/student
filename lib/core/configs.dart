@@ -16,13 +16,7 @@ final class AppConfig {
   Map<String, dynamic> data = {};
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("config");
-    if (rawInfo is! String) {
-      await SharedPrefs.setString("studyPlan", defaultConfig);
-      data = defaultConfig;
-    } else {
-      data = jsonDecode(rawInfo) ?? defaultConfig;
-    }
+    data = SharedPrefs.getString("config", defaultConfig)!;
   }
 
   Future<void> _write() async {

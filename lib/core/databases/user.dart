@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -33,17 +31,9 @@ class User {
   bool get initialized => _initialized;
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("user");
-    if (rawInfo is! String) {
+    Map<String, dynamic>? parsedInfo = SharedPrefs.getString("user");
+    if (parsedInfo == null) {
       throw Exception("Could not get user info from cache!");
-    }
-
-    Map<String, dynamic> parsedInfo = {};
-
-    try {
-      parsedInfo = jsonDecode(rawInfo);
-    } catch (e) {
-      throw Exception("Failed to parse user info JSON from cache! $e");
     }
 
     id = parsedInfo["id"] as String;

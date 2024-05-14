@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 
 class SchoolNewPapersPage extends StatelessWidget implements TypicalPage {
@@ -10,10 +11,8 @@ class SchoolNewPapersPage extends StatelessWidget implements TypicalPage {
   }
 
   @override
-  // TODO: implement icon
-  Icon get icon => throw UnimplementedError();
+  Icon get icon => const Icon(Symbols.news);
 
   @override
-  // TODO: implement title
-  String get title => throw UnimplementedError();
+  String get title => "Latest of TLU";
 }

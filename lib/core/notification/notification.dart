@@ -19,6 +19,7 @@ class Notif {
   final TLUSemester? applySemester;
   final bool? override;
   bool? applied;
+  bool read;
   Notif(
     this.title, {
     required this.content,
@@ -29,6 +30,7 @@ class Notif {
     this.applySemester,
     this.override,
     bool? applied,
+    this.read = false,
   }) : applied = applyEvent != null ? applied ?? false : null;
 
   Notif.fromJson(Map<String, dynamic> map)
@@ -61,8 +63,9 @@ class Notif {
           applySemester: map["applySemester"] == null
               ? null
               : TLUSemester.values[map["applySemester"] as int],
-          override: map["override"] == null ? null : map["override"] as bool,
-          applied: map["applied"] == null ? null : map["applied"] as bool,
+          override: map["override"] as bool?,
+          applied: map["applied"] as bool?,
+          read: (map["read"] ?? false) as bool,
         );
 
   Map<String, dynamic> toJson() => {
@@ -77,9 +80,11 @@ class Notif {
         'applySemester': applySemester?.index,
         'override': override,
         'applied': applied,
+        'read': read,
       };
 
   void apply() {
+    if (applied == true) return;
     if (applyEvent == null ||
         applyGroup != User().group ||
         applySemester != User().semester) {
@@ -91,6 +96,11 @@ class Notif {
       override: override ?? false,
       days: applyDates,
     );
+    applied = true;
+  }
+
+  void readNotif() {
+    read = true;
   }
 }
 
@@ -103,53 +113,47 @@ final class NotificationsGet {
 
   late final List<Notif> _notifications;
   List<Notif> get notifications => _notifications;
-  late final DateTime _lastUpdated;
+  late final int _lastUpdated;
 
-  Notif _parseString(String string) => _parseMap(jsonDecode(string));
+  Notif _parseMap(Map<String, dynamic> map) {
+    Notif notif = Notif.fromJson(map);
+    if (notif.applied == false) notif.apply();
+    return notif;
+  }
 
-  Notif _parseMap(Map<String, dynamic> map) => Notif.fromJson(map);
-
-  Future<void> _write() async {
+  Future<void> write() async {
     await SharedPrefs.setString(
       "notifications",
-      jsonEncode({
+      {
         'lastUpdated': _lastUpdated,
         'data': _notifications,
-      }),
+      },
     );
   }
 
   Future<void> initialize() async {
-    String rawInfo = SharedPrefs.getString("notifications") ?? "{}";
-    // if (rawInfo is! String) {
-    //   rawInfo = await Server.getNotifications(0);
-    //   await SharedPrefs.setString("notifications", rawInfo);
-    // }
-
-    Map<String, dynamic> parsedInfo = {};
-
-    try {
-      parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
-          .map((key, value) => MapEntry(key, value as String));
-    } catch (e) {
-      throw Exception("Failed to parse teachers info JSON from cache! $e");
-    }
+    Map<String, dynamic> parsedInfo =
+        SharedPrefs.getString("notifications", {})!;
 
     // _lastUpdated = parsedInfo["lastUpdated"];
 
-    MapEntry<int, List<String>> updated = await Server.getNotifications(
-        MiscFns.epoch((parsedInfo["lastUpdated"] == null
-            ? 0
-            : parsedInfo["lastUpdated"] as int)));
+    MapEntry<int, List<Iterable<Map<String, dynamic>>>> updated =
+        await Server.getNotifications(
+      ((parsedInfo["lastUpdated"] ?? 0) as int),
+    );
 
-    _notifications = [
-      ...MiscFns.listType<Map<String, dynamic>>(parsedInfo["data"] as List)
-          .map((e) => _parseMap(e)),
-      ...updated.value.map((e) => _parseString(e))
-    ];
-    _lastUpdated = MiscFns.epoch(updated.key);
+    _notifications = updated.value
+        .map((_) => _.map((e) => _parseMap(e)))
+        .fold(
+          MiscFns.listType<Map<String, dynamic>>(
+            (parsedInfo["data"] ?? []) as List,
+          ).map((e) => _parseMap(e)),
+          (p, n) => [...p, ...n],
+        )
+        .toList();
+    _lastUpdated = updated.key;
 
     // _teachers = parsedInfo;
-    await _write();
+    await write();
   }
 }

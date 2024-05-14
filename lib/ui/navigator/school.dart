@@ -43,13 +43,7 @@ class SchoolPage extends StatelessWidget implements TypicalPage {
             "https://service.teamfuho.net/wp-content/uploads/2024/02/2024-02-10_22.06.19.jpg",
           ),
         ]),
-        OptionLabelWidgets(title, const [
-          "notif",
-          "program",
-          "learning_result",
-          "student",
-          "help",
-        ]),
+        OptionLabelWidgets(title),
         Padding(
           padding: const EdgeInsets.all(16),
           child: Row(

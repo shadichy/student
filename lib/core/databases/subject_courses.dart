@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/user.dart';
-import 'package:student/core/routing.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/iterable_extensions.dart';
-import 'package:student/misc/misc_functions.dart';
 
 final class InStudyCourses {
   InStudyCourses._instance();
@@ -30,31 +26,26 @@ final class InStudyCourses {
       getSubjectAlt(_getCourseID.firstMatch(id).toString())?.getCourse(id);
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("inStudyCourses");
-    if (rawInfo is! String) {
+    Map<String, dynamic>? rawInfo = SharedPrefs.getString("inStudyCourses");
+    if (rawInfo == null) {
       rawInfo = await Server.getSemester(User().group, User().semester);
       await SharedPrefs.setString("inStudyCourses", rawInfo);
     }
 
-    Map<String, List<Map<String, dynamic>>> parsedInfo = {};
+    // Map<String, List<Map<String, dynamic>>> parsedInfo = {};
+    // throw Exception("d log1");
 
-    try {
-      parsedInfo = parsedInfo = (jsonDecode(rawInfo) as Map<String, dynamic>)
-          .map((key, value) => MapEntry(
-              key, MiscFns.listType<Map<String, dynamic>>(value as List)));
-    } catch (e) {
-      throw Exception(
-          "Failed to parse inStudyCourses info JSON from cache! $e");
-    }
+    // parsedInfo = rawInfo.map((key, value) =>
+    // MapEntry(key, MiscFns.listType<Map<String, dynamic>>(value as List)));
 
-    _inStudyCourses = parsedInfo.map<String, Subject>((key, value) {
+    _inStudyCourses = rawInfo.map<String, Subject>((key, value) {
       BaseSubject? s = Subjects().getSubject(key);
       if (s! is Subject) {
         throw Exception(
             "Failed to parse inStudyCourses info JSON: $key is invalid!");
       }
 
-      Iterable<SubjectCourse> map = value.map<SubjectCourse>((c) {
+      Iterable<SubjectCourse> map = (value as List).map<SubjectCourse>((c) {
         String courseID = c["courseID"] as String;
 
         SubjectCourse course = SubjectCourse(
@@ -62,26 +53,21 @@ final class InStudyCourses {
           subjectID: s.subjectID,
           timestamp: (c["timestamp"] as List).map<CourseTimestamp>(
             (s) {
-              CourseTimestamp stamp = CourseTimestamp.fromJson(s, courseID);
-              //   courseID: courseID,
-              //   intStamp: s["intStamp"] as int,
-              //   dayOfWeek: s["dayOfWeek"] as int,
-              //   teacherID: s["teacherID"] as String,
-              //   room: s["room"] as String,
-              //   timestampType: TimestampType.values[s["timestampType"] as int],
-              // );
-
-              Routing.addRoute(
-                "stamp_${courseID}_${stamp.dayOfWeek}_${stamp.intStamp}",
-                Routing.stamp(stamp),
+              CourseTimestamp stamp = CourseTimestamp.fromJson(
+                s as Map<String, dynamic>,
+                courseID,
               );
+              // Routing.addRoute(
+              //   "stamp_${courseID}_${stamp.dayOfWeek}_${stamp.intStamp}",
+              //   Routing.stamp(stamp),
+              // );
 
               return stamp;
             },
           ).toList(),
         );
 
-        Routing.addRoute("course_$courseID", Routing.course(course));
+        // Routing.addRoute("course_$courseID", Routing.course(course));
 
         return course;
       });
@@ -91,7 +77,7 @@ final class InStudyCourses {
         map.toList(),
       );
 
-      Routing.addRoute("subject_$s", Routing.subject(subject));
+      // Routing.addRoute("subject_$s", Routing.subject(subject));
 
       return MapEntry(key, subject);
     }).values;

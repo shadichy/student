@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
@@ -151,41 +150,27 @@ final class SemesterTimetable {
   }
 
   Future<void> _write() async {
-    String rawInfo = json.encode(_timetable);
-    await SharedPrefs.setString("userTimetable", rawInfo);
+    await SharedPrefs.setString("userTimetable", _timetable);
   }
 
   Future<void> initialize() async {
-    String? rawInfo = SharedPrefs.getString("userTimetable");
+    List? rawInfo = SharedPrefs.getString("userTimetable");
+
     SemesterPlan currentPlan =
         StudyPlan().table.toList()[_currentSemester.index];
     _startDate = currentPlan.startDate;
-    if (rawInfo is String) {
-      Iterable<Map<String, dynamic>> parsedInfo = jsonDecode(rawInfo);
+
+    if (rawInfo is List) {
+      Iterable<Map<String, dynamic>> parsedInfo =
+          MiscFns.listType<Map<String, dynamic>>(rawInfo);
       _timetable = parsedInfo.map((w) {
         return WeekTimetable(
           MiscFns.listType<Map<String, dynamic>>(
-            w["timetable"] as List,
+            w["timestamps"] as List,
           ).map((s) {
             return s["courseID"] != null
-                ? CourseTimestamp(
-                    intStamp: s["intStamp"] as int,
-                    dayOfWeek: s["dayOfWeek"] as int,
-                    courseID: s["courseID"] as String,
-                    teacherID: s["teacherID"] as String,
-                    room: s["room"] as String,
-                    timestampType:
-                        TimestampType.values[s["timestampType"] as int],
-                    courseType: s["courseType"] == null
-                        ? null
-                        : CourseType.values[s["courseType"] as int])
-                : EventTimestamp(
-                    eventName: s["eventName"] as String,
-                    intStamp: s["intStamp"] as int,
-                    dayOfWeek: s["dayOfWeek"] as int,
-                    location: s["location"],
-                    heldBy: s["heldBy"],
-                  );
+                ? CourseTimestamp.fromJson(s)
+                : EventTimestamp.fromJson(s);
           }).toList(),
           startDate: MiscFns.epoch(w["startDate"] as int),
           weekNo: w["weekNo"] as int?,

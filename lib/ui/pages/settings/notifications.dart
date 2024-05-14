@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/reminder.dart';
@@ -147,12 +148,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                 }),
               );
             }),
-            separatorBuilder: ((context, index) {
-              return const Divider(
-                color: Colors.transparent,
-                height: 8,
-              );
-            }),
+            separatorBuilder: ((context, index) => MWds.divider(8)),
             itemCount: reminders.length,
             // scrollDirection: Axis.vertical,
             shrinkWrap: true,

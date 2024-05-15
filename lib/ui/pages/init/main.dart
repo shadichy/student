@@ -16,8 +16,13 @@ class Initializer extends StatelessWidget {
         "group": 2,
         "semester": 1,
         "schoolYear": 36,
-        "passed": [],
-        "learning": []
+        "learning": [
+          [
+            ["VC134", "ML113"],
+            ["IM210"]
+          ],
+          []
+        ]
       },
     ).then((_) => StudentApp.action(context, AppAction.init));
     return const Scaffold(body: Text("Scanning step"));

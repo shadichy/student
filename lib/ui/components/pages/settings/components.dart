@@ -160,6 +160,7 @@ class Opt extends StatefulWidget {
   final Widget? target;
   final void Function(BuildContext context)? action;
   final Widget? icon;
+  final double? minVerticalPadding;
 
   const Opt({
     required this.label,
@@ -172,6 +173,7 @@ class Opt extends StatefulWidget {
     this.action,
     this.switcherDefaultValue,
     this.icon,
+    this.minVerticalPadding,
     super.key,
   })  : assert(buttonType != ButtonType.page || target != null,
             'Page button must have a target destination.'),
@@ -212,7 +214,8 @@ class _OptState extends State<Opt> {
 
     return ListTile(
       // contentPadding: const EdgeInsets.symmetric(vertical: 8),
-      minVerticalPadding: 12,
+      minVerticalPadding: widget.minVerticalPadding ?? 12,
+      // minVerticalPadding: 12,
       title: Text(widget.label, style: textTheme.titleLarge),
       subtitle: widget.desc != null
           ? Text(widget.desc!, style: textTheme.bodyMedium)

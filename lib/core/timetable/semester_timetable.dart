@@ -1,4 +1,3 @@
-
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/subject_courses.dart';
@@ -87,8 +86,9 @@ final class SemesterTimetable {
       int week = (daysDiff / 7).floor();
       int doW = daysDiff % 7;
       while (_timetable.length < week + 1) {
-        _timetable.add(WeekTimetable([],
-            startDate: startDate.add(Duration(days: 7 * week))));
+        _timetable.add(
+          WeekTimetable([], startDate: startDate.add(Duration(days: 7 * week))),
+        );
       }
       Iterable<EventTimestamp> matchEvents =
           timestamp.where((_) => _.dayOfWeek == doW);
@@ -179,8 +179,9 @@ final class SemesterTimetable {
       return;
     }
 
-    Iterable<SubjectCourse> registeredCourses =
-        User().learningCourseIDs.map((id) => InStudyCourses().getCourse(id)!);
+    Iterable<SubjectCourse> registeredCourses = User()
+        .learningCourses[User().currentSchoolYear - User().schoolYear][User().semester]!
+        .map((id) => InStudyCourses().getCourse(id)!);
 
     _timetable = currentPlan.timetable
         .asMap()

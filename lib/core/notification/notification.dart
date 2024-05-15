@@ -1,6 +1,5 @@
 // get notifications
 
-
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
@@ -132,7 +131,7 @@ final class NotificationsGet {
 
   Future<void> initialize() async {
     Map<String, dynamic> parsedInfo =
-        SharedPrefs.getString("notifications", {})!;
+        (await Server.getString("notifications")) ?? {};
 
     // _lastUpdated = parsedInfo["lastUpdated"];
 

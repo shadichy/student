@@ -44,23 +44,6 @@ class OptionLabelWidgets extends StatelessWidget {
           minVerticalPadding: 16,
         );
       }),
-      // SizedBox(
-      //   width: 220,
-      //   child: TextOption(
-      //     Options.add((BuildContext context) {}),
-      //     label: "Thêm shortcut",
-      //     margin: const EdgeInsets.symmetric(vertical: 8),
-      //     padding: const EdgeInsets.symmetric(horizontal: 16),
-      //     color: colorScheme.onPrimaryContainer,
-      //     backgroundColor: colorScheme.primaryContainer,
-      //     fontWeight: FontWeight.w700,
-      //     textAlign: TextAlign.center,
-      //     iconSize: 24,
-      //     fontSize: 12,
-      //     borderRadius: const BorderRadius.all(Radius.circular(30)),
-      //     dense: true,
-      //   ),
-      // ),
       MWds.divider(8),
       InkWell(
         borderRadius: BorderRadius.circular(32),

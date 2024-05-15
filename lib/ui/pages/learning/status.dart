@@ -14,6 +14,23 @@ class LearningStatusPage extends StatelessWidget implements TypicalPage {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        leading: IconButton(
+          onPressed: Navigator.of(context).pop,
+          icon: const Icon(Symbols.arrow_back, size: 28),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Symbols.more_horiz),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(child: Column(
+        
+      ),),
+    );
   }
 }

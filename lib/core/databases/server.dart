@@ -11,33 +11,49 @@ abstract final class Server {
   static final String _domain = env["fetchDomain"]!;
   static final String _prefix = env["apiPrefix"] ?? "";
 
-  static String url(String endpoint) => "https://$_domain/$_prefix/$endpoint.json";
+  static String url(String endpoint) =>
+      "https://$_domain/$_prefix/$endpoint.json";
 
-  static CacheManager instanceCacheManager = CacheManager(Config(
+  static CacheManager iCM = CacheManager(Config(
     "student_app",
     stalePeriod: const Duration(days: 30),
   ));
 
-  static Future<T> download<T>(String endpoint) {}
+  static Future<void> kill() async {
+    await iCM.removeFile("notifications");
+    await iCM.removeFile("${User().group.name}/subjects");
+    await iCM.removeFile("${User().group.name}/study_plan");
+    await iCM
+        .removeFile("${User().group.name}/${User().semester.name}/semester");
+  }
 
-  static Future<T> getString<T>(String key) {}
+  static Future<T> download<T>(String endpoint) async {
+    try {
+      return jsonDecode((await iCM.downloadFile(url(endpoint), force: true))
+          .file
+          .readAsStringSync());
+    } catch (e) {
+      throw FormatException("Failed to get file $endpoint: ", e);
+    }
+  }
 
-  static Future<void> setString(String key, Object value) {}
+  static Future<T?> getString<T>(String key, [T? defaultValue]) async {
+    try {
+      return jsonDecode(
+          (await iCM.getFileFromCache(key))!.file.readAsStringSync());
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  static Future<void> setString(String key, Object value) async {
+    await iCM.putFile(key, const Utf8Encoder().convert(jsonEncode(value)));
+  }
 
   static Future<T> fetch<T>(String endpoint) async {
-    // final res = await http.get(
-    //   Uri.https(_domain, "$_prefix/$endpoint"),
-    //   // headers: {
-    //   //   'Access-Control-Allow-Origin': '*',
-    //   // },
-    // );
-    // if (res.statusCode != 200) {
-    //   throw Exception("Failed to fetch from $_domain/$endpoint!");
-    // }
     try {
-      return jsonDecode((await instanceCacheManager
-              .getSingleFile(url(endpoint)), key: endpoint,)
-          .readAsStringSync(),) as T;
+      return jsonDecode((await iCM.getSingleFile(url(endpoint), key: endpoint))
+          .readAsStringSync()) as T;
     } catch (e) {
       throw FormatException("Failed to get file $endpoint: ", e);
     }
@@ -64,13 +80,7 @@ abstract final class Server {
     List<int> notifIdList;
     try {
       notifIdList = MiscFns.listType<int>(
-        jsonDecode((await instanceCacheManager.downloadFile(
-          "https://$_domain/$_prefix/notifications/timestamps.json",
-          force: true,
-        ))
-            .file
-            .readAsStringSync()),
-      );
+          await download<List>("notifications/timestamps"));
     } catch (e) {
       return MapEntry(startDate, []);
     }
@@ -78,7 +88,7 @@ abstract final class Server {
     for (int notif in notifIdList.take(
       notifIdList.indexOf((startDate)),
     )) {
-      values.add((await fetch<List>("notifications/$notif"))
+      values.add((await download<List>("notifications/$notif"))
           .map((e) => e as Map<String, dynamic>));
     }
     return MapEntry(notifIdList[0], values);

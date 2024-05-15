@@ -19,10 +19,12 @@ class User {
   late final TLUGroup group;
   late final TLUSemester semester;
   late final int schoolYear;
+  final int currentSchoolYear = 36;
   // only be in ID
-  late final List<String> passedSubjectIDs;
+  // late final List<String> passedSubjectIDs;
   // can be either ID or Alt ID
-  late final List<String> learningCourseIDs;
+  // late final List<String> learningCourseIDs;
+  late final List<Map<TLUSemester, List<String>>> learningCourses;
   late final String? major; // later
   late final String? majorClass; // later
   late final int? majorCred; // later
@@ -44,12 +46,14 @@ class User {
     group = TLUGroup.values[parsedInfo["group"] as int];
     semester = TLUSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
-    passedSubjectIDs = MiscFns.listType<String>(
-      parsedInfo["passed"] as List,
-    );
-    learningCourseIDs = MiscFns.listType<String>(
-      parsedInfo["learning"] as List,
-    );
+    learningCourses = (parsedInfo["learning"] as List).map((v) {
+      return (v as List).asMap().map((key, value) {
+        return MapEntry(
+          TLUSemester.values[key],
+          MiscFns.listType<String>(value as List),
+        );
+      });
+    }).toList();
     _initialized = true;
   }
 }

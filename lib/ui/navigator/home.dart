@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget implements TypicalPage {
   HomePage({super.key});
 
   final Iterable<Notif> _notif =
-      NotificationsGet().notifications.where((e) => e.applied == false).take(4);
+      NotificationsGet().notifications.where((e) => !e.read).take(4);
 
   late final bool hasNotif = _notif.isNotEmpty;
 

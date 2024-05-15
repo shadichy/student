@@ -11,7 +11,7 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  double _opacity = 1;
+  double _opacity = 0;
 
   @override
   Widget build(BuildContext context) {

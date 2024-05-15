@@ -32,11 +32,12 @@ class _SearchPageState extends State<SearchPage> {
       Symbols.search: () => Routing.goto(context, Routing.search_result(query)),
     }).entries.toList();
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(64),
+      appBar: AppBar(
+        // preferredSize: const Size.fromHeight(64),
         // elevation: 0,
-        // toolbarHeight: 64,
-        child: TextField(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 64,
+        flexibleSpace: TextField(
           textAlignVertical: TextAlignVertical.center,
           autofocus: true,
           decoration: InputDecoration(

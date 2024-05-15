@@ -20,7 +20,7 @@ final class AppConfig {
   }
 
   Future<void> _write() async {
-    await SharedPrefs.setString("config", jsonEncode(data));
+    await SharedPrefs.setString("config", data);
   }
 
   void setConfig(String id, Object? value) {
@@ -49,3 +49,4 @@ final class AppConfig {
     }
   }
 }
+

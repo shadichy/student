@@ -11,10 +11,18 @@ abstract final class Server {
   static final String _domain = env["fetchDomain"]!;
   static final String _prefix = env["apiPrefix"] ?? "";
 
+  static String url(String endpoint) => "https://$_domain/$_prefix/$endpoint.json";
+
   static CacheManager instanceCacheManager = CacheManager(Config(
     "student_app",
     stalePeriod: const Duration(days: 30),
   ));
+
+  static Future<T> download<T>(String endpoint) {}
+
+  static Future<T> getString<T>(String key) {}
+
+  static Future<void> setString(String key, Object value) {}
 
   static Future<T> fetch<T>(String endpoint) async {
     // final res = await http.get(
@@ -28,8 +36,8 @@ abstract final class Server {
     // }
     try {
       return jsonDecode((await instanceCacheManager
-              .getSingleFile("https://$_domain/$_prefix/$endpoint.json"))
-          .readAsStringSync()) as T;
+              .getSingleFile(url(endpoint)), key: endpoint,)
+          .readAsStringSync(),) as T;
     } catch (e) {
       throw FormatException("Failed to get file $endpoint: ", e);
     }

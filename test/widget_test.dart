@@ -53,5 +53,9 @@ void main() {
   // print(jsonEncode(true));
   // print(jsonEncode(5.6));
   // print(jsonEncode(["a"]));
-  // print(jsonEncode({'a.b': 'c'}));
+  // print(jsonEncode({'`a.b': 'c'}));
+  // print(DateTime(2024, 9, 6, 7, 0, 0)
+  //         .difference(DateTime.fromMillisecondsSinceEpoch(589446000000))
+  //         .inDays /
+  //     365.25);
 }

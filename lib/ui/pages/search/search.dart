@@ -49,12 +49,12 @@ class _SearchPageState extends State<SearchPage> {
             ),
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(actions.length, (_) {
+              children: List.generate(actions.length, (a) {
                 return [
                   IconButton(
-                    onPressed: actions[_].value,
+                    onPressed: actions[a].value,
                     icon: Icon(
-                      actions[_].key,
+                      actions[a].key,
                       color: colorScheme.onPrimaryContainer,
                     ),
                   ),
@@ -66,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
               }).fold<List<Widget>>([], (p, n) => p + n),
             ),
           ),
-          onChanged: (_) => setState(() => query = _),
+          onChanged: (k) => setState(() => query = k),
         ),
       ),
       // body: ListView.builder(),

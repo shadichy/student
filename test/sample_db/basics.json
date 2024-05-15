@@ -18,6 +18,6 @@
   "onlineClassTypes": ["Elearning", "ONLINE"],
   "currency": "vnd",
   "creditPrices" : {
-    "k36": 500000
+    "36": 500000
   }
 }

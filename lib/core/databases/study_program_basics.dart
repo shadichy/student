@@ -14,14 +14,17 @@ final class SPBasics {
 
   late final List<List<int>> _studyTimestamps;
   late final List<String> _onlineClassTypes;
-  late final Map<String, int> _creditPrice;
+  late final Map<int, int> _creditPrice;
   late final Currency _currency;
+
+  final int currentYear =
+      1 + DateTime.now().difference(MiscFns.epoch(589446000)).inDays ~/ 365.25;
 
   List<List<int>> get classTimestamps => _studyTimestamps;
   List<String> get onlineClass => _onlineClassTypes;
   Currency get currency => _currency;
 
-  int? creditPrice(String schoolYear) => _creditPrice[schoolYear];
+  int? creditPrice(int schoolYear) => _creditPrice[schoolYear];
 
   Future<void> initialize() async {
     Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
@@ -33,7 +36,7 @@ final class SPBasics {
     _onlineClassTypes =
         MiscFns.listType<String>(parsedInfo["onlineClassTypes"] as List);
     _creditPrice = (parsedInfo["creditPrices"] as Map<String, dynamic>)
-        .map((key, value) => MapEntry(key, value as int));
+        .map((key, value) => MapEntry(int.parse(key), value as int));
     String cr =
         ((parsedInfo["currency"] ?? defaultConfig["misc.currency"]) as String)
             .toLowerCase();

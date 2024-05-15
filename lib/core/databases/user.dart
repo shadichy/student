@@ -19,7 +19,6 @@ class User {
   late final TLUGroup group;
   late final TLUSemester semester;
   late final int schoolYear;
-  final int currentSchoolYear = 36;
   // only be in ID
   // late final List<String> passedSubjectIDs;
   // can be either ID or Alt ID

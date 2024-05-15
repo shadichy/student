@@ -1,5 +1,6 @@
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
+import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subject_courses.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
@@ -180,7 +181,8 @@ final class SemesterTimetable {
     }
 
     Iterable<SubjectCourse> registeredCourses = User()
-        .learningCourses[User().currentSchoolYear - User().schoolYear][User().semester]!
+        .learningCourses[SPBasics().currentYear - User().schoolYear]
+            [User().semester]!
         .map((id) => InStudyCourses().getCourse(id)!);
 
     _timetable = currentPlan.timetable

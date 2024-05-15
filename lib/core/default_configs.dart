@@ -19,7 +19,7 @@ Map<String, dynamic> defaultConfig = {
   'misc.currency': Currency.vnd.name,
   'opts.Home': [
     "settings",
-    "program",
+    "status",
     "learning_result",
     "finance",
     "help",
@@ -34,7 +34,7 @@ Map<String, dynamic> defaultConfig = {
   'opts.Student': [
     "student",
     "finance",
-    "program",
+    "status",
     "learning_result",
     "settings",
     "help",

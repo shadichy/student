@@ -16,8 +16,8 @@ class SettingsBase extends StatelessWidget {
   final double _kToolbarMaxHeight = 160;
   final double _kToolbarMinHeight = 64;
 
-  final double _kTitleMaxPadding = 40;
-  final double _kTitleMinPadding = 0;
+  final double _kTitleMaxPadding = 56;
+  final double _kTitleMinPadding = 16;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/user.dart';
@@ -17,20 +16,17 @@ final class InStudyCourses {
   final RegExp _getCourseID = RegExp(r'(^[A-Z]+(\([A-Z]\))?)');
 
   Subject? getSubject(String id) =>
-      _inStudyCourses.firstWhereIf((_) => _.subjectID == id);
+      _inStudyCourses.firstWhereIf((s) => s.subjectID == id);
 
   Subject? getSubjectAlt(String id) =>
-      _inStudyCourses.firstWhereIf((_) => _.subjectAltID == id);
+      _inStudyCourses.firstWhereIf((s) => s.subjectAltID == id);
 
   SubjectCourse? getCourse(String id) =>
       getSubjectAlt(_getCourseID.firstMatch(id).toString())?.getCourse(id);
 
   Future<void> initialize() async {
-    Map<String, dynamic>? rawInfo = SharedPrefs.getString("inStudyCourses");
-    if (rawInfo == null) {
-      rawInfo = await Server.getSemester(User().group, User().semester);
-      await SharedPrefs.setString("inStudyCourses", rawInfo);
-    }
+    Map<String, dynamic> rawInfo =
+        await Server.getSemester(User().group, User().semester);
 
     // Map<String, List<Map<String, dynamic>>> parsedInfo = {};
     // throw Exception("d log1");

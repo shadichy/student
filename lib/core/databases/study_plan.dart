@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -33,11 +32,7 @@ final class StudyPlan {
   // static List<DayType> _full(DayType type) => List.generate(7, (_) => type);
 
   Future<void> initialize() async {
-    Map<String, dynamic>? parsedInfo = SharedPrefs.getString("studyPlan");
-    if (parsedInfo == null) {
-      parsedInfo = await Server.getStudyPlan(User().group);
-      await SharedPrefs.setString("studyPlan", parsedInfo);
-    }
+    Map<String, dynamic> parsedInfo = await Server.getStudyPlan(User().group);
 
     int startDateInt = parsedInfo["startDate"];
 
@@ -50,7 +45,7 @@ final class StudyPlan {
         .map((l, s) {
       List<List<DayType>> chunkedWeek = (s)
           .characters
-          .map((_) => DayType.values[int.parse(_)])
+          .map((d) => DayType.values[int.parse(d)])
           .chunked(7)
           .toList();
       List<int> studyWeek = [];

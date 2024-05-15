@@ -22,10 +22,10 @@ class _AppState extends State<App> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _t,
         onDestinationSelected: _onItemTapped,
-        destinations: List.generate(_nav.length, (_) {
+        destinations: List.generate(_nav.length, (i) {
           return NavigationDestination(
-            icon: _nav[_].icon,
-            label: _nav[_].title,
+            icon: _nav[i].icon,
+            label: _nav[i].title,
           );
         }),
       ),

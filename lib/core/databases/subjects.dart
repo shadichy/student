@@ -1,6 +1,4 @@
-
 import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -15,17 +13,13 @@ final class Subjects {
   late final Iterable<BaseSubject> _subjects;
 
   BaseSubject? getSubject(String id) =>
-      _subjects.firstWhereIf((_) => _.subjectID == id);
+      _subjects.firstWhereIf((s) => s.subjectID == id);
 
   BaseSubject? getSubjectAlt(String id) =>
-      _subjects.firstWhereIf((_) => _.subjectAltID == id);
+      _subjects.firstWhereIf((s) => s.subjectAltID == id);
 
   Future<void> initialize() async {
-    Map<String, dynamic>? rawInfo = SharedPrefs.getString("subjects");
-    if (rawInfo == null) {
-      rawInfo = await Server.getSubjects(User().group);
-      await SharedPrefs.setString("subjects", rawInfo);
-    }
+    Map<String, dynamic> rawInfo = await Server.getSubjects(User().group);
 
     Map<String, Map<String, dynamic>> parsedInfo = {};
 

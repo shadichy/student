@@ -18,8 +18,8 @@ class Initializer extends StatelessWidget {
         "schoolYear": 36,
         "learning": [
           [
-            ["VC134", "ML113"],
-            ["IM210"]
+            ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
+            ["NHATSC2.3"]
           ],
           []
         ]

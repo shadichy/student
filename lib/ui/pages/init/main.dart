@@ -19,7 +19,8 @@ class Initializer extends StatelessWidget {
         "learning": [
           [
             ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
-            ["NHATSC2.3"]
+            ["NHATSC2.3"],
+            ["TIENGVIETTH.3", "PHANMEMTHIETKE.1.1_BT"]
           ],
           []
         ]

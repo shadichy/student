@@ -60,7 +60,8 @@ void main() {
   //     365.25);
   // print(RegExp(r'([^.]+)').firstMatch("NHATSC2.3")![0]);
   // print(DateTime.fromMillisecondsSinceEpoch(1790045200 * 1000)
-  //         .subtract(Duration(days: 365 * 2))
+  //         .subtract(Duration(days: 365 * 3 + 1))
   //         .millisecondsSinceEpoch ~/
   //     1000);
+  print(DateTime.parse("2023-07-24").millisecondsSinceEpoch);
 }

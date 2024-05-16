@@ -50,6 +50,8 @@ final class SemesterTimetable {
   TLUSemester get currentSemester => _currentSemester;
   DateTime get startDate => _startDate;
 
+  SemesterPlan currentPlan = StudyPlan().table.toList()[User().semester.index];
+
   WeekTimetable getWeek(DateTime startDate) {
     int daysDiff = startDate.difference(_startDate).inDays.abs();
     int week = (daysDiff / 7).floor();
@@ -67,6 +69,12 @@ final class SemesterTimetable {
                     ._timestamps
                     .where((_) => _.dayOfWeek < startDay)
             ]);
+    }
+    print(currentPlan.studyWeeks);
+    if (currentPlan.studyWeeks.contains(week)) {
+      week = currentPlan.studyWeeks.indexOf(week);
+    } else {
+      week = -1;
     }
     return WeekTimetable(
       timestamps,
@@ -157,8 +165,6 @@ final class SemesterTimetable {
   Future<void> initialize() async {
     List? rawInfo = SharedPrefs.getString("userTimetable");
 
-    SemesterPlan currentPlan =
-        StudyPlan().table.toList()[_currentSemester.index];
     _startDate = currentPlan.startDate;
 
     if (rawInfo is List) {

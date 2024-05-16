@@ -14,11 +14,13 @@ class _LoadingState extends State<Loading> {
   double _opacity = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 10), () => _opacity = 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Future.delayed(
-      const Duration(seconds: 10),
-      () => setState(() => _opacity = 1),
-    );
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16),

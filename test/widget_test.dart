@@ -58,4 +58,9 @@ void main() {
   //         .difference(DateTime.fromMillisecondsSinceEpoch(589446000000))
   //         .inDays /
   //     365.25);
+  // print(RegExp(r'([^.]+)').firstMatch("NHATSC2.3")![0]);
+  // print(DateTime.fromMillisecondsSinceEpoch(1790045200 * 1000)
+  //         .subtract(Duration(days: 365 * 2))
+  //         .millisecondsSinceEpoch ~/
+  //     1000);
 }

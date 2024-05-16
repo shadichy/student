@@ -29,7 +29,7 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
     'Friday',
     'Saturday',
   ];
-  int startWeekday = AppConfig().getConfig<bool>("misc.startWeekday") ??
+  int startWeekday = AppConfig().getConfig<int>("misc.startWeekday") ??
       defaultConfig["misc.startWeekday"];
   void setStartWeekday(int day) {
     setState(() {

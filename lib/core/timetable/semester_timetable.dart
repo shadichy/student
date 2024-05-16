@@ -51,7 +51,7 @@ final class SemesterTimetable {
   DateTime get startDate => _startDate;
 
   WeekTimetable getWeek(DateTime startDate) {
-    int daysDiff = startDate.difference(_startDate).inDays;
+    int daysDiff = startDate.difference(_startDate).inDays.abs();
     int week = (daysDiff / 7).floor();
     int startDay = daysDiff % 7;
     List<EventTimestamp> timestamps = [];
@@ -191,7 +191,8 @@ final class SemesterTimetable {
           List<CourseTimestamp> stamps = [];
           for (SubjectCourse course in registeredCourses) {
             for (CourseTimestamp stamp in course.timestamp) {
-              if (p[stamp.dayOfWeek] != DayType.H) continue;
+              if (p[stamp.dayOfWeek] != DayType.H &&
+                  p[stamp.dayOfWeek] != DayType.B) continue;
               stamps.add(stamp);
             }
           }

@@ -67,7 +67,7 @@ class _StudentAppState extends State<StudentApp> {
         ? SystemTheme.accentColor.accent
         : Color(AppConfig().getConfig<int>("theme.accentColor") ??
             Colors.deepOrange.value);
-    mode = useSystem ? 0 : AppConfig().getConfig<int>("them`e.themeMode") ?? 1;
+    mode = useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
     font = useSystem ? null : AppConfig().getConfig<String>("theme.appFont");
   }
 

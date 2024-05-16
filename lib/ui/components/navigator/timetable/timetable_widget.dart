@@ -1,8 +1,8 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 // import 'package:student/core/semester/functions.dart';
-import 'package:student/core/generator/generator.dart';
 import 'package:student/core/routing.dart';
+import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
 // import 'package:student/misc/misc_variables.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
@@ -11,63 +11,42 @@ import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableWidget extends StatefulWidget {
-  final SampleTimetable timetableData;
-  const TimetableWidget(this.timetableData, {super.key});
+  const TimetableWidget({super.key});
 
   @override
   State<TimetableWidget> createState() => _TimetableWidgetState();
 }
 
 class _TimetableWidgetState extends State<TimetableWidget> {
+  late DateTime weekStart;
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime now = DateTime.now();
+    int weekday = now.weekday % 7;
+    weekStart = now.subtract(
+      Duration(days: weekday - TimetableBox.weekdayStart),
+    );
+  }
+
+  void changeWeek(DateTime weekStart) {
+    setState(() {
+      this.weekStart = weekStart;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    // Widget colorDef(int key, SubjectCourse value) {
-    //   return Row(children: [
-    //     Container(
-    //       width: 64,
-    //       height: 32,
-    //       margin: const EdgeInsets.symmetric(horizontal: 16),
-    //       decoration: BoxDecoration(
-    //         color: M3SeededColor.colors[key],
-    //         border: Border.all(
-    //           width: 1,
-    //           color: colorScheme.primary.withOpacity(0.05),
-    //         ),
-    //         borderRadius: const BorderRadius.all(Radius.circular(8)),
-    //       ),
-    //     ),
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(vertical: 8),
-    //       child: Column(children: [
-    //         Text(
-    //           value.courseID,
-    //           style: TextStyle(
-    //             color: colorScheme.onPrimaryContainer,
-    //             fontWeight: FontWeight.bold,
-    //             fontSize: 14,
-    //           ),
-    //           overflow: TextOverflow.ellipsis,
-    //         ),
-    //         Text(
-    //           value.subjectID,
-    //           style: TextStyle(
-    //             color: colorScheme.onPrimaryContainer,
-    //             fontSize: 12,
-    //           ),
-    //           overflow: TextOverflow.ellipsis,
-    //         ),
-    //       ]),
-    //     )
-    //   ]);
-    // }
+    TimetableBox currentWeekView = TimetableBox(
+      SemesterTimetable().getWeek(weekStart),
+    );
 
-    DateTime now = DateTime.now();
-    int weekday = now.weekday % 7;
-    DateTime firstDoW = now.subtract(Duration(days: weekday));
-    DateTime lastDoW = now.add(Duration(days: 6 - weekday));
+    DateTime firstDoW = currentWeekView.firstWeekday;
+    DateTime lastDoW = currentWeekView.lastWeekday;
 
     String dateFormat(DateTime date) {
       return MiscFns.timeFormat(date, format: "dd/MM");
@@ -87,7 +66,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_left),
-            onPressed: () {},
+            onPressed: () => changeWeek(weekStart.subtract(const Duration(days: 7))),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
@@ -106,7 +85,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_right),
-            onPressed: () {},
+            onPressed: () => changeWeek(weekStart.add(const Duration(days: 7))),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
@@ -149,7 +128,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           color: colorScheme.outlineVariant,
         ),
       ),
-      child: TimetableBox(widget.timetableData),
+      child: currentWeekView,
     );
 
     // Widget detailPane = Padding(

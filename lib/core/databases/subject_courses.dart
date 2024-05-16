@@ -13,7 +13,7 @@ final class InStudyCourses {
   }
 
   late final Iterable<Subject> _inStudyCourses;
-  final RegExp _getCourseID = RegExp(r'(^[A-Z]+(\([A-Z]\))?)');
+  final RegExp _getCourseID = RegExp(r'([^.]+)');
 
   Subject? getSubject(String id) =>
       _inStudyCourses.firstWhereIf((s) => s.subjectID == id);
@@ -21,8 +21,13 @@ final class InStudyCourses {
   Subject? getSubjectAlt(String id) =>
       _inStudyCourses.firstWhereIf((s) => s.subjectAltID == id);
 
-  SubjectCourse? getCourse(String id) =>
-      getSubjectAlt(_getCourseID.firstMatch(id).toString())?.getCourse(id);
+  SubjectCourse? getCourse(String id) {
+    try {
+      return getSubjectAlt(_getCourseID.firstMatch(id)![0]!)?.getCourse(id);
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future<void> initialize() async {
     Map<String, dynamic> rawInfo =

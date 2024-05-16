@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/configs.dart';
 import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/default_configs.dart';
 import 'package:student/core/semester/functions.dart';
-import 'package:student/core/generator/generator.dart';
+import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
 // import 'package:student/misc/misc_variables.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
@@ -18,8 +20,23 @@ double _cellSize = 128;
 double _headerCellSize = 72;
 
 class TimetableBox extends StatelessWidget {
-  final SampleTimetable timetable;
-  const TimetableBox(this.timetable, {super.key});
+  final WeekTimetable timetable;
+  final DateTime firstWeekday;
+  final DateTime lastWeekday;
+  final int currentWeek;
+  TimetableBox(this.timetable, {super.key})
+      : firstWeekday = timetable.startDate,
+        lastWeekday = timetable.startDate.add(const Duration(days: 6)),
+        currentWeek = timetable.weekNo ?? 0;
+
+  static final int weekdayStart =
+      AppConfig().getConfig<int>("misc.startWeekday") ??
+          defaultConfig["misc.startWeekday"];
+
+  Iterable<T> _remapDiff<T>(Iterable<T> input, [int diff = 0]) {
+    if (diff == 0) return input;
+    return [...input.skip(diff), ...input.take(diff)];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +54,6 @@ class TimetableBox extends StatelessWidget {
       'Fri',
       'Sat'
     ];
-
-    DateTime firstDoW = date.subtract(Duration(days: weekday));
-    int week = 1;
 
     Span builder(double cellSize) {
       return TableSpan(
@@ -74,25 +88,28 @@ class TimetableBox extends StatelessWidget {
     }
 
     List<Widget> headRow = [
-      headRowBuilder("Week", "$week"),
-      ...shortDayOfWeek.asMap().map((i, d) {
-        Widget content = headRowBuilder(
-          shortDayOfWeek[i],
-          MiscFns.timeFormat(
-            firstDoW.add(Duration(days: i)),
-            format: "d",
-          ),
-        );
-        return MapEntry(
-          i,
-          i != weekday
-              ? content
-              : Container(
-                  color: colorScheme.primary.withOpacity(0.05),
-                  child: content,
-                ),
-        );
-      }).values,
+      headRowBuilder("Week", "${timetable.weekNo! + 1}"),
+      ..._remapDiff(
+        shortDayOfWeek.asMap().map((i, d) {
+          Widget content = headRowBuilder(
+            shortDayOfWeek[i],
+            MiscFns.timeFormat(
+              firstWeekday.add(Duration(days: i)),
+              format: "d",
+            ),
+          );
+          return MapEntry(
+            i,
+            i != weekday
+                ? content
+                : Container(
+                    color: colorScheme.primary.withOpacity(0.05),
+                    child: content,
+                  ),
+          );
+        }).values,
+        weekdayStart,
+      ),
     ];
 
     Widget firstColBuilder(int stamp) {
@@ -118,7 +135,7 @@ class TimetableBox extends StatelessWidget {
       );
     }
 
-    TableViewCell inColBuilder(Iterable<Widget> children, index) {
+    TableViewCell inColBuilder(Iterable<Widget> children, int index) {
       Widget content = Stack(
         children: [
           ...children,
@@ -135,7 +152,7 @@ class TimetableBox extends StatelessWidget {
               ),
             ),
           ),
-          if (index == weekday)
+          if (index == weekday - weekdayStart)
             Positioned(
               top: _cellSize *
                       (() {
@@ -197,54 +214,56 @@ class TimetableBox extends StatelessWidget {
 
     List<List<Widget>> timetableMap = List.generate(7, (index) => []);
 
-    for (SubjectCourse c in timetable.classes) {
-      for (CourseTimestamp s in c.timestamp) {
-        int classStartsAt = 0;
-        while (s.intStamp & (1 << classStartsAt) == 0) {
-          classStartsAt++;
-        }
-        int classLength = s.intStamp.bitCount();
-        timetableMap[s.dayOfWeek].add(Positioned(
-          width: _cellSize,
-          height: _cellSize * classLength,
-          top: _cellSize * classStartsAt,
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: InkWell(
-              onTap: () {
-                showBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Container();
-                  },
-                );
-              },
-              radius: 12,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${s.room}\n${c.courseID}",
-                      maxLines: 3,
-                      overflow: TextOverflow.clip,
-                      style: textTheme.labelLarge!.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )
-                  ],
-                ),
+    // for (SubjectCourse c in timetable.classes) {
+    for (EventTimestamp s in timetable.timestamps) {
+      int classStartsAt = 0;
+      while (s.intStamp & (1 << classStartsAt) == 0) {
+        classStartsAt++;
+      }
+      int classLength = s.intStamp.bitCount();
+      timetableMap[s.dayOfWeek].add(Positioned(
+        width: _cellSize,
+        height: _cellSize * classLength,
+        top: _cellSize * classStartsAt,
+        child: Container(
+          margin: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: InkWell(
+            onTap: () {
+              showBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container();
+                },
+              );
+            },
+            radius: 12,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    s is CourseTimestamp
+                        ? "${s.room}\n${s.courseID}"
+                        : s.eventName,
+                    maxLines: 3,
+                    overflow: TextOverflow.clip,
+                    style: textTheme.labelLarge!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                ],
               ),
             ),
           ),
-        ));
-      }
+        ),
+      ));
     }
+    // }
 
     // print(timetableMap);
 
@@ -263,8 +282,8 @@ class TimetableBox extends StatelessWidget {
             : _cellSize * SPBasics().classTimestamps.length,
       ),
       cells: [
-        List.generate(headRow.length, (_) => TableViewCell(child: headRow[_])),
-        [firstCols, ...restCols],
+        List.generate(headRow.length, (c) => TableViewCell(child: headRow[c])),
+        [firstCols, ..._remapDiff(restCols, weekdayStart)],
         // ...firstCols.map((e) => [e, ...restCols]),
       ],
     );

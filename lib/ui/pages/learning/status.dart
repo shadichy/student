@@ -28,7 +28,7 @@ class LearningStatusPage extends StatelessWidget implements TypicalPage {
           )
         ],
       ),
-      body: SingleChildScrollView(child: Column(
+      body: const SingleChildScrollView(child: Column(
         
       ),),
     );

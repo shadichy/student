@@ -1,7 +1,5 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/semester/functions.dart';
-import 'package:student/core/generator/generator.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
@@ -23,38 +21,7 @@ class TimetablePage extends StatelessWidget implements TypicalPage {
       appBar: const TimetableTopBar(),
       body: [
         TimetableUpcomingWidget(SampleTimetableData.from2dList([])),
-        TimetableWidget(
-          SampleTimetable(classes: [
-            SubjectCourse(
-              courseID: "classID1",
-              subjectID: "subjectID1",
-              timestamp: [
-                CourseTimestamp(
-                  intStamp: 123,
-                  dayOfWeek: 4,
-                  courseID: "classID1",
-                  teacherID: "teacherID",
-                  room: "A929",
-                  timestampType: TimestampType.offline,
-                )
-              ],
-            ),
-            SubjectCourse(
-              courseID: "classID2",
-              subjectID: "subjectID2",
-              timestamp: [
-                CourseTimestamp(
-                  intStamp: 132,
-                  dayOfWeek: 5,
-                  courseID: "classID2",
-                  teacherID: "teacherID",
-                  room: "B666",
-                  timestampType: TimestampType.offline,
-                )
-              ],
-            ),
-          ]),
-        ),
+        const TimetableWidget(),
         // const ResultSummaryWidget(),
         // const MajorInfoWidget(),
         MWds.divider(16),

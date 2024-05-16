@@ -56,7 +56,7 @@ final class StudyPlan {
       });
 
       int startDate = prevWeeks * 7 * 24 * 3600 + startDateInt;
-      prevWeeks = chunkedWeek.length;
+      prevWeeks += chunkedWeek.length;
 
       return MapEntry(
         l,

@@ -1,7 +1,10 @@
 // import 'package:flutter/material.dart';
+import 'package:bitcount/bitcount.dart';
+import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/semester/functions.dart';
+import 'package:student/ui/components/upcoming.dart';
 
 // class NextupClass {
 //   late final ClassTimestamp stamp;
@@ -41,6 +44,44 @@ class UpcomingEvent {
     this.location,
     this.heldBy,
   });
+
+  static final DateTime _now = DateTime.now();
+  static final DateTime _today = DateTime(_now.year, _now.month, _now.day);
+
+  static int _getStartStamp(int timestamp) {
+    int classStartsAt = 0;
+    while (timestamp & (1 << classStartsAt) == 0) {
+      classStartsAt++;
+    }
+    return classStartsAt;
+  }
+
+  static DateTime _getStart(int timestamp) {
+    return _today.add(
+      Duration(
+        seconds: SPBasics().classTimestamps[_getStartStamp(timestamp)][0],
+      ),
+    );
+  }
+
+  static DateTime _getEnd(int timestamp) {
+    return _today.add(
+      Duration(
+        seconds: SPBasics().classTimestamps[
+            _getStartStamp(timestamp) + timestamp.bitCount()][1],
+      ),
+    );
+  }
+
+  UpcomingEvent.fromTimestamp(EventTimestamp event)
+      : this(
+          eventLabel: event.eventName,
+          eventDesc: "",
+          startTime: _getStart(event.intStamp),
+          endTime: _getEnd(event.intStamp),
+          location: event.location,
+          heldBy: event.heldBy,
+        );
 }
 
 class NextupClassView extends UpcomingEvent {
@@ -59,8 +100,8 @@ class NextupClassView extends UpcomingEvent {
           eventLabel: Subjects().getSubjectAlt(stamp.courseID)!.name,
           location: stamp.room,
           heldBy: Teachers().getTeacher(stamp.teacherID)!,
-          startTime: DateTime.now(),
-          endTime: DateTime.now(),
+          startTime: UpcomingEvent._getStart(stamp.intStamp),
+          endTime: UpcomingEvent._getEnd(stamp.intStamp),
         );
 
   NextupClassView.manual({

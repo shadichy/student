@@ -9,6 +9,7 @@ import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/pages/learning/timetable.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
+import 'package:student/ui/components/upcoming.dart';
 
 class TimetableWidget extends StatefulWidget {
   const TimetableWidget({super.key});
@@ -18,21 +19,11 @@ class TimetableWidget extends StatefulWidget {
 }
 
 class _TimetableWidgetState extends State<TimetableWidget> {
-  late DateTime weekStart;
+  WeekTimetable week = UpcomingData.thisWeek;
 
-  @override
-  void initState() {
-    super.initState();
-    DateTime now = DateTime.now();
-    int weekday = now.weekday % 7;
-    weekStart = now.subtract(
-      Duration(days: weekday - TimetableBox.weekdayStart),
-    );
-  }
-
-  void changeWeek(DateTime weekStart) {
+  void changeWeek(DateTime startDate) {
     setState(() {
-      this.weekStart = weekStart;
+      week = SemesterTimetable().getWeek(startDate);
     });
   }
 
@@ -41,9 +32,7 @@ class _TimetableWidgetState extends State<TimetableWidget> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    TimetableBox currentWeekView = TimetableBox(
-      SemesterTimetable().getWeek(weekStart),
-    );
+    TimetableBox currentWeekView = TimetableBox(week);
 
     DateTime firstDoW = currentWeekView.firstWeekday;
     DateTime lastDoW = currentWeekView.lastWeekday;
@@ -66,7 +55,8 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_left),
-            onPressed: () => changeWeek(weekStart.subtract(const Duration(days: 7))),
+            onPressed: () =>
+                changeWeek(week.startDate.subtract(const Duration(days: 7))),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
@@ -85,7 +75,8 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_right),
-            onPressed: () => changeWeek(weekStart.add(const Duration(days: 7))),
+            onPressed: () =>
+                changeWeek(week.startDate.add(const Duration(days: 7))),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,

@@ -6,7 +6,7 @@ import 'package:student/ui/components/pages/event.dart';
 enum CardState { ring, silent }
 
 class HomeNextupClassCard extends StatefulWidget {
-  final NextupClassView nextupClass;
+  final UpcomingEvent nextupClass;
   final CardState state;
   const HomeNextupClassCard(
     this.nextupClass, {
@@ -52,6 +52,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
     //   );
     // }
 
+    UpcomingEvent event = widget.nextupClass;
     return Card.outlined(
       elevation: 0,
       // color: colorScheme.primaryContainer,
@@ -85,7 +86,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   Row(
                     children: [
                       Text(
-                        "${widget.nextupClass.room} \u2022 ",
+                        "${widget.nextupClass.location} \u2022 ",
                         style: textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -107,7 +108,9 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                     ],
                   ),
                   Text(
-                    widget.nextupClass.courseId,
+                    event is NextupClassView
+                        ? event.courseId
+                        : event.eventLabel,
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.w500,
@@ -118,7 +121,9 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   //   style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w500),
                   // ),
                   Text(
-                    widget.nextupClass.classDesc,
+                    event is NextupClassView
+                        ? event.classDesc
+                        : "${event.eventDesc}",
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w500,

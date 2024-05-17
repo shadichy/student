@@ -14,13 +14,13 @@ class Initializer extends StatelessWidget {
         "id": "A47548",
         "name": "Sadashi Ken Ichi",
         "group": 2,
-        "semester": 1,
+        "semester": 2,
         "schoolYear": 36,
         "learning": [
           [
             ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
             ["NHATSC2.3"],
-            ["TIENGVIETTH.3", "PHANMEMTHIETKE.1.1_BT"]
+            ["TIENGVIETTH.3", "PHANMEMTHIETKE.1.1_BT", "KTEHOCDC.5"],
           ],
           []
         ]

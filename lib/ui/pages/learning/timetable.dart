@@ -5,6 +5,7 @@ import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/pages/learning/timetable.dart';
 
 import 'package:student/ui/components/navigator/navigator.dart';
+import 'package:student/ui/components/upcoming.dart';
 
 class LearningTimetablePage extends StatefulWidget implements TypicalPage {
   const LearningTimetablePage({super.key});
@@ -20,21 +21,11 @@ class LearningTimetablePage extends StatefulWidget implements TypicalPage {
 }
 
 class _LearningTimetablePageState extends State<LearningTimetablePage> {
-  late DateTime weekStart;
+  WeekTimetable week = UpcomingData.thisWeek;
 
-  @override
-  void initState() {
-    super.initState();
-    DateTime now = DateTime.now();
-    int weekday = now.weekday % 7;
-    weekStart = now.subtract(
-      Duration(days: weekday - TimetableBox.weekdayStart),
-    );
-  }
-
-  void changeWeek(DateTime weekStart) {
+  void changeWeek(DateTime startDate) {
     setState(() {
-      this.weekStart = weekStart;
+      week = SemesterTimetable().getWeek(startDate);
     });
   }
 
@@ -45,9 +36,7 @@ class _LearningTimetablePageState extends State<LearningTimetablePage> {
         .textTheme
         .apply(bodyColor: colorScheme.onPrimaryContainer);
 
-    TimetableBox currentWeekView = TimetableBox(
-      SemesterTimetable().getWeek(weekStart),
-    );
+    TimetableBox currentWeekView = TimetableBox(week);
 
     DateTime firstDoW = currentWeekView.firstWeekday;
     DateTime lastDoW = currentWeekView.lastWeekday;

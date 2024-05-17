@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:student/core/routing.dart';
+import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
 import 'package:student/ui/components/section_label.dart';
+import 'package:student/ui/components/upcoming.dart';
 
 class TimetableUpcomingWidget extends StatefulWidget {
   final SampleTimetableData timetableData;
@@ -17,88 +19,11 @@ class TimetableUpcomingWidget extends StatefulWidget {
 }
 
 class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
-  List<NextupClassView> classStamps = [
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.2',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.3',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.4',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.5',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.6',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.7',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.8',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.9',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'NNLAPTRINH.8.10',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-  ];
+  List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
+      .map((e) => e is CourseTimestamp
+          ? NextupClassView(e)
+          : UpcomingEvent.fromTimestamp(e))
+      .toList();
 
   int index = 0;
 

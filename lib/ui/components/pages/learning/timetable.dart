@@ -5,6 +5,7 @@ import 'package:student/core/default_configs.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/ui/components/upcoming.dart';
 // import 'package:student/misc/misc_variables.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
 // import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
@@ -29,10 +30,6 @@ class TimetableBox extends StatelessWidget {
         lastWeekday = timetable.startDate.add(const Duration(days: 6)),
         currentWeek = timetable.weekNo ?? 0;
 
-  static final int weekdayStart =
-      AppConfig().getConfig<int>("misc.startWeekday") ??
-          defaultConfig["misc.startWeekday"];
-
   Iterable<T> _remapDiff<T>(Iterable<T> input, [int diff = 0]) {
     if (diff == 0) return input;
     return [...input.skip(diff), ...input.take(diff)];
@@ -44,16 +41,17 @@ class TimetableBox extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
-    int weekday = now.weekday % 7;
-    List<String> shortDayOfWeek = [
+    int weekday = (now.weekday - UpcomingData.weekdayStart + 7) % 7;
+    List<String> shortDayOfWeek = _remapDiff([
       'Sun',
       'Mon',
       'Tue',
       'Wed',
       'Thu',
       'Fri',
-      'Sat'
-    ];
+      'Sat',
+    ], UpcomingData.weekdayStart)
+        .toList();
 
     Span builder(double cellSize) {
       return TableSpan(
@@ -89,27 +87,24 @@ class TimetableBox extends StatelessWidget {
 
     List<Widget> headRow = [
       headRowBuilder("Week", "${timetable.weekNo! + 1}"),
-      ..._remapDiff(
-        shortDayOfWeek.asMap().map((i, d) {
-          Widget content = headRowBuilder(
-            shortDayOfWeek[i],
-            MiscFns.timeFormat(
-              firstWeekday.add(Duration(days: i)),
-              format: "d",
-            ),
-          );
-          return MapEntry(
-            i,
-            i != weekday
-                ? content
-                : Container(
-                    color: colorScheme.primary.withOpacity(0.05),
-                    child: content,
-                  ),
-          );
-        }).values,
-        weekdayStart,
-      ),
+      ...shortDayOfWeek.asMap().map((i, d) {
+        Widget content = headRowBuilder(
+          shortDayOfWeek[i],
+          MiscFns.timeFormat(
+            firstWeekday.add(Duration(days: i)),
+            format: "d",
+          ),
+        );
+        return MapEntry(
+          i,
+          i != weekday
+              ? content
+              : Container(
+                  color: colorScheme.primary.withOpacity(0.05),
+                  child: content,
+                ),
+        );
+      }).values,
     ];
 
     Widget firstColBuilder(int stamp) {
@@ -152,7 +147,7 @@ class TimetableBox extends StatelessWidget {
               ),
             ),
           ),
-          if (index == weekday - weekdayStart)
+          if (index == weekday)
             Positioned(
               top: _cellSize *
                       (() {
@@ -221,7 +216,8 @@ class TimetableBox extends StatelessWidget {
         classStartsAt++;
       }
       int classLength = s.intStamp.bitCount();
-      timetableMap[s.dayOfWeek].add(Positioned(
+      timetableMap[(s.dayOfWeek - UpcomingData.weekdayStart + 7) % 7]
+          .add(Positioned(
         width: _cellSize,
         height: _cellSize * classLength,
         top: _cellSize * classStartsAt,
@@ -283,7 +279,7 @@ class TimetableBox extends StatelessWidget {
       ),
       cells: [
         List.generate(headRow.length, (c) => TableViewCell(child: headRow[c])),
-        [firstCols, ..._remapDiff(restCols, weekdayStart)],
+        [firstCols, ...restCols],
         // ...firstCols.map((e) => [e, ...restCols]),
       ],
     );

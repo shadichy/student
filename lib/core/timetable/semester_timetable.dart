@@ -70,7 +70,6 @@ final class SemesterTimetable {
                     .where((_) => _.dayOfWeek < startDay)
             ]);
     }
-    print(currentPlan.studyWeeks);
     if (currentPlan.studyWeeks.contains(week)) {
       week = currentPlan.studyWeeks.indexOf(week);
     } else {

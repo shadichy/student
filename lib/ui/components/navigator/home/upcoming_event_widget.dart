@@ -1,8 +1,10 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/upcoming_event.dart';
 import 'package:student/ui/components/pages/event.dart';
+import 'package:student/ui/components/upcoming.dart';
 
 class HomeNextupClassWidget extends StatefulWidget {
   final SampleTimetableData timetableData;
@@ -13,88 +15,11 @@ class HomeNextupClassWidget extends StatefulWidget {
 }
 
 class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
-  List<NextupClassView> classStamps = [
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-    NextupClassView.manual(
-      courseId: 'TIENGVIETTH(THANHNHAC).1',
-      classDesc: 'Ngôn ngữ lập trình',
-      teacher: 'Nguyễn Huyền Châu',
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      room: 'A709',
-    ),
-  ];
+  List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
+      .map((e) => e is CourseTimestamp
+          ? NextupClassView(e)
+          : UpcomingEvent.fromTimestamp(e))
+      .toList();
 
   @override
   Widget build(BuildContext context) {

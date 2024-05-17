@@ -50,7 +50,7 @@ class _StudentAppState extends State<StudentApp> {
           initialize();
           break;
         case AppAction.reload:
-          setTheme();
+          setConfigs();
           break;
         case AppAction.deinit:
           SharedPrefs.setString("user", null);
@@ -61,7 +61,7 @@ class _StudentAppState extends State<StudentApp> {
     });
   }
 
-  void setTheme() {
+  void setConfigs() {
     bool useSystem = AppConfig().getConfig<bool>("theme.systemTheme") == true;
     seed = useSystem
         ? SystemTheme.accentColor.accent
@@ -75,7 +75,7 @@ class _StudentAppState extends State<StudentApp> {
   void initState() {
     super.initState();
     initialize();
-    setTheme();
+    setConfigs();
   }
 
   Future<void> initialize() async {
@@ -88,7 +88,9 @@ class _StudentAppState extends State<StudentApp> {
     await InStudyCourses().initialize();
     await SemesterTimetable().initialize();
     await NotificationsGet().initialize();
-    setState(() => mainContent = const App());
+    setState(() {
+      mainContent = const App();
+    });
   }
 
   @override

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student/core/configs.dart';
 import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/default_configs.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -41,7 +39,8 @@ class TimetableBox extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
-    int weekday = (now.weekday - UpcomingData.weekdayStart + 7) % 7;
+    final int weekdayStart = UpcomingData.weekdayStart;
+    int weekday = (now.weekday - weekdayStart + 7) % 7;
     List<String> shortDayOfWeek = _remapDiff([
       'Sun',
       'Mon',
@@ -50,7 +49,7 @@ class TimetableBox extends StatelessWidget {
       'Thu',
       'Fri',
       'Sat',
-    ], UpcomingData.weekdayStart)
+    ], weekdayStart)
         .toList();
 
     Span builder(double cellSize) {
@@ -211,13 +210,13 @@ class TimetableBox extends StatelessWidget {
 
     // for (SubjectCourse c in timetable.classes) {
     for (EventTimestamp s in timetable.timestamps) {
+      if (s.intStamp == 0) continue;
       int classStartsAt = 0;
       while (s.intStamp & (1 << classStartsAt) == 0) {
         classStartsAt++;
       }
       int classLength = s.intStamp.bitCount();
-      timetableMap[(s.dayOfWeek - UpcomingData.weekdayStart + 7) % 7]
-          .add(Positioned(
+      timetableMap[(s.dayOfWeek - weekdayStart + 7) % 7].add(Positioned(
         width: _cellSize,
         height: _cellSize * classLength,
         top: _cellSize * classStartsAt,

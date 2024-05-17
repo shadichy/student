@@ -4,7 +4,6 @@ import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/semester/functions.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 // class NextupClass {
 //   late final ClassTimestamp stamp;

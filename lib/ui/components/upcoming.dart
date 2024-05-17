@@ -5,7 +5,7 @@ import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 
 abstract final class UpcomingData {
-  static final int fullStamp =
+  static final int _fullStamp =
       (-1).toUnsigned(SPBasics().classTimestamps.length);
   static final DateTime _now = DateTime.now();
   static final int _weekday = _now.weekday % 7;
@@ -39,6 +39,6 @@ abstract final class UpcomingData {
           }
         }
         if (startAt > 0) startAt--;
-        return e.intStamp & (fullStamp << startAt) != 0;
+        return e.intStamp & (_fullStamp << startAt) != 0;
       });
 }

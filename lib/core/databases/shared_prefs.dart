@@ -20,4 +20,6 @@ abstract final class SharedPrefs {
       value != null
           ? await _prefs.setString(key, jsonEncode(value))
           : _prefs.remove(key);
+
+  static Future<void> clear() async => await _prefs.clear();
 }

@@ -5,7 +5,7 @@
   },
   "user": {
     "id": "A47548",
-    "name": "Sadashi Ken Ichi",
+    "name": "Bui Gia Vien",
     "group": 2,
     "semester": 2,
     "schoolYear": 36,
@@ -13,7 +13,7 @@
       [
         ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
         ["NHATSC2.3"],
-        ["TIENGVIETTH.3", "PHANMEMTHIETKE.1.1_BT", "KTEHOCDC.5"]
+        ["PHANMEMTHIETKE.1.1_BT", "KTEHOCDC.5", "MICRO.3"]
       ],
       []
     ]

@@ -31,7 +31,7 @@ abstract final class Server {
     await iCM.removeFile(
       "${User().group.name}/${User().semester.name}/semester",
     );
-    await SharedPrefs.setString("user", null);
+    await SharedPrefs.clear();
     Restart.restartApp();
   }
 

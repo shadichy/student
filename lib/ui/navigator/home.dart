@@ -30,13 +30,20 @@ class _HomePageState extends State<HomePage> {
   bool get hasNotif => _notif.isNotEmpty;
 
   @override
+  void initState() {
+    super.initState();
+
+    NotificationsGet().awaitInitialized().then((_) {
+      setState(() {
+        _notif = NotificationsGet().notifications.where((e) => !e.read).take(4);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
-
-    NotificationsGet().awaitInitialized().then((_) {
-      _notif = NotificationsGet().notifications.where((e) => !e.read).take(4);
-    });
 
     return WithAppbar(
       height: 80,

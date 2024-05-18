@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/ui/connect.dart';
@@ -15,7 +18,10 @@ class Initializer extends StatefulWidget {
 }
 
 class _InitializerState extends State<Initializer> {
-  // Barcode? _barcode;
+  final MobileScannerController controller = MobileScannerController(
+    formats: [BarcodeFormat.qrCode],
+    // required options for the scanner
+  );
 
   void _handleBarcode(BarcodeCapture barcodes) {
     if (!mounted) return;
@@ -26,12 +32,20 @@ class _InitializerState extends State<Initializer> {
     Server.iCM.downloadFile(barcode.displayValue!).then((value) {
       Map<String, dynamic> parsed = jsonDecode(value.file.readAsStringSync());
 
-      SharedPrefs.setString("env", parsed["env"]).then((_) {
-        SharedPrefs.setString("user", parsed["user"]).then(
-          (_) => StudentApp.action(context, AppAction.init),
-        );
-      });
+      try {
+        SharedPrefs.setString("env", parsed["env"]).then((_) {
+          SharedPrefs.setString("user", parsed["user"]).then(
+            (_) => Restart.restartApp(),
+          );
+        });
+      } catch (e) {}
     });
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await controller.dispose();
   }
 
   @override
@@ -44,10 +58,8 @@ class _InitializerState extends State<Initializer> {
       ),
       body: Stack(children: [
         MobileScanner(
-          controller: MobileScannerController(
-            formats: [BarcodeFormat.qrCode],
-          ),
-          fit: BoxFit.contain,
+          controller: controller,
+          // fit: BoxFit.contain,
           onDetect: _handleBarcode,
         )
       ]),

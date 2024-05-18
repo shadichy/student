@@ -43,11 +43,11 @@ final class SemesterTimetable {
   }
 
   late List<WeekTimetable> _timetable;
-  final TLUSemester _currentSemester = User().semester;
+  final UserSemester _currentSemester = User().semester;
   late final DateTime _startDate;
 
   List<WeekTimetable> get timetable => _timetable;
-  TLUSemester get currentSemester => _currentSemester;
+  UserSemester get currentSemester => _currentSemester;
   DateTime get startDate => _startDate;
 
   SemesterPlan currentPlan = StudyPlan().table.toList()[User().semester.index];

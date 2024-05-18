@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:student/core/configs.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
@@ -31,7 +32,8 @@ class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
-  bool get initializeStart => SharedPrefs.getString("user") != null;
+  static bool get start => SharedPrefs.getString("user") != null;
+  bool initializeStart = start;
 
   // bool initializeStart = initStat;
 
@@ -58,16 +60,8 @@ class _StudentAppState extends State<StudentApp> {
     setState(() {
       switch (action) {
         case AppAction.init:
-          initialize();
-          break;
         case AppAction.reload:
-          // setConfigs();
-          break;
         case AppAction.deinit:
-          SharedPrefs.setString("user", null);
-          Server.kill().then((_) {
-            key = UniqueKey();
-          });
           break;
       }
     });
@@ -84,6 +78,7 @@ class _StudentAppState extends State<StudentApp> {
 
   Future<void> initialize() async {
     if (!initializeStart) return;
+
     await User().initialize();
     await SPBasics().initialize();
     await Teachers().initialize();

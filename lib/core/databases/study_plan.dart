@@ -7,7 +7,7 @@ import 'package:student/misc/misc_functions.dart';
 enum DayType { H, T, N, B, Q, O, S, X }
 
 class SemesterPlan {
-  final TLUSemester currentSemester;
+  final UserSemester currentSemester;
   final List<List<DayType>> timetable;
   final List<int> studyWeeks;
   final DateTime startDate;
@@ -61,7 +61,7 @@ final class StudyPlan {
       return MapEntry(
         l,
         SemesterPlan(
-          currentSemester: TLUSemester.values[l],
+          currentSemester: UserSemester.values[l],
           timetable: chunkedWeek,
           studyWeeks: studyWeek,
           startDate: MiscFns.epoch(startDate),

@@ -1,5 +1,7 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/server.dart';
+import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/option.dart';
 import 'package:student/ui/connect.dart';
@@ -127,7 +129,7 @@ class _StudentGlanceState extends State<StudentGlance> {
               ),
               IconButton(
                 icon: const Icon(Symbols.logout),
-                onPressed: () => StudentApp.action(context, AppAction.deinit),
+                onPressed: () => Server.kill(),
                 // margin: const EdgeInsets.only(right: 16),
                 padding: const EdgeInsets.all(16),
                 color: colorScheme.onSecondary,

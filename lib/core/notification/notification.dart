@@ -15,8 +15,8 @@ class Notif {
   final DateTime? uploadDate;
   final EventTimeline? applyEvent;
   final List<DateTime>? applyDates;
-  final TLUGroup? applyGroup;
-  final TLUSemester? applySemester;
+  final UserGroup? applyGroup;
+  final UserSemester? applySemester;
   final bool? override;
   bool? applied;
   bool read;
@@ -59,10 +59,10 @@ class Notif {
                   .toList(),
           applyGroup: map["applyGroup"] == null
               ? null
-              : TLUGroup.values[map["applyGroup"] as int],
+              : UserGroup.values[map["applyGroup"] as int],
           applySemester: map["applySemester"] == null
               ? null
-              : TLUSemester.values[map["applySemester"] as int],
+              : UserSemester.values[map["applySemester"] as int],
           override: map["override"] as bool?,
           applied: map["applied"] as bool?,
           read: (map["read"] ?? false) as bool,

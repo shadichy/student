@@ -8,8 +8,8 @@ import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 
 class LabeledSection extends StatelessWidget {
-  final TLUGroup group;
-  final TLUSemester semester;
+  final UserGroup group;
+  final UserSemester semester;
   final List<BaseSubject> subjects;
   const LabeledSection({
     super.key,

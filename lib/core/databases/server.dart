@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 // import 'package:http/http.dart' as http;
 import 'package:student/core/databases/user.dart';
@@ -23,10 +24,15 @@ abstract final class Server {
 
   static Future<void> kill() async {
     await iCM.removeFile("notifications");
+    await iCM.removeFile("basics");
+    await iCM.removeFile("teachers");
     await iCM.removeFile("${User().group.name}/subjects");
     await iCM.removeFile("${User().group.name}/study_plan");
-    await iCM
-        .removeFile("${User().group.name}/${User().semester.name}/semester");
+    await iCM.removeFile(
+      "${User().group.name}/${User().semester.name}/semester",
+    );
+    await SharedPrefs.setString("user", null);
+    Restart.restartApp();
   }
 
   static Future<T> download<T>(String endpoint) async {
@@ -67,14 +73,14 @@ abstract final class Server {
   static Future<Map<String, dynamic>> get getTeachers async =>
       await fetch("teachers");
 
-  static Future<Map<String, dynamic>> getSubjects(TLUGroup group) async =>
+  static Future<Map<String, dynamic>> getSubjects(UserGroup group) async =>
       await fetch("${group.name}/subjects");
 
-  static Future<Map<String, dynamic>> getStudyPlan(TLUGroup group) async =>
+  static Future<Map<String, dynamic>> getStudyPlan(UserGroup group) async =>
       await fetch("${group.name}/study_plan");
 
   static Future<Map<String, dynamic>> getSemester(
-          TLUGroup group, TLUSemester semester) async =>
+          UserGroup group, UserSemester semester) async =>
       await fetch("${group.name}/${semester.name}/semester");
 
   static Future<MapEntry<int, List<Iterable<Map<String, dynamic>>>>>

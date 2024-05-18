@@ -2,9 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_functions.dart';
 
-enum TLUGroup { n1, n2, n3 }
+enum UserGroup { n1, n2, n3 }
 
-enum TLUSemester { k1, k2, k3 }
+enum UserSemester { k1, k2, k3 }
 
 class User {
   User._instance();
@@ -16,14 +16,14 @@ class User {
   late final String id;
   late final String name;
   late final ImageProvider<Object>? picture;
-  late final TLUGroup group;
-  late final TLUSemester semester;
+  late final UserGroup group;
+  late final UserSemester semester;
   late final int schoolYear;
   // only be in ID
   // late final List<String> passedSubjectIDs;
   // can be either ID or Alt ID
   // late final List<String> learningCourseIDs;
-  late final List<Map<TLUSemester, List<String>>> learningCourses;
+  late final List<Map<UserSemester, List<String>>> learningCourses;
   late final String? major; // later
   late final String? majorClass; // later
   late final int? majorCred; // later
@@ -32,6 +32,7 @@ class User {
   bool get initialized => _initialized;
 
   Future<void> initialize() async {
+    if (_initialized) return;
     Map<String, dynamic>? parsedInfo = SharedPrefs.getString("user");
     if (parsedInfo == null) {
       throw Exception("Could not get user info from cache!");
@@ -42,13 +43,13 @@ class User {
     parsedInfo["picture"] is String
         ? picture = NetworkImage(parsedInfo["picture"])
         : picture = const AssetImage("assets/images/thanglong_logo.png");
-    group = TLUGroup.values[parsedInfo["group"] as int];
-    semester = TLUSemester.values[parsedInfo["semester"] as int];
+    group = UserGroup.values[parsedInfo["group"] as int];
+    semester = UserSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
     learningCourses = (parsedInfo["learning"] as List).map((v) {
       return (v as List).asMap().map((key, value) {
         return MapEntry(
-          TLUSemester.values[key],
+          UserSemester.values[key],
           MiscFns.listType<String>(value as List),
         );
       });

@@ -27,6 +27,7 @@ final class SPBasics {
   int? creditPrice(int schoolYear) => _creditPrice[schoolYear];
 
   Future<void> initialize() async {
+    print("invoke");
     Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
 
     _studyTimestamps =

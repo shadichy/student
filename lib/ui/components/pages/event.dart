@@ -67,7 +67,7 @@ class UpcomingEvent {
     return _today.add(
       Duration(
         seconds: SPBasics().classTimestamps[
-            _getStartStamp(timestamp) + timestamp.bitCount()][1],
+            _getStartStamp(timestamp) + timestamp.bitCount() - 1][1],
       ),
     );
   }

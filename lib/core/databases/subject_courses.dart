@@ -13,17 +13,17 @@ final class InStudyCourses {
   }
 
   late final Iterable<Subject> _inStudyCourses;
-  final RegExp _getCourseID = RegExp(r'([^.]+)');
+  String _getCourseID(String id) => RegExp(r'([^.]+)').firstMatch(id)![0]!;
 
   Subject? getSubject(String id) =>
       _inStudyCourses.firstWhereIf((s) => s.subjectID == id);
 
   Subject? getSubjectAlt(String id) =>
-      _inStudyCourses.firstWhereIf((s) => s.subjectAltID == id);
+      _inStudyCourses.firstWhereIf((s) => s.subjectAltID == _getCourseID(id));
 
   SubjectCourse? getCourse(String id) {
     try {
-      return getSubjectAlt(_getCourseID.firstMatch(id)![0]!)?.getCourse(id);
+      return getSubjectAlt(_getCourseID(id))?.getCourse(id);
     } catch (e) {
       return null;
     }

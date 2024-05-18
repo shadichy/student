@@ -12,11 +12,13 @@ final class Subjects {
   }
   late final Iterable<BaseSubject> _subjects;
 
+  String _getCourseID(String id) => RegExp(r'([^.]+)').firstMatch(id)![0]!;
+
   BaseSubject? getSubject(String id) =>
       _subjects.firstWhereIf((s) => s.subjectID == id);
 
   BaseSubject? getSubjectAlt(String id) =>
-      _subjects.firstWhereIf((s) => s.subjectAltID == id);
+      _subjects.firstWhereIf((s) => s.subjectAltID == _getCourseID(id));
 
   Future<void> initialize() async {
     Map<String, dynamic> rawInfo = await Server.getSubjects(User().group);

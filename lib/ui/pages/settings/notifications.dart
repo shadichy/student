@@ -25,7 +25,7 @@ class SettingsNotificationsPage extends StatefulWidget implements TypicalPage {
 
 class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
   List<Map<String, dynamic>> reminders = MiscFns.listType<Map<String, dynamic>>(
-    AppConfig().getConfig<List>("notif.reminders"),
+    AppConfig().getConfig<List>("notif.reminders")!,
   );
 
   void reminderConf(void Function() fn) {

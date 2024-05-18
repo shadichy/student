@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:student/core/routing.dart';
-import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_widget.dart';
-import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
 import 'package:student/ui/components/section_label.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 class TimetableUpcomingWidget extends StatefulWidget {
-  final SampleTimetableData timetableData;
-  const TimetableUpcomingWidget(this.timetableData, {super.key});
+  final List<UpcomingEvent> classStamps;
+  const TimetableUpcomingWidget(this.classStamps, {super.key});
 
   @override
   State<TimetableUpcomingWidget> createState() =>
@@ -19,13 +16,15 @@ class TimetableUpcomingWidget extends StatefulWidget {
 }
 
 class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
-  List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
-      .map((e) => e is CourseTimestamp
-          ? NextupClassView(e)
-          : UpcomingEvent.fromTimestamp(e))
-      .toList();
+  late final List<UpcomingEvent> classStamps;
 
   int index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    classStamps = widget.classStamps;
+  }
 
   void changeClass(int nextClass) {
     if (nextClass < 0) nextClass = 0;

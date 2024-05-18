@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:student/core/databases/shared_prefs.dart';
 // import 'package:http/http.dart' as http;
 import 'package:student/core/databases/user.dart';
 // import 'package:student/core/configs.dart';
@@ -8,8 +9,9 @@ import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_functions.dart';
 
 abstract final class Server {
-  static final String _domain = env["fetchDomain"]!;
-  static final String _prefix = env["apiPrefix"] ?? "";
+  static final Map<String, dynamic> _env = SharedPrefs.getString("env");
+  static final String _domain = _env["fetchDomain"] ?? env["fetchDomain"]!;
+  static final String _prefix = _env["apiPrefix"] ?? env["apiPrefix"] ?? "";
 
   static String url(String endpoint) =>
       "https://$_domain/$_prefix/$endpoint.json";

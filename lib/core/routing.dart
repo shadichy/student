@@ -51,7 +51,7 @@ abstract class Routing {
   static TypicalPage? getRoute(String id) => _map[id];
 
   static List<TypicalPage> get mainNavigators => [
-        HomePage(),
+        const HomePage(),
         TimetablePage(),
         SchoolPage(),
         StudentPage(),

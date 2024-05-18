@@ -1,5 +1,7 @@
 // get notifications
 
+import 'dart:async';
+
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
@@ -109,9 +111,18 @@ final class NotificationsGet {
     return _notifInstance;
   }
 
+  bool _initialized = false;
+
   late final List<Notif> _notifications;
   List<Notif> get notifications => _notifications;
   late final int _lastUpdated;
+
+  Future<void> awaitInitialized() async {
+    while (!_initialized) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    return;
+  }
 
   Notif _parseMap(Map<String, dynamic> map) {
     Notif notif = Notif.fromJson(map);
@@ -152,6 +163,7 @@ final class NotificationsGet {
     _lastUpdated = updated.key;
 
     // _teachers = parsedInfo;
+    _initialized = true;
     await write();
   }
 }

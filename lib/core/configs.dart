@@ -33,14 +33,14 @@ final class AppConfig {
     _write();
   }
 
-  dynamic getConfig<T>(String id) {
+  T? getConfig<T>(String id) {
     switch (T) {
       case const (bool):
-        return bool.tryParse("${data[id]}");
+        return bool.tryParse("${data[id]}") as T?;
       case const (int):
-        return int.tryParse("${data[id]}");
+        return int.tryParse("${data[id]}") as T?;
       case const (double):
-        return double.tryParse("${data[id]}");
+        return double.tryParse("${data[id]}") as T?;
       case const (List):
         return data[id] ?? [];
       default:

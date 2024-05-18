@@ -11,18 +11,32 @@ import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/quick_navigators.dart';
 import 'package:student/ui/components/with_appbar.dart';
 
-class HomePage extends StatelessWidget implements TypicalPage {
-  HomePage({super.key});
+class HomePage extends StatefulWidget implements TypicalPage {
+  const HomePage({super.key});
 
-  final Iterable<Notif> _notif =
-      NotificationsGet().notifications.where((e) => !e.read).take(4);
+  @override
+  State<HomePage> createState() => _HomePageState();
 
-  late final bool hasNotif = _notif.isNotEmpty;
+  @override
+  Icon get icon => const Icon(Symbols.home);
+
+  @override
+  String get title => "Home";
+}
+
+class _HomePageState extends State<HomePage> {
+  Iterable<Notif> _notif = [];
+
+  bool get hasNotif => _notif.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
+
+    NotificationsGet().awaitInitialized().then((_) {
+      _notif = NotificationsGet().notifications.where((e) => !e.read).take(4);
+    });
 
     return WithAppbar(
       height: 80,
@@ -31,7 +45,7 @@ class HomePage extends StatelessWidget implements TypicalPage {
         const HomeGlance(),
         if (hasNotif) HomeNotifWidget(_notif.toList()),
         HomeNextupClassWidget(SampleTimetableData.from2dList([])),
-        OptionLabelWidgets(title),
+        OptionLabelWidgets(widget.title),
         MWds.divider(16),
         Text(
           "You've reached the end\nHave a nice day!",
@@ -43,10 +57,4 @@ class HomePage extends StatelessWidget implements TypicalPage {
       ],
     );
   }
-
-  @override
-  Icon get icon => const Icon(Symbols.home);
-
-  @override
-  String get title => "Home";
 }

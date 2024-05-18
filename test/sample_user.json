@@ -1,0 +1,21 @@
+{
+  "env": {
+    "fetchDomain": "raw.githubusercontent.com",
+    "apiPrefix": "shadichydev/student/async/test/sample_db"
+  },
+  "user": {
+    "id": "A47548",
+    "name": "Sadashi Ken Ichi",
+    "group": 2,
+    "semester": 2,
+    "schoolYear": 36,
+    "learning": [
+      [
+        ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
+        ["NHATSC2.3"],
+        ["TIENGVIETTH.3", "PHAN```````MEMTHIETKE.1.1_BT", "KTEHOCDC.5"]
+      ],
+      []
+    ]
+  }
+}

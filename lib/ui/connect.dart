@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/configs.dart';
+import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
@@ -30,52 +31,55 @@ class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
-  static bool get initStat => SharedPrefs.getString("user") != null;
+  bool get initializeStart => SharedPrefs.getString("user") != null;
 
-  bool initializeStart = initStat;
+  // bool initializeStart = initStat;
 
   Widget mainContent = const Loading();
 
   Key key = UniqueKey();
 
-  late Color seed;
-  late int mode;
-  late String? font;
+  bool get useSystem =>
+      AppConfig().getConfig<bool>("theme.systemTheme") == true;
+
+  int? get colorCode => AppConfig().getConfig<int>("theme.accentColor");
+
+  Color? get seed => useSystem
+      ? SystemTheme.accentColor.accent
+      : colorCode != null
+          ? Color(colorCode!)
+          : null;
+  int get mode =>
+      useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
+  String? get font =>
+      useSystem ? null : AppConfig().getConfig<String>("theme.appFont");
 
   void action(AppAction action) {
     setState(() {
       switch (action) {
         case AppAction.init:
-          initializeStart = initStat;
           initialize();
           break;
         case AppAction.reload:
-          setConfigs();
+          // setConfigs();
           break;
         case AppAction.deinit:
           SharedPrefs.setString("user", null);
-          initializeStart = false;
-          key = UniqueKey();
+          Server.kill().then((_) {
+            key = UniqueKey();
+          });
           break;
       }
     });
   }
 
-  void setConfigs() {
-    bool useSystem = AppConfig().getConfig<bool>("theme.systemTheme") == true;
-    seed = useSystem
-        ? SystemTheme.accentColor.accent
-        : Color(AppConfig().getConfig<int>("theme.accentColor") ??
-            Colors.deepOrange.value);
-    mode = useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
-    font = useSystem ? null : AppConfig().getConfig<String>("theme.appFont");
-  }
+  // void setConfigs() {}
 
   @override
   void initState() {
     super.initState();
     initialize();
-    setConfigs();
+    // setConfigs();
   }
 
   Future<void> initialize() async {
@@ -87,7 +91,7 @@ class _StudentAppState extends State<StudentApp> {
     await StudyPlan().initialize();
     await InStudyCourses().initialize();
     await SemesterTimetable().initialize();
-    await NotificationsGet().initialize();
+    NotificationsGet().initialize();
     setState(() {
       mainContent = const App();
     });
@@ -96,13 +100,17 @@ class _StudentAppState extends State<StudentApp> {
   @override
   Widget build(BuildContext context) {
     ThemeData buildTheme(Brightness brightness) {
-      ColorScheme colorScheme = ColorScheme.fromSeed(
-        seedColor: seed,
-        brightness: brightness,
-      );
-      Color bgColor = colorScheme.primary.withOpacity(0.05);
-      Color textColor = colorScheme.onSurface;
+      ColorScheme? colorScheme;
+      if (seed is Color) {
+        colorScheme = ColorScheme.fromSeed(
+          seedColor: seed!,
+          brightness: brightness,
+        );
+      }
+      Color? bgColor = colorScheme?.primary.withOpacity(0.05);
+      Color? textColor = colorScheme?.onSurface;
       ThemeData baseTheme = ThemeData(
+        brightness: brightness,
         colorScheme: colorScheme,
         useMaterial3: true,
         splashColor: bgColor,

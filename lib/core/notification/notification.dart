@@ -118,9 +118,9 @@ final class NotificationsGet {
   late final int _lastUpdated;
 
   Future<void> awaitInitialized() async {
-    while (!_initialized) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1), () async {
+      if (!_initialized) await awaitInitialized();
+    });
     return;
   }
 

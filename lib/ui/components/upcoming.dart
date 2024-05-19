@@ -15,7 +15,7 @@ abstract final class UpcomingData {
       defaultConfig["misc.startWeekday"];
 
   static DateTime get weekStart => _now.subtract(
-        Duration(days: _weekday - weekdayStart),
+        Duration(days: (_weekday - weekdayStart + 7) % 7),
       );
 
   static WeekTimetable get thisWeek => SemesterTimetable().getWeek(weekStart);

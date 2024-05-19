@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/ui/connect.dart';
+import 'package:student/misc/misc_widget.dart';
+import 'package:student/ui/pages/init/fill_form.dart';
 // import 'package:student/core/databases/user.dart';
 
 class Initializer extends StatefulWidget {
@@ -18,13 +20,23 @@ class Initializer extends StatefulWidget {
 }
 
 class _InitializerState extends State<Initializer> {
+  double invalidOpacity = 0;
   final MobileScannerController controller = MobileScannerController(
     formats: [BarcodeFormat.qrCode],
     // required options for the scanner
   );
 
-  void _handleBarcode(BarcodeCapture barcodes) {
-    if (!mounted) return;
+  void checkValidUser(Map<String, dynamic> data) {
+    data["id"] as String;
+    data["name"] as String;
+    data["group"] as int;
+    data["semester"] as int;
+    data["schoolYear"] as int;
+    data["learning"] as List;
+  }
+
+  void _handleBarcode(BarcodeCapture? barcodes) {
+    if (barcodes == null || !mounted) return;
 
     Barcode? barcode = barcodes.barcodes.firstOrNull;
     if (barcode == null) return;
@@ -33,12 +45,23 @@ class _InitializerState extends State<Initializer> {
       Map<String, dynamic> parsed = jsonDecode(value.file.readAsStringSync());
 
       try {
-        SharedPrefs.setString("env", parsed["env"]).then((_) {
-          SharedPrefs.setString("user", parsed["user"]).then(
+        checkValidUser(parsed["user"]);
+        SharedPrefs.setString("user", parsed["user"]).then((_) {
+          SharedPrefs.setString("env", parsed["env"]).then(
             (_) => Restart.restartApp(),
           );
         });
-      } catch (e) {}
+      } catch (e) {
+        setState(() {
+          invalidOpacity = 1;
+        });
+        SharedPrefs.clear();
+        Future.delayed(const Duration(seconds: 3), () {
+          setState(() {
+            invalidOpacity = 0;
+          });
+        });
+      }
     });
   }
 
@@ -50,6 +73,14 @@ class _InitializerState extends State<Initializer> {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ButtonStyle style = TextButton.styleFrom(
+      backgroundColor: colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -61,6 +92,61 @@ class _InitializerState extends State<Initializer> {
           controller: controller,
           // fit: BoxFit.contain,
           onDetect: _handleBarcode,
+        ),
+        Positioned(
+          bottom: 16,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            width: MediaQuery.of(context).size.width,
+            height: 256,
+            child: Column(children: [
+              AnimatedOpacity(
+                opacity: invalidOpacity,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: colorScheme.surface),
+                  child: const Text(
+                      "QR Code scanned is invalid, please try again!"),
+                ),
+              ),
+              MWds.divider(16),
+              Row(children: [
+                TextButton.icon(
+                  onPressed: () {
+                    FilePicker.platform
+                        .pickFiles(type: FileType.image)
+                        .then((f) {
+                      if (f == null) return;
+                      controller
+                          .analyzeImage(f.files.single.path!)
+                          .then(_handleBarcode);
+                    });
+                  },
+                  icon: const Icon(Symbols.upload),
+                  label: const Text("Use picture"),
+                  style: style,
+                ),
+                const VerticalDivider(
+                  width: 16,
+                  color: Colors.transparent,
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const FillForm(),
+                    ));
+                  },
+                  icon: const Icon(Symbols.edit),
+                  label: const Text("Fill manually"),
+                  style: style,
+                ),
+              ])
+            ]),
+          ),
         )
       ]),
     );

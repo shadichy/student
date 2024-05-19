@@ -1,10 +1,8 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/option.dart';
-import 'package:student/ui/connect.dart';
 
 class StudentGlance extends StatefulWidget {
   final Image studentPicture;

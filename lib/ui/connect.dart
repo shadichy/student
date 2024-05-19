@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:student/core/configs.dart';
-import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';

@@ -96,9 +96,9 @@ class NextupClassView extends UpcomingEvent {
   NextupClassView(this.stamp)
       : courseId = stamp.courseID,
         super(
-          eventLabel: Subjects().getSubjectAlt(stamp.courseID)!.name,
+          eventLabel: Subjects().getSubjectAlt(stamp.courseID)?.name?? "Unknown",
           location: stamp.room,
-          heldBy: Teachers().getTeacher(stamp.teacherID)!,
+          heldBy: Teachers().getTeacher(stamp.teacherID)?? "Unknown",
           startTime: UpcomingEvent._getStart(stamp.intStamp),
           endTime: UpcomingEvent._getEnd(stamp.intStamp),
         );

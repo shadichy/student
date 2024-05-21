@@ -18,7 +18,7 @@ class OptionLabelWidgets extends StatelessWidget {
     super.key,
     this.headingLabel = "Quick actions",
   }) : _routes = MiscFns.listType<String>(
-          AppConfig().getConfig<List>("opts.$id")!,
+          AppConfig().getConfig<List>("opts.$id")!, // Must be defined in the default configuration
         );
 
   @override

@@ -15,7 +15,7 @@ class HomeNextupClassWidget extends StatefulWidget {
 }
 
 class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
-  List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
+  final List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
       .map((e) => e is CourseTimestamp
           ? NextupClassView(e)
           : UpcomingEvent.fromTimestamp(e))

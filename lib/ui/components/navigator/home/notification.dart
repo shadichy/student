@@ -247,10 +247,10 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
           AnimatedSize(
             duration: const Duration(milliseconds: 100),
             child: Column(
-              children: List.generate(notifications.length, (_) {
+              children: List.generate(notifications.length, (n) {
                 return isExpanded
-                    ? NotifExpand(notifications[_])
-                    : titlePreview(notifications[_]);
+                    ? NotifExpand(notifications[n])
+                    : titlePreview(notifications[n]);
               }),
             ),
           ),

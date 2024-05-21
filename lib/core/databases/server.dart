@@ -87,7 +87,7 @@ abstract final class Server {
       getNotifications(int startDate) async {
     List<int> notifIdList;
     try {
-      notifIdList = MiscFns.listType<int>(
+      notifIdList = MiscFns.list<int>(
           await download<List>("notifications/timestamps"));
     } catch (e) {
       return MapEntry(startDate, []);

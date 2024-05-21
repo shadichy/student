@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -5,9 +7,36 @@ import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/pages/event_preview.dart';
 
-class TimetableUpcomingCardAlt extends StatelessWidget {
+class TimetableUpcomingCardAlt extends StatefulWidget {
   final UpcomingEvent upcomingEvent;
   const TimetableUpcomingCardAlt(this.upcomingEvent, {super.key});
+
+  @override
+  State<TimetableUpcomingCardAlt> createState() =>
+      _TimetableUpcomingCardAltState();
+}
+
+class _TimetableUpcomingCardAltState extends State<TimetableUpcomingCardAlt> {
+  String _timeString = "";
+
+  @override
+  void initState() {
+    _timeString = MiscFns.timeLeft(
+      widget.upcomingEvent.startTime,
+      widget.upcomingEvent.endTime,
+    );
+    Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    super.initState();
+  }
+
+  void _getTime() {
+    setState(() {
+      _timeString = MiscFns.timeLeft(
+        widget.upcomingEvent.startTime,
+        widget.upcomingEvent.endTime,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +77,19 @@ class TimetableUpcomingCardAlt extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                upcomingEvent.eventLabel,
+                widget.upcomingEvent.eventLabel,
                 style: textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Row(children: [
-                if (upcomingEvent.location is String)
+                if (widget.upcomingEvent.location is String)
                   Text(
-                    "${upcomingEvent.location} \u2022 ",
+                    "${widget.upcomingEvent.location} \u2022 ",
                     style: textTheme.titleMedium,
                   ),
                 Text(
-                  MiscFns.timeLeft(
-                      upcomingEvent.startTime, upcomingEvent.endTime),
+                  _timeString,
                   style: textTheme.titleMedium,
                 ),
               ])
@@ -74,8 +102,8 @@ class TimetableUpcomingCardAlt extends StatelessWidget {
 }
 
 class TimetableUpcomingCard extends StatefulWidget {
-  final NextupClassView nextupClass;
-  const TimetableUpcomingCard(this.nextupClass, {super.key});
+  final NextupClassView upcomingEvent;
+  const TimetableUpcomingCard(this.upcomingEvent, {super.key});
 
   @override
   State<TimetableUpcomingCard> createState() => _TimetableUpcomingCardState();
@@ -161,7 +189,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
           showBottomSheet(
             context: context,
             builder: ((BuildContext context) {
-              return UpcomingEventSheet(widget.nextupClass);
+              return UpcomingEventSheet(widget.upcomingEvent);
             }),
           );
         },
@@ -181,7 +209,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                 ),
               ),
               child: Text(
-                widget.nextupClass.courseId,
+                widget.upcomingEvent.courseId,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -199,7 +227,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.nextupClass.classDesc,
+                    widget.upcomingEvent.classDesc,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
@@ -209,22 +237,22 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                   textTile(
                     Symbols.meeting_room,
                     "Room",
-                    widget.nextupClass.room,
+                    widget.upcomingEvent.room,
                   ),
                   textTile(
                     Symbols.alarm,
                     "Time",
-                    "${MiscFns.timeFormat(widget.nextupClass.startTime)} - ${MiscFns.timeFormat(widget.nextupClass.endTime)}",
+                    "${MiscFns.timeFormat(widget.upcomingEvent.startTime)} - ${MiscFns.timeFormat(widget.upcomingEvent.endTime)}",
                   ),
                   textTile(
                     Symbols.event,
                     "Date",
-                    MiscFns.timeFormat(widget.nextupClass.startTime),
+                    MiscFns.timeFormat(widget.upcomingEvent.startTime),
                   ),
                   textTile(
                     Symbols.person,
                     "Teacher",
-                    widget.nextupClass.teacher,
+                    widget.upcomingEvent.teacher,
                   ),
                 ],
               ),

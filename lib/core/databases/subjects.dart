@@ -40,7 +40,7 @@ final class Subjects {
           subjectAltID: value["subjectAltID"] as String,
           name: value["name"] as String,
           cred: value["cred"] as int,
-          dependencies: MiscFns.listType<String>(value["dependencies"] as List),
+          dependencies: MiscFns.list<String>(value["dependencies"] as List),
         ),
       );
     }).values;

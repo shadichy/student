@@ -45,18 +45,18 @@ class _SettingsPageState extends State<SettingsPage> {
             "Select language",
             style: textTheme.bodyMedium,
           ),
-          children: List.generate(langMap.length, (_) {
+          children: List.generate(langMap.length, (l) {
             return SimpleDialogOption(
               child: Text(
-                langMapEntry[_].value,
+                langMapEntry[l].value,
               ),
-              onPressed: () => Navigator.of(context).pop(langMapEntry[_].key),
+              onPressed: () => Navigator.of(context).pop(langMapEntry[l].key),
             );
           }),
         );
       },
-    ).then((_) {
-      if (_ != null) setLang(_);
+    ).then((l) {
+      if (l != null) setLang(l);
     });
   }
 

@@ -109,17 +109,17 @@ class EventTimeline {
     required this.label,
     required this.timestamp,
   })  : heldBy = timestamp
-            .where((_) => _.heldBy != null)
-            .map((_) => _.heldBy!)
+            .where((t) => t.heldBy != null)
+            .map((t) => t.heldBy!)
             .toList(),
         locations = timestamp
-            .where((_) => _.location != null)
-            .map((_) => _.location!)
+            .where((t) => t.location != null)
+            .map((t) => t.location!)
             .toList(),
-        intEvent = timestamp.fold(BigInt.zero, (f, _) {
+        intEvent = timestamp.fold(BigInt.zero, (f, i) {
           return f |
-              (BigInt.from(_.intStamp) <<
-                  (_.dayOfWeek * SPBasics().classTimestamps.length));
+              (BigInt.from(i.intStamp) <<
+                  (i.dayOfWeek * SPBasics().classTimestamps.length));
         });
 
   int get length => timestamp.length;
@@ -182,9 +182,9 @@ final class SubjectCourse extends EventTimeline {
                   .getSubjectAlt(courseID ?? (jsonData["courseID"] as String))
                   ?.subjectID ??
               (jsonData["subjectID"] as String),
-          timestamp: MiscFns.listType<Map<String, dynamic>>(
+          timestamp: MiscFns.list<Map<String, dynamic>>(
                   jsonData["timestamp"] as List)
-              .map((_) => CourseTimestamp.fromJson(_, courseID))
+              .map((t) => CourseTimestamp.fromJson(t, courseID))
               .toList(),
         );
 
@@ -220,7 +220,7 @@ final class Subject extends BaseSubject {
         );
 
   SubjectCourse? getCourse(String courseID) {
-    return courses.firstWhereIf((_) => _.courseID == courseID);
+    return courses.firstWhereIf((c) => c.courseID == courseID);
   }
 
   BaseSubject toBase() => BaseSubject(

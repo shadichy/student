@@ -15,7 +15,7 @@ class User {
 
   late final String id;
   late final String name;
-  late final ImageProvider<Object>? picture;
+  late final ImageProvider<Object> picture;
   late final UserGroup group;
   late final UserSemester semester;
   late final int schoolYear;
@@ -27,6 +27,7 @@ class User {
   late final String? major; // later
   late final String? majorClass; // later
   late final int? majorCred; // later
+  late final int? creds; // later
   bool _initialized = false;
 
   bool get initialized => _initialized;
@@ -42,7 +43,7 @@ class User {
     name = parsedInfo["name"] as String;
     parsedInfo["picture"] is String
         ? picture = NetworkImage(parsedInfo["picture"])
-        : picture = const AssetImage("assets/images/thanglong_logo.png");
+        : picture = const AssetImage("assets/images/logo.png");
     group = UserGroup.values[parsedInfo["group"] as int];
     semester = UserSemester.values[parsedInfo["semester"] as int];
     schoolYear = parsedInfo["schoolYear"] as int;
@@ -50,7 +51,7 @@ class User {
       return (v as List).asMap().map((key, value) {
         return MapEntry(
           UserSemester.values[key],
-          MiscFns.listType<String>(value as List),
+          MiscFns.list<String>(value as List),
         );
       });
     }).toList();

@@ -63,11 +63,11 @@ final class SemesterTimetable {
           : [
               ..._timetable[week]
                   ._timestamps
-                  .where((_) => _.dayOfWeek >= startDay),
+                  .where((t) => t.dayOfWeek >= startDay),
               if (week + 1 < _timetable.length)
                 ..._timetable[week + 1]
                     ._timestamps
-                    .where((_) => _.dayOfWeek < startDay)
+                    .where((t) => t.dayOfWeek < startDay)
             ]);
     }
     if (currentPlan.studyWeeks.contains(week)) {
@@ -99,7 +99,7 @@ final class SemesterTimetable {
         );
       }
       Iterable<EventTimestamp> matchEvents =
-          timestamp.where((_) => _.dayOfWeek == doW);
+          timestamp.where((t) => t.dayOfWeek == doW);
       WeekTimetable targetWeek = _timetable[week];
       modifier(targetWeek, matchEvents);
       // _timetable[week] = WeekTimetable(
@@ -113,9 +113,9 @@ final class SemesterTimetable {
       timestamp,
       days,
       (c, t) => c.setStamps([
-        ...c._timestamps.where((_) {
+        ...c._timestamps.where((i) {
           for (EventTimestamp event in t) {
-            if (event.intStamp | _.intStamp != 0) return false;
+            if (event.intStamp | i.intStamp != 0) return false;
           }
           return true;
         }),
@@ -129,7 +129,7 @@ final class SemesterTimetable {
   }
 
   void _addAll(List<EventTimestamp> timestamp) {
-    void add(WeekTimetable _) => _.addStamps(timestamp);
+    void add(WeekTimetable w) => w.addStamps(timestamp);
     _timetable.forEach(add);
   }
 
@@ -168,10 +168,10 @@ final class SemesterTimetable {
 
     if (rawInfo is List) {
       Iterable<Map<String, dynamic>> parsedInfo =
-          MiscFns.listType<Map<String, dynamic>>(rawInfo);
+          MiscFns.list<Map<String, dynamic>>(rawInfo);
       _timetable = parsedInfo.map((w) {
         return WeekTimetable(
-          MiscFns.listType<Map<String, dynamic>>(
+          MiscFns.list<Map<String, dynamic>>(
             w["timestamps"] as List,
           ).map((s) {
             return s["courseID"] != null
@@ -191,7 +191,9 @@ final class SemesterTimetable {
             [User().semester]!) {
       try {
         registeredCourses.add(InStudyCourses().getCourse(id)!);
-      } catch (e) {}
+      } catch (e) {
+        // invavlid course
+      }
     }
 
     _timetable = currentPlan.timetable

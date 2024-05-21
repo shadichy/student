@@ -16,7 +16,7 @@ abstract final class MiscFns {
     String hour = "";
     if (diffStart.inHours > 0) hour += "${diffStart.inHours}h";
     if (diffStart.inMinutes < 0) return "now";
-    return "$hour${diffStart.inMinutes}m";
+    return "$hour${diffStart.inMinutes % 60}m";
   }
 
   static String colorCode(Color color) =>
@@ -24,7 +24,7 @@ abstract final class MiscFns {
 
   static DateTime epoch(int s) => DateTime.fromMillisecondsSinceEpoch(s * 1000);
 
-  static List<T> listType<T>(List<dynamic> list) =>
+  static List<T> list<T>(List<dynamic> list) =>
       list.map((s) => s as T).toList();
 
   // static List<Type> genList<Type>(

@@ -27,15 +27,14 @@ final class SPBasics {
   int? creditPrice(int schoolYear) => _creditPrice[schoolYear];
 
   Future<void> initialize() async {
-    print("invoke");
     Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
 
     _studyTimestamps =
-        MiscFns.listType<List>(parsedInfo["studyTimestamps"] as List)
-            .map((l) => MiscFns.listType<int>(l))
+        MiscFns.list<List>(parsedInfo["studyTimestamps"] as List)
+            .map((l) => MiscFns.list<int>(l))
             .toList();
     _onlineClassTypes =
-        MiscFns.listType<String>(parsedInfo["onlineClassTypes"] as List);
+        MiscFns.list<String>(parsedInfo["onlineClassTypes"] as List);
     _creditPrice = (parsedInfo["creditPrices"] as Map<String, dynamic>)
         .map((key, value) => MapEntry(int.parse(key), value as int));
     String cr =

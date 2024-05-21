@@ -7,8 +7,14 @@ class FillForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Fill your info"),
+        title: const Text("Fill your info"),
       ),
+      body: Form(child: Column(children: [
+        TextFormField(),
+        TextFormField(),
+        TextFormField(),
+        TextFormField(),
+      ])),
     );
   }
 }

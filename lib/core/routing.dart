@@ -100,15 +100,15 @@ abstract class Routing {
   static TypicalPage get help => _map['help']!;
 
   static TypicalPage Function(SubjectCourse) get course =>
-      (_) => SubjectCoursePage(_);
+      (p) => SubjectCoursePage(p);
   static TypicalPage Function(CourseTimestamp) get stamp =>
-      (_) => SubjectStampPage(_);
-  static TypicalPage Function(Subject) get subject => (_) => SubjectPage(_);
+      (p) => SubjectStampPage(p);
+  static TypicalPage Function(Subject) get subject => (p) => SubjectPage(p);
   static Widget Function(String) get search_result =>
-      (_) => SearchResultPage(_);
+      (p) => SearchResultPage(p);
   static Widget Function(int) get notif_detail =>
-      (_) => const NotificationDetailPage();
-  static Widget Function(String) get article => (_) => SchoolArticlePage(_);
+      (p) => const NotificationDetailPage();
+  static Widget Function(String) get article => (p) => SchoolArticlePage(p);
   static Widget Function(String) get quick_action_edit =>
-      (_) => SettingsQuickActionPage(_);
+      (p) => SettingsQuickActionPage(p);
 }

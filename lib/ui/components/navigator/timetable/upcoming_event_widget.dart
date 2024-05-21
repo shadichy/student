@@ -26,13 +26,13 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
     classStamps = widget.classStamps;
   }
 
-  void changeClass(int nextClass) {
-    if (nextClass < 0) nextClass = 0;
-    if (nextClass >= classStamps.length) nextClass = classStamps.length - 1;
-    setState(() {
-      index = nextClass;
-    });
-  }
+  // void _changeClass(int nextClass) {
+  //   if (nextClass < 0) nextClass = 0;
+  //   if (nextClass >= classStamps.length) nextClass = classStamps.length - 1;
+  //   setState(() {
+  //     index = nextClass;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

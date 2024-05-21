@@ -38,12 +38,12 @@ class _NotificationPageState extends State<NotificationPage> {
           style: textTheme.titleLarge,
         ),
         backgroundColor: Colors.transparent,
-        actions: List.generate(actions.length, (_) {
+        actions: List.generate(actions.length, (i) {
           return [
             IconButton(
-              onPressed: actions[_].value,
+              onPressed: actions[i].value,
               icon: Icon(
-                actions[_].key,
+                actions[i].key,
                 color: colorScheme.onPrimaryContainer,
               ),
             ),

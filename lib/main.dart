@@ -5,6 +5,7 @@ import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/ui/connect.dart';
 import 'package:system_theme/system_theme.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -13,5 +14,6 @@ void main() async {
   if (AppConfig().getConfig<bool>("theme.systemTheme") == true) {
     await SystemTheme.accentColor.load();
   }
+  // await NotificationService().initialize();
   runApp(const StudentApp());
 }

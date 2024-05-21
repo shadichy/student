@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -20,10 +22,30 @@ class HomeNextupClassCard extends StatefulWidget {
 
 class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
   late bool state = widget.state == CardState.ring;
+  String _timeString = "";
 
-  void switchState(newState) {
+  @override
+  void initState() {
+    _timeString = MiscFns.timeLeft(
+      widget.nextupClass.startTime,
+      widget.nextupClass.endTime,
+    );
+    Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    super.initState();
+  }
+
+  void _switchState(newState) {
     setState(() {
       state = newState;
+    });
+  }
+
+  void _getTime() {
+    setState(() {
+      _timeString = MiscFns.timeLeft(
+        widget.nextupClass.startTime,
+        widget.nextupClass.endTime,
+      );
     });
   }
 
@@ -97,10 +119,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                         size: 18,
                       ),
                       Text(
-                        MiscFns.timeLeft(
-                          widget.nextupClass.startTime,
-                          widget.nextupClass.endTime,
-                        ),
+                        _timeString,
                         style: textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -143,7 +162,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
               ),
             ),
             IconButton(
-              onPressed: () => switchState(!state),
+              onPressed: () => _switchState(!state),
               padding: const EdgeInsets.all(8),
               icon: Icon(
                   state ? Symbols.notifications_active : Symbols.notifications),

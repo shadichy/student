@@ -7,7 +7,7 @@ class SampleTimetable {
   final int length;
   SampleTimetable({required this.classes})
       : length = classes.length,
-        intMatrix = classes.fold(BigInt.zero, (f, _) => f = _.intCourse);
+        intMatrix = classes.fold(BigInt.zero, (f, i) => f = i.intCourse);
 }
 
 class SubjectFilter {

@@ -139,8 +139,8 @@ class _SettingsThemesPageState extends State<SettingsThemesPage> {
                   },
                   searchMethod: (query, items) {
                     String k = query.toLowerCase();
-                    return items.skip(1).where((_) {
-                      return _.toLowerCase().contains(k);
+                    return items.skip(1).where((i) {
+                      return i.toLowerCase().contains(k);
                     }).toList();
                   },
                 );

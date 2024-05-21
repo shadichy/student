@@ -46,7 +46,7 @@ class Notif {
                   ? SubjectCourse.fromJson(map["applyEvent"])
                   : SchoolEvent(
                       label: map["applyEvent"]["label"] as String,
-                      timestamp: MiscFns.listType<Map<String, dynamic>>(
+                      timestamp: MiscFns.list<Map<String, dynamic>>(
                               map["applyEvent"]["timestamp"] as List)
                           .map((e) => EventTimestamp.fromJson(e))
                           .toList(),
@@ -54,7 +54,7 @@ class Notif {
                     ),
           applyDates: map["applyDates"] == null
               ? null
-              : MiscFns.listType<int>(map["applyDates"] as List)
+              : MiscFns.list<int>(map["applyDates"] as List)
                   .map((e) => MiscFns.epoch(e))
                   .toList(),
           applyGroup: map["applyGroup"] == null
@@ -75,7 +75,7 @@ class Notif {
             ? null
             : uploadDate!.millisecondsSinceEpoch ~/ 1000,
         'applyEvent': applyEvent,
-        'applyDates': applyDates?.map((_) => _.millisecondsSinceEpoch ~/ 1000),
+        'applyDates': applyDates?.map((d) => d.millisecondsSinceEpoch ~/ 1000),
         'applyGroup': applyGroup?.index,
         'applySemester': applySemester?.index,
         'override': override,
@@ -118,10 +118,10 @@ final class NotificationsGet {
   late final int _lastUpdated;
 
   Future<void> awaitInitialized() async {
+    if (_initialized) return;
     await Future.delayed(const Duration(seconds: 1), () async {
-      if (!_initialized) await awaitInitialized();
+      await awaitInitialized();
     });
-    return;
   }
 
   Notif _parseMap(Map<String, dynamic> map) {
@@ -152,9 +152,9 @@ final class NotificationsGet {
     );
 
     _notifications = updated.value
-        .map((_) => _.map((e) => _parseMap(e)))
+        .map((v) => v.map((e) => _parseMap(e)))
         .fold(
-          MiscFns.listType<Map<String, dynamic>>(
+          MiscFns.list<Map<String, dynamic>>(
             (parsedInfo["data"] ?? []) as List,
           ).map((e) => _parseMap(e)),
           (p, n) => [...p, ...n],

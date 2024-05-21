@@ -40,7 +40,7 @@ final class StudyPlan {
 
     int prevWeeks = 0;
 
-    table = MiscFns.listType<String>(parsedInfo["plan"] as List)
+    table = MiscFns.list<String>(parsedInfo["plan"] as List)
         .asMap()
         .map((l, s) {
       List<List<DayType>> chunkedWeek = (s)

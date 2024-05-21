@@ -1,28 +1,21 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/server.dart';
+import 'package:student/core/databases/user.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/option.dart';
 
 class StudentGlance extends StatefulWidget {
-  final Image studentPicture;
-  final String studentFullName;
-  final String studentCode; // or studentID
-  final String studentSchool;
-  final String studentMajor;
-  final String studentClass;
-  final String studentGPA;
-  final int studentCred;
-  const StudentGlance({
-    super.key,
-    required this.studentCode,
-    required this.studentFullName,
-    required this.studentPicture,
-    required this.studentSchool,
-    required this.studentMajor,
-    required this.studentClass,
-    required this.studentGPA,
-    required this.studentCred,
+  final Image studentPicture = Image(image: User().picture);
+  final String studentFullName = User().name;
+  final String studentCode = User().id;
+  // final String studentSchool ;
+  final String? studentMajor = User().major;
+  final String? studentClass = User().majorClass;
+  final String? studentGPA = "";
+  final int? studentCred = User().creds;
+  StudentGlance({
+    super.key
   });
 
   @override
@@ -84,10 +77,10 @@ class _StudentGlanceState extends State<StudentGlance> {
             child: Table(
               columnWidths: const {0: FixedColumnWidth(80)},
               children: [
-                MapEntry("Major", widget.studentMajor),
-                MapEntry("Class", widget.studentClass),
-                MapEntry("Credit", "${widget.studentCred}/144"),
-                MapEntry("GPA", widget.studentGPA),
+                MapEntry("Major", "${widget.studentMajor}"),
+                MapEntry("Class", "${widget.studentClass}"),
+                MapEntry("Credit", "${widget.studentCred}/${User().majorCred ?? 0}"),
+                MapEntry("GPA", "${widget.studentGPA}"),
               ].map((item) {
                 return TableRow(children: [
                   Text(

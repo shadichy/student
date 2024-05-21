@@ -44,7 +44,7 @@ dependencies:
   bitcount: ^0.3.0
   flutter_svg: ^2.0.10+1
   http: ^1.2.1
-  two_dimensional_scrollables: ^0.2.1
+  two_dimensional_scrollables: ^0.3.0
   # sheet: ^0.0.4+1
   system_theme: ^2.3.1
   scroll_snap_list: ^0.9.1
@@ -55,6 +55,7 @@ dependencies:
   restart_app: ^1.2.1
   file_picker: ^8.0.3
   flutter_local_notifications: ^17.1.2
+  alarm: ^3.1.4
 
 dev_dependencies:
   flutter_test:
@@ -112,3 +113,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_launcher_icons:
+  android: true
+  ios: true
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/images/logo_dark.png"
+  image_path: "assets/images/logo.png"

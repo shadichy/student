@@ -55,6 +55,10 @@ class User {
         );
       });
     }).toList();
+    major = parsedInfo["major"];
+    majorClass = parsedInfo["majorClass"];
+    majorCred = parsedInfo["majorCred"];
+    creds = parsedInfo["creds"];
     _initialized = true;
   }
 }

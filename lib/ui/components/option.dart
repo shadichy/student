@@ -13,7 +13,7 @@ class Option {
       : icon = page.icon,
         target = ((context) {});
 }
-
+@Deprecated("This will no longer be necessarily used ")
 class TextOption extends StatefulWidget {
   final Option option;
   final String? label;

@@ -42,6 +42,7 @@ final class AppConfig {
       case const (double):
         return double.tryParse("${data[id]}") as T?;
       case const (List):
+      case const (Iterable):
         return data[id] ?? [];
       default:
         return data[id] as T?;

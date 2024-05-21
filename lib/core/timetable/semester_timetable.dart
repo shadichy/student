@@ -185,10 +185,14 @@ final class SemesterTimetable {
       return;
     }
 
-    Iterable<SubjectCourse> registeredCourses = User()
-        .learningCourses[SPBasics().currentYear - User().schoolYear]
-            [User().semester]!
-        .map((id) => InStudyCourses().getCourse(id)!);
+    List<SubjectCourse> registeredCourses = [];
+    for (var id
+        in User().learningCourses[SPBasics().currentYear - User().schoolYear]
+            [User().semester]!) {
+      try {
+        registeredCourses.add(InStudyCourses().getCourse(id)!);
+      } catch (e) {}
+    }
 
     _timetable = currentPlan.timetable
         .asMap()

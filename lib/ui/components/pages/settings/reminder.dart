@@ -1,7 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-
-enum AlarmMode { follow, silent, custom }
+import 'package:student/core/notification/alarm.dart';
 
 enum ActionType { change, delete }
 
@@ -14,7 +13,7 @@ class ReminderCard extends StatefulWidget {
   final bool disabled;
   final bool vibrate;
   final AlarmMode alarmMode;
-  final String? alarm;
+  final String? audio;
   const ReminderCard(
     this.duration, {
     super.key,
@@ -22,8 +21,8 @@ class ReminderCard extends StatefulWidget {
     this.disabled = false,
     this.vibrate = true,
     this.alarmMode = AlarmMode.follow,
-    this.alarm,
-  }) : assert(alarmMode != AlarmMode.custom || alarm != null,
+    this.audio,
+  }) : assert(alarmMode != AlarmMode.custom || audio != null,
             'Missing custom alarm');
 
   @override
@@ -35,7 +34,7 @@ class _ReminderCardState extends State<ReminderCard> {
   late bool disabled = widget.disabled;
   late bool vibrate = widget.vibrate;
   late AlarmMode alarmMode = widget.alarmMode;
-  late String? alarm = widget.alarm;
+  late String? alarm = widget.audio;
 
   Map<String, dynamic> get toObject {
     return {

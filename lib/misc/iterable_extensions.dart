@@ -1,5 +1,5 @@
 extension IterableExtensions<E> on Iterable<E> {
-  Iterable<List<E>> chunked(int chunkSize) sync* {
+  Iterable<Iterable<E>> chunked(int chunkSize) sync* {
     if (length <= 0) {
       yield [];
       return;

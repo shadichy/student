@@ -48,20 +48,25 @@ abstract final class Server {
   static Future<T?> getString<T>(String key, [T? defaultValue]) async {
     try {
       return jsonDecode(
-          (await iCM.getFileFromCache(key))!.file.readAsStringSync());
+          (await iCM.getFileFromCache(key))!.file.readAsStringSync()) as T;
     } catch (e) {
       return defaultValue;
     }
   }
 
   static Future<void> setString(String key, Object value) async {
-    await iCM.putFile(key, const Utf8Encoder().convert(jsonEncode(value)));
+    await iCM.putFile(
+      key,
+      const Utf8Encoder().convert(jsonEncode(value)),
+      key: key,
+    );
   }
 
   static Future<T> fetch<T>(String endpoint) async {
     try {
-      return jsonDecode((await iCM.getSingleFile(url(endpoint), key: endpoint))
-          .readAsStringSync()) as T;
+      return await getString<T>(endpoint) ??
+          jsonDecode((await iCM.getSingleFile(url(endpoint), key: endpoint))
+              .readAsStringSync()) as T;
     } catch (e) {
       throw FormatException("Failed to get file $endpoint: ", e);
     }
@@ -87,8 +92,8 @@ abstract final class Server {
       getNotifications(int startDate) async {
     List<int> notifIdList;
     try {
-      notifIdList = MiscFns.list<int>(
-          await download<List>("notifications/timestamps"));
+      notifIdList =
+          MiscFns.list<int>(await download<List>("notifications/timestamps"));
     } catch (e) {
       return MapEntry(startDate, []);
     }

@@ -16,6 +16,7 @@ class User {
   late final String id;
   late final String name;
   late final ImageProvider<Object> picture;
+  late final String? pictureUri;
   late final UserGroup group;
   late final UserSemester semester;
   late final int schoolYear;
@@ -27,10 +28,50 @@ class User {
   late final String? major; // later
   late final String? majorClass; // later
   late final int? majorCred; // later
-  late final int? creds; // later
+  late final int? credits; // later
   bool _initialized = false;
 
   bool get initialized => _initialized;
+
+  void setUser(Map<String, dynamic> data) {
+    id = data["id"] as String;
+    name = data["name"] as String;
+    data["picture"] is String
+        ? picture = NetworkImage(data["picture"])
+        : picture = const AssetImage("assets/images/logo.png");
+    pictureUri = data["picture"];
+    group = UserGroup.values[data["group"] as int];
+    semester = UserSemester.values[data["semester"] as int];
+    schoolYear = data["schoolYear"] as int;
+    learningCourses = (data["learning"] as List).map((v) {
+      return ((v is List) ? v.asMap() : v as Map).map((key, value) {
+        return MapEntry(
+          UserSemester.values[key],
+          (value as List).cast<String>(),
+        );
+      });
+    }).toList();
+    major = data["major"];
+    majorClass = data["majorClass"];
+    majorCred = data["majorCred"];
+    credits = data["credits"];
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "picture": pictureUri,
+        "group": group.index,
+        "semester": semester.index,
+        "schoolYear": schoolYear,
+        "major": major,
+        "majorClass": majorClass,
+        "majorCred": majorCred,
+        "credits": credits,
+        "learningCourses": learningCourses.map((l) {
+          return l.map((key, value) => MapEntry(key.index, value));
+        }),
+      };
 
   Future<void> initialize() async {
     if (_initialized) return;
@@ -38,27 +79,7 @@ class User {
     if (parsedInfo == null) {
       throw Exception("Could not get user info from cache!");
     }
-
-    id = parsedInfo["id"] as String;
-    name = parsedInfo["name"] as String;
-    parsedInfo["picture"] is String
-        ? picture = NetworkImage(parsedInfo["picture"])
-        : picture = const AssetImage("assets/images/logo.png");
-    group = UserGroup.values[parsedInfo["group"] as int];
-    semester = UserSemester.values[parsedInfo["semester"] as int];
-    schoolYear = parsedInfo["schoolYear"] as int;
-    learningCourses = (parsedInfo["learning"] as List).map((v) {
-      return (v as List).asMap().map((key, value) {
-        return MapEntry(
-          UserSemester.values[key],
-          MiscFns.list<String>(value as List),
-        );
-      });
-    }).toList();
-    major = parsedInfo["major"];
-    majorClass = parsedInfo["majorClass"];
-    majorCred = parsedInfo["majorCred"];
-    creds = parsedInfo["creds"];
+    setUser(parsedInfo);
     _initialized = true;
   }
 }

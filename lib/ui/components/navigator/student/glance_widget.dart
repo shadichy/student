@@ -13,10 +13,8 @@ class StudentGlance extends StatefulWidget {
   final String? studentMajor = User().major;
   final String? studentClass = User().majorClass;
   final String? studentGPA = "";
-  final int? studentCred = User().creds;
-  StudentGlance({
-    super.key
-  });
+  final int? studentCred = User().credits;
+  StudentGlance({super.key});
 
   @override
   State<StudentGlance> createState() => _StudentGlanceState();
@@ -79,7 +77,8 @@ class _StudentGlanceState extends State<StudentGlance> {
               children: [
                 MapEntry("Major", "${widget.studentMajor}"),
                 MapEntry("Class", "${widget.studentClass}"),
-                MapEntry("Credit", "${widget.studentCred}/${User().majorCred ?? 0}"),
+                MapEntry(
+                    "Credit", "${widget.studentCred}/${User().majorCred ?? 0}"),
                 MapEntry("GPA", "${widget.studentGPA}"),
               ].map((item) {
                 return TableRow(children: [

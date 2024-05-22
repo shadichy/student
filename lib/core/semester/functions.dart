@@ -1,18 +1,26 @@
+import 'package:hive/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
+part 'functions.g.reserved.dart';
 
 enum TimestampType { offline, online }
 
 enum CourseType { course, subcourse }
 
+@HiveType(typeId: 1)
 class EventTimestamp {
+  @HiveField(0)
   final String eventName;
+  @HiveField(1)
   final int intStamp;
+  @HiveField(2)
   final int dayOfWeek; // for one single event open-close time at a day
+  @HiveField(3)
   final String? location;
+  @HiveField(4)
   final String? heldBy;
 
   EventTimestamp({
@@ -46,6 +54,7 @@ class EventTimestamp {
   String toString() => toMap.toString();
 }
 
+@HiveType(typeId: 2)
 final class CourseTimestamp extends EventTimestamp {
   // final int intStamp;
   // late int startStamp;
@@ -54,11 +63,14 @@ final class CourseTimestamp extends EventTimestamp {
   // late final int endStampUnix;
   // late final String day;
   // final int dayOfWeek;
+  @HiveField(5)
+  final TimestampType timestampType;
+  @HiveField(6)
+  final CourseType? courseType; // LT and BT
+
   String get courseID => eventName;
   String get teacherID => heldBy!;
   String get room => location!;
-  final TimestampType timestampType;
-  final CourseType? courseType; // LT and BT
   CourseTimestamp({
     required super.intStamp,
     required super.dayOfWeek,
@@ -98,8 +110,11 @@ final class CourseTimestamp extends EventTimestamp {
       };
 }
 
+@HiveType(typeId: 3)
 class EventTimeline {
+  @HiveField(0)
   final String label;
+  @HiveField(1)
   final List<EventTimestamp> timestamp;
   final BigInt intEvent;
   final List<String> heldBy;
@@ -137,9 +152,13 @@ class EventTimeline {
   String toString() => toMap.toString();
 }
 
+@HiveType(typeId: 4)
 final class SchoolEvent extends EventTimeline {
+  @HiveField(2)
   final String? title;
+  @HiveField(3)
   final String? desc;
+  @HiveField(4)
   final List<DateTime> days;
 
   SchoolEvent({
@@ -151,8 +170,11 @@ final class SchoolEvent extends EventTimeline {
   }) : title = title ?? label;
 }
 
+@HiveType(typeId: 5)
 final class SubjectCourse extends EventTimeline {
+  @HiveField(2)
   final String subjectID;
+  @HiveField(3)
   final List<CourseTimestamp> _timestamp;
 
   String get courseID => label;
@@ -182,8 +204,18 @@ final class SubjectCourse extends EventTimeline {
                   .getSubjectAlt(courseID ?? (jsonData["courseID"] as String))
                   ?.subjectID ??
               (jsonData["subjectID"] as String),
-          timestamp: MiscFns.list<Map<String, dynamic>>(
-                  jsonData["timestamp"] as List)
+          timestamp:
+              MiscFns.list<Map<String, dynamic>>(jsonData["timestamp"] as List)
+                  .map((t) => CourseTimestamp.fromJson(t, courseID))
+                  .toList(),
+        );
+  SubjectCourse.fromList(Iterable timestamp, String courseID,
+      [String? subjectID])
+      : this(
+          courseID: courseID,
+          subjectID: subjectID ?? Subjects().getSubjectAlt(courseID)!.subjectID,
+          timestamp: timestamp
+              .cast<Map<String, dynamic>>()
               .map((t) => CourseTimestamp.fromJson(t, courseID))
               .toList(),
         );
@@ -198,8 +230,10 @@ final class SubjectCourse extends EventTimeline {
       };
 }
 
+@HiveType(typeId: 10)
 final class Subject extends BaseSubject {
-  final List<SubjectCourse> courses;
+  @HiveField(5)
+  final Map<String, SubjectCourse> courses;
 
   const Subject({
     required super.subjectID,
@@ -220,7 +254,11 @@ final class Subject extends BaseSubject {
         );
 
   SubjectCourse? getCourse(String courseID) {
-    return courses.firstWhereIf((c) => c.courseID == courseID);
+    try {
+      return courses["courseID"];
+    } catch (e) {
+      return null;
+    }
   }
 
   BaseSubject toBase() => BaseSubject(
@@ -242,7 +280,7 @@ final class Subject extends BaseSubject {
 }
 
 extension BaseSubjectExtension on BaseSubject {
-  Subject toSubject(List<SubjectCourse> courses) =>
+  Subject toSubject(Map<String, SubjectCourse> courses) =>
       Subject.fromBase(this, courses);
 
   // @override

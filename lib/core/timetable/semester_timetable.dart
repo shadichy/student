@@ -1,3 +1,4 @@
+import 'package:hive/hive.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
@@ -5,22 +6,29 @@ import 'package:student/core/databases/subject_courses.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_functions.dart';
+part 'semester_timetable.g.dart';
 
-class WeekTimetable {
+@HiveType(typeId: 9)
+class WeekTimetable extends HiveObject {
+  @HiveField(0)
   final DateTime startDate; // must be start of week
   List<EventTimestamp> _timestamps;
+  @HiveField(1)
   List<EventTimestamp> get timestamps => _timestamps;
+  @HiveField(2)
   final int? weekNo;
   WeekTimetable(List<EventTimestamp> timestamps,
       {required this.startDate, this.weekNo})
       : _timestamps = timestamps;
 
-  void addStamps(Iterable<EventTimestamp> timestamp) {
+  Future<void> addStamps(Iterable<EventTimestamp> timestamp) async {
     _timestamps.addAll(timestamp);
+    await save();
   }
 
-  void setStamps(List<EventTimestamp> timestamp) {
+  Future<void> setStamps(List<EventTimestamp> timestamp) async {
     _timestamps = timestamp;
+    await save();
   }
 
   Map<String, dynamic> toJson() => toMap();
@@ -50,7 +58,7 @@ final class SemesterTimetable {
   UserSemester get currentSemester => _currentSemester;
   DateTime get startDate => _startDate;
 
-  SemesterPlan currentPlan = StudyPlan().table.toList()[User().semester.index];
+  SemesterPlan currentPlan = StudyPlan().table.elementAt(User().semester.index);
 
   WeekTimetable getWeek(DateTime startDate) {
     int daysDiff = startDate.difference(_startDate).inDays.abs();
@@ -197,13 +205,14 @@ final class SemesterTimetable {
     }
 
     _timetable = currentPlan.timetable
+        .toList()
         .asMap()
         .map<int, WeekTimetable>((w, p) {
           List<CourseTimestamp> stamps = [];
           for (SubjectCourse course in registeredCourses) {
             for (CourseTimestamp stamp in course.timestamp) {
-              if (p[stamp.dayOfWeek] != DayType.H &&
-                  p[stamp.dayOfWeek] != DayType.B) continue;
+              DayType d = p.elementAt(stamp.dayOfWeek);
+              if (d != DayType.H && d != DayType.B) continue;
               stamps.add(stamp);
             }
           }

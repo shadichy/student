@@ -26,20 +26,28 @@ final class SPBasics {
 
   int? creditPrice(int schoolYear) => _creditPrice[schoolYear];
 
+  void setBasics(Map<String, dynamic> data) {
+    _studyTimestamps = (data["studyTimestamps"] as List)
+        .cast<List>()
+        .map((l) => l.cast<int>())
+        .toList();
+    _onlineClassTypes = (data["onlineClassTypes"] as List).cast<String>();
+    _creditPrice = (data["creditPrices"] as Map<dynamic, dynamic>)
+        .map((key, value) => MapEntry(key as int, value as int));
+    String cr = ((data["currency"] ?? defaultConfig["misc.currency"]) as String)
+        .toLowerCase();
+    _currency = Currency.values.firstWhere((c) => c.name == cr);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'studyTimestamps': _studyTimestamps,
+        'onlineClassTypes': _onlineClassTypes,
+        'creditPrice': _creditPrice,
+        'currency': _currency.name,
+      };
+
   Future<void> initialize() async {
     Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
-
-    _studyTimestamps =
-        MiscFns.list<List>(parsedInfo["studyTimestamps"] as List)
-            .map((l) => MiscFns.list<int>(l))
-            .toList();
-    _onlineClassTypes =
-        MiscFns.list<String>(parsedInfo["onlineClassTypes"] as List);
-    _creditPrice = (parsedInfo["creditPrices"] as Map<String, dynamic>)
-        .map((key, value) => MapEntry(int.parse(key), value as int));
-    String cr =
-        ((parsedInfo["currency"] ?? defaultConfig["misc.currency"]) as String)
-            .toLowerCase();
-    _currency = Currency.values.firstWhere((c) => c.name == cr);
+    setBasics(parsedInfo);
   }
 }

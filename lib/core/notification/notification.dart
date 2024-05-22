@@ -2,23 +2,36 @@
 
 import 'dart:async';
 
+import 'package:hive/hive.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
+part 'notification.g.dart';
 
-class Notif {
+@HiveType(typeId: 7)
+class Notif extends HiveObject {
+  @HiveField(0)
   final String title;
+  @HiveField(1)
   final String content;
+  @HiveField(2)
   final DateTime? uploadDate;
+  @HiveField(3)
   final EventTimeline? applyEvent;
+  @HiveField(4)
   final List<DateTime>? applyDates;
+  @HiveField(5)
   final UserGroup? applyGroup;
+  @HiveField(6)
   final UserSemester? applySemester;
+  @HiveField(7)
   final bool? override;
+  @HiveField(8)
   bool? applied;
+  @HiveField(9)
   bool read;
   Notif(
     this.title, {
@@ -83,13 +96,13 @@ class Notif {
         'read': read,
       };
 
-  void apply() {
-    if (applied == true) return;
+  Future<void> apply() async {
+    if (applied == true) return await save();
     if (applyEvent == null ||
         applyGroup != User().group ||
         applySemester != User().semester) {
       applied = true;
-      return;
+      return await save();
     }
     SemesterTimetable().update(
       applyEvent!,
@@ -97,10 +110,12 @@ class Notif {
       days: applyDates,
     );
     applied = true;
+    await save();
   }
 
-  void readNotif() {
+  Future<void> readNotif() async {
     read = true;
+    await save();
   }
 }
 

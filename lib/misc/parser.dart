@@ -118,7 +118,7 @@ class SampleTimetableData {
             subjectID: subjectID,
             name: subjectInfo["name"].toString(),
             cred: subjectInfo["cred"],
-            courses: courses,
+            courses: courses.asMap().map((_, v) => MapEntry(v.courseID, v)),
             subjectAltID: courses[0]
                 .courseID
                 .replaceFirst(RegExp(r"(\.[0-9])+(_[LB]T)?$"), ''),
@@ -199,7 +199,9 @@ class SampleTimetableData {
           subjectID: subjectID,
           name: subjectInfo["name"].toString(),
           cred: subjectInfo["cred"],
-          courses: _mapToClass(subjectID, subjectInfo["classes"]),
+          courses: _mapToClass(subjectID, subjectInfo["classes"])
+              .asMap()
+              .map((_, v) => MapEntry(v.courseID, v)),
           subjectAltID: subjectID,
           dependencies: [],
         )));

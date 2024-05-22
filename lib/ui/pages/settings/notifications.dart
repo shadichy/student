@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/configs.dart';
+import 'package:student/core/notification/alarm.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
@@ -135,7 +136,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                 alarmMode: AlarmMode.values[data["alarmMode"] is int
                     ? data["alarmMode"]
                     : int.tryParse("${data['alarmMode']}") ?? 0],
-                alarm: data["alarm"] as String?,
+                audio: data["audio"] as String?,
                 action: ((actionType, value) {
                   switch (actionType) {
                     case ActionType.change:

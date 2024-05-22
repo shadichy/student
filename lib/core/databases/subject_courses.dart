@@ -75,7 +75,7 @@ final class InStudyCourses {
 
       Subject subject = Subject.fromBase(
         s,
-        map.toList(),
+        map.toList().asMap().map((_, v) => MapEntry(v.courseID, v)),
       );
 
       // Routing.addRoute("subject_$s", Routing.subject(subject));

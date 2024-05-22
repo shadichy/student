@@ -1,9 +1,18 @@
+import 'package:hive/hive.dart';
+part 'subject.g.dart';
+
+@HiveType(typeId: 0)
 class BaseSubject {
+  @HiveField(0)
   final String subjectID;
+  @HiveField(1)
   final String subjectAltID;
+  @HiveField(2)
   final String name;
+  @HiveField(3)
   final int cred;
   // final List<SubjectCourse> courses;
+  @HiveField(4)
   final List<String> dependencies;
   const BaseSubject({
     required this.subjectID,
@@ -13,6 +22,15 @@ class BaseSubject {
     // required this.courses,
     required this.dependencies,
   });
+
+  BaseSubject.fromJson(Map<String, dynamic> data)
+      : this(
+          subjectID: data["subjectID"] as String,
+          subjectAltID: data["subjectAltID"] as String,
+          name: data["name"] as String,
+          cred: data["cred"] as int,
+          dependencies: (data["dependencies"] as List).cast(),
+        );
 
   // SubjectCourse? getCourse(String courseID) {
   //   return courses.firstWhereIf(

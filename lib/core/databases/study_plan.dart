@@ -1,22 +1,34 @@
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:flutter/widgets.dart';
+import 'package:characters/characters.dart';
+import 'package:hive/hive.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
+part 'study_plan.g.dart';
 
 enum DayType { H, T, N, B, Q, O, S, X }
 
+@HiveType(typeId: 8)
 class SemesterPlan {
+  @HiveField(0)
   final UserSemester currentSemester;
-  final List<List<DayType>> timetable;
+  @HiveField(1)
+  final Iterable<Iterable<DayType>> timetable;
+  @HiveField(2)
   final List<int> studyWeeks;
+  @HiveField(3)
   final DateTime startDate;
-  const SemesterPlan({
-    required this.currentSemester,
-    required this.timetable,
+  SemesterPlan({
+    required int currentSemester,
+    required Iterable<Iterable<int>> timetable,
     required this.studyWeeks,
     required this.startDate,
-  });
+  })  : currentSemester = UserSemester.values[currentSemester],
+        timetable = timetable.map(
+          (w) => w.map((e) => DayType.values[e]),
+        );
 }
 
 final class StudyPlan {
@@ -27,9 +39,14 @@ final class StudyPlan {
   }
 
   late final DateTime startDate; // must be start of week
-  late final Iterable<SemesterPlan> table;
+  final List<SemesterPlan> table = [];
 
   // static List<DayType> _full(DayType type) => List.generate(7, (_) => type);
+
+  void setPlan(DateTime startDate, Iterable<SemesterPlan> table) {
+    this.startDate = startDate;
+    this.table.addAll(table);
+  }
 
   Future<void> initialize() async {
     Map<String, dynamic> parsedInfo = await Server.getStudyPlan(User().group);
@@ -39,34 +56,28 @@ final class StudyPlan {
     startDate = MiscFns.epoch(startDateInt);
 
     int prevWeeks = 0;
+    int prev = 0;
 
-    table = MiscFns.list<String>(parsedInfo["plan"] as List)
-        .asMap()
-        .map((l, s) {
-      List<List<DayType>> chunkedWeek = (s)
-          .characters
-          .map((d) => DayType.values[int.parse(d)])
-          .chunked(7)
-          .toList();
+    (parsedInfo["plan"] as List).cast<String>().forEach((s) {
       List<int> studyWeek = [];
+      List<Iterable<int>> chunkedWeek =
+          (s).characters.map((d) => int.parse(d)).chunked(7).toList();
 
       chunkedWeek.asMap().forEach((key, value) {
-        if (!value.contains(DayType.H)) return;
+        if (!value.contains(DayType.H.index)) return;
         studyWeek.add(key);
       });
 
       int startDate = prevWeeks * 7 * 24 * 3600 + startDateInt;
       prevWeeks += chunkedWeek.length;
+      prev++;
 
-      return MapEntry(
-        l,
-        SemesterPlan(
-          currentSemester: UserSemester.values[l],
-          timetable: chunkedWeek,
-          studyWeeks: studyWeek,
-          startDate: MiscFns.epoch(startDate),
-        ),
-      );
-    }).values;
+      table.add(SemesterPlan(
+        currentSemester: prev - 1,
+        timetable: chunkedWeek,
+        studyWeeks: studyWeek,
+        startDate: MiscFns.epoch(startDate),
+      ));
+    });
   }
 }

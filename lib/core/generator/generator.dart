@@ -91,17 +91,17 @@ extension Filter on Subject {
     }
     List<SubjectCourse> result = [];
     if (filterLayer.inClass.isNotEmpty) {
-      result = courses
+      result = courses.values
           .where((c) => filterLayer.inClass.contains(c.courseID))
           .toList();
     }
     if (filterLayer.notInClass.isNotEmpty) {
-      result = courses
+      result = courses.values
           .where((c) => !filterLayer.notInClass.contains(c.courseID))
           .toList();
     }
     if (filterLayer.includeTeacher.isNotEmpty) {
-      List<CompareStamp> o = courses
+      List<CompareStamp> o = courses.values
           .map((c) => CompareStamp(
                 delta: c.teachers.isEmpty
                     ? 0.0
@@ -122,7 +122,7 @@ extension Filter on Subject {
       result = o.map((c) => c.subjectClass).toList();
     }
     if (filterLayer.excludeTeacher.isNotEmpty) {
-      result = courses
+      result = courses.values
           .map((c) => CompareStamp(
                 delta: c.teachers.isEmpty
                     ? 0.0
@@ -139,12 +139,12 @@ extension Filter on Subject {
           .toList();
     }
     if (filterLayer.forcefulMatrix != BigInt.zero) {
-      result = courses.where((c) {
+      result = courses.values.where((c) {
         return c.intCourse & filterLayer.forcefulMatrix == BigInt.zero;
       }).toList();
     }
     if (filterLayer.spareMatrix != BigInt.zero) {
-      List<CompareStamp> o = courses
+      List<CompareStamp> o = courses.values
           .map((c) => CompareStamp(
                 delta: (c.intCourse & filterLayer.spareMatrix).toDouble(),
                 subjectClass: c,
@@ -159,7 +159,7 @@ extension Filter on Subject {
       subjectID: subjectID,
       name: name,
       cred: cred,
-      courses: result,
+      courses: result.asMap().map((_, v) => MapEntry(v.courseID, v)),
       subjectAltID: subjectID,
       dependencies: [],
     );
@@ -180,12 +180,12 @@ class GenTimetable {
     Subject filteredSubject =
         _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
     if (output.isEmpty) {
-      output.addAll(
-          filteredSubject.courses.map((c) => SampleTimetable(classes: [c])));
+      output.addAll(filteredSubject.courses.values
+          .map((c) => SampleTimetable(classes: [c])));
     } else {
       List<SampleTimetable> newOutput = [];
       for (SampleTimetable sample in output) {
-        for (SubjectCourse target in filteredSubject.courses) {
+        for (SubjectCourse target in filteredSubject.courses.values) {
           BigInt tmpDint = BigInt.zero;
           tmpDint = sample.intMatrix & target.intCourse;
           if (tmpDint != BigInt.zero) continue;

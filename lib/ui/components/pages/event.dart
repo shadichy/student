@@ -1,8 +1,7 @@
 // import 'package:flutter/material.dart';
 import 'package:bitcount/bitcount.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/databases/subjects.dart';
-import 'package:student/core/databases/teachers.dart';
 import 'package:student/core/semester/functions.dart';
 
 // class NextupClass {
@@ -96,9 +95,10 @@ class NextupClassView extends UpcomingEvent {
   NextupClassView(this.stamp)
       : courseId = stamp.courseID,
         super(
-          eventLabel: Subjects().getSubjectAlt(stamp.courseID)?.name?? "Unknown",
+          eventLabel:
+              Storage().getSubjectBaseAlt(stamp.courseID)?.name ?? "Unknown",
           location: stamp.room,
-          heldBy: Teachers().getTeacher(stamp.teacherID)?? "Unknown",
+          heldBy: Storage().getTeacher(stamp.teacherID) ?? "Unknown",
           startTime: UpcomingEvent._getStart(stamp.intStamp),
           endTime: UpcomingEvent._getEnd(stamp.intStamp),
         );

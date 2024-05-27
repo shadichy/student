@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/misc/misc_functions.dart';
+import 'package:student/core/databases/hive.dart';
 
 enum UserGroup { n1, n2, n3 }
 
@@ -75,7 +74,7 @@ class User {
 
   Future<void> initialize() async {
     if (_initialized) return;
-    Map<String, dynamic>? parsedInfo = SharedPrefs.getString("user");
+    Map<String, dynamic>? parsedInfo = Storage().getUser();
     if (parsedInfo == null) {
       throw Exception("Could not get user info from cache!");
     }

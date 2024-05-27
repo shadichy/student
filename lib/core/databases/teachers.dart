@@ -1,6 +1,6 @@
-
 import 'package:student/core/databases/server.dart';
 
+@Deprecated("moving to Hive")
 final class Teachers {
   Teachers._instance();
   static final _teachersInstance = Teachers._instance();

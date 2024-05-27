@@ -1,8 +1,7 @@
 import 'package:hive/hive.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/databases/subjects.dart';
 import 'package:student/core/databases/subject.dart';
-import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
 part 'functions.g.reserved.dart';
 
@@ -64,8 +63,10 @@ final class CourseTimestamp extends EventTimestamp {
   // late final String day;
   // final int dayOfWeek;
   @HiveField(5)
+  final int timestampTypeInt;
   final TimestampType timestampType;
   @HiveField(6)
+  final int? courseTypeInt;
   final CourseType? courseType; // LT and BT
 
   String get courseID => eventName;
@@ -79,7 +80,25 @@ final class CourseTimestamp extends EventTimestamp {
     required String room,
     required this.timestampType,
     this.courseType,
-  }) : super(
+  })  : timestampTypeInt = timestampType.index,
+        courseTypeInt = courseType?.index,
+        super(
+          eventName: courseID,
+          location: room,
+          heldBy: teacherID,
+        );
+  CourseTimestamp.fromHive({
+    required super.intStamp,
+    required super.dayOfWeek,
+    required String courseID,
+    required String teacherID,
+    required String room,
+    required this.timestampTypeInt,
+    this.courseTypeInt,
+  })  : timestampType = TimestampType.values[timestampTypeInt],
+        courseType =
+            courseTypeInt == null ? null : CourseType.values[courseTypeInt],
+        super(
           eventName: courseID,
           location: room,
           heldBy: teacherID,
@@ -200,7 +219,7 @@ final class SubjectCourse extends EventTimeline {
       : this(
           courseID: courseID ?? (jsonData["courseID"] as String),
           subjectID: subjectID ??
-              Subjects()
+              Storage()
                   .getSubjectAlt(courseID ?? (jsonData["courseID"] as String))
                   ?.subjectID ??
               (jsonData["subjectID"] as String),
@@ -213,7 +232,8 @@ final class SubjectCourse extends EventTimeline {
       [String? subjectID])
       : this(
           courseID: courseID,
-          subjectID: subjectID ?? Subjects().getSubjectAlt(courseID)!.subjectID,
+          subjectID:
+              subjectID ?? Storage().getSubjectBaseAlt(courseID)!.subjectID,
           timestamp: timestamp
               .cast<Map<String, dynamic>>()
               .map((t) => CourseTimestamp.fromJson(t, courseID))

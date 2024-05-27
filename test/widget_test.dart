@@ -64,4 +64,6 @@ void main() {
   //         .millisecondsSinceEpoch ~/
   //     1000);
   // print(DateTime.parse("2023-07-24").millisecondsSinceEpoch);
+  print(2 as String);
+  print(2.5 as String);
 }

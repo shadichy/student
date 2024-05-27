@@ -7,7 +7,7 @@ import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableUpcomingWidget extends StatefulWidget {
-  final List<UpcomingEvent> classStamps;
+  final Iterable<UpcomingEvent> classStamps;
   const TimetableUpcomingWidget(this.classStamps, {super.key});
 
   @override
@@ -16,7 +16,7 @@ class TimetableUpcomingWidget extends StatefulWidget {
 }
 
 class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
-  late final List<UpcomingEvent> classStamps;
+  late final Iterable<UpcomingEvent> classStamps;
 
   int index = 0;
 
@@ -52,7 +52,7 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 16),
           itemBuilder: ((context, index) {
-            return TimetableUpcomingCardAlt(classStamps[index]);
+            return TimetableUpcomingCardAlt(classStamps.elementAt(index));
           }),
           separatorBuilder: ((context, index) => MWds.divider(8)),
           itemCount: classStamps.length > 2 ? 2 : classStamps.length,

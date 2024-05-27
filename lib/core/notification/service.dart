@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+@Deprecated("moving to Hive")
 class NotificationService {
   NotificationService._instance();
   static final _notificationService = NotificationService._instance();
@@ -15,7 +16,7 @@ class NotificationService {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    // initialize the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
     final DarwinInitializationSettings initializationSettingsDarwin =
@@ -53,7 +54,8 @@ class NotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,macOS: initializationSettingsDarwin,
+      iOS: initializationSettingsDarwin,
+      macOS: initializationSettingsDarwin,
       linux: initializationSettingsLinux,
     );
     flutterLocalNotificationsPlugin.initialize(
@@ -93,7 +95,8 @@ class NotificationService {
     // handle action
   }
 
-  Future onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+  Future onDidReceiveNotificationResponse(
+      NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     // if (notificationResponse.payload != null) {
     //   debugPrint('notification payload: $payload');

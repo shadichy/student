@@ -43,6 +43,7 @@ class WeekTimetable extends HiveObject {
   String toString() => toMap.toString();
 }
 
+@Deprecated("moving to Hive")
 final class SemesterTimetable {
   SemesterTimetable._instance();
   static final _semesterTimetableInstance = SemesterTimetable._instance();
@@ -200,7 +201,7 @@ final class SemesterTimetable {
       try {
         registeredCourses.add(InStudyCourses().getCourse(id)!);
       } catch (e) {
-        // invavlid course
+        // invalid course
       }
     }
 

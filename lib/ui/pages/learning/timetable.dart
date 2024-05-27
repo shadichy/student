@@ -1,11 +1,11 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/pages/learning/timetable.dart';
 
 import 'package:student/ui/components/navigator/navigator.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 class LearningTimetablePage extends StatefulWidget implements TypicalPage {
   const LearningTimetablePage({super.key});
@@ -21,11 +21,11 @@ class LearningTimetablePage extends StatefulWidget implements TypicalPage {
 }
 
 class _LearningTimetablePageState extends State<LearningTimetablePage> {
-  WeekTimetable week = UpcomingData.thisWeek;
+  WeekTimetable week = Storage().thisWeek;
 
   void changeWeek(DateTime startDate) {
     setState(() {
-      week = SemesterTimetable().getWeek(startDate);
+      week = Storage().getWeek(startDate);
     });
   }
 

@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/databases/server.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/option.dart';
@@ -119,7 +119,40 @@ class _StudentGlanceState extends State<StudentGlance> {
               ),
               IconButton(
                 icon: const Icon(Symbols.logout),
-                onPressed: () => Server.kill(),
+                onPressed: () {
+                  // show dialog prompting for logout
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(
+                        "Confirm logout",
+                        style: textTheme.titleLarge,
+                      ),
+                      content: Text(
+                        "Are you sure you want to logout?",
+                        style: textTheme.bodyLarge,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "Cancel",
+                            style: textTheme.bodyLarge,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await Storage().clear();
+                          },
+                          child: Text(
+                            "Logout",
+                            style: textTheme.bodyLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 // margin: const EdgeInsets.only(right: 16),
                 padding: const EdgeInsets.all(16),
                 color: colorScheme.onSecondary,

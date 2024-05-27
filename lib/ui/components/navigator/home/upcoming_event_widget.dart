@@ -1,10 +1,10 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/upcoming_event.dart';
 import 'package:student/ui/components/pages/event.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 class HomeNextupClassWidget extends StatefulWidget {
   final SampleTimetableData timetableData;
@@ -15,11 +15,10 @@ class HomeNextupClassWidget extends StatefulWidget {
 }
 
 class _HomeNextupClassWidgetState extends State<HomeNextupClassWidget> {
-  final List<UpcomingEvent> classStamps = UpcomingData.upcomingEvents
-      .map((e) => e is CourseTimestamp
+  final Iterable<UpcomingEvent> classStamps = Storage().upcomingEvents.map(
+      (e) => e is CourseTimestamp
           ? NextupClassView(e)
-          : UpcomingEvent.fromTimestamp(e))
-      .toList();
+          : UpcomingEvent.fromTimestamp(e));
 
   @override
   Widget build(BuildContext context) {

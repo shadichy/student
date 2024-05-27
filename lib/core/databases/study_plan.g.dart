@@ -17,8 +17,8 @@ class SemesterPlanAdapter extends TypeAdapter<SemesterPlan> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SemesterPlan(
-      currentSemester: fields[0] as int,
-      timetable:
+      semester: fields[0] as int,
+      timetableInt:
           (fields[1] as List).map((dynamic e) => (e as List).cast<int>()),
       studyWeeks: (fields[2] as List).cast<int>(),
       startDate: fields[3] as DateTime,
@@ -30,9 +30,9 @@ class SemesterPlanAdapter extends TypeAdapter<SemesterPlan> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.currentSemester)
+      ..write(obj.semester)
       ..writeByte(1)
-      ..write(obj.timetable.toList())
+      ..write(obj.timetableInt.toList())
       ..writeByte(2)
       ..write(obj.studyWeeks)
       ..writeByte(3)

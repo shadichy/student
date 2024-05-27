@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 // import 'package:student/core/semester/functions.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
@@ -9,7 +10,6 @@ import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/pages/learning/timetable.dart';
 import 'package:student/ui/components/options.dart';
 import 'package:student/ui/components/section_label.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 class TimetableWidget extends StatefulWidget {
   const TimetableWidget({super.key});
@@ -19,11 +19,11 @@ class TimetableWidget extends StatefulWidget {
 }
 
 class _TimetableWidgetState extends State<TimetableWidget> {
-  WeekTimetable week = UpcomingData.thisWeek;
+  WeekTimetable week = Storage().thisWeek;
 
   void changeWeek(DateTime startDate) {
     setState(() {
-      week = SemesterTimetable().getWeek(startDate);
+      week = Storage().getWeek(startDate);
     });
   }
 

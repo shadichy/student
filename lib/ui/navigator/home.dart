@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/notification.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
@@ -33,9 +34,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    NotificationsGet().awaitInitialized().then((_) {
+    Storage().awaitNotificationInitialized().then((_) {
       setState(() {
-        _notif = NotificationsGet().notifications.where((e) => !e.read).take(4);
+        _notif = Storage().notifications.where((e) => !e.read).take(4);
       });
     });
   }

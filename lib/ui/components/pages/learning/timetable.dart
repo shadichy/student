@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/upcoming.dart';
 // import 'package:student/misc/misc_variables.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
 // import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
@@ -39,7 +39,7 @@ class TimetableBox extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
-    final int weekdayStart = UpcomingData.weekdayStart;
+    final int weekdayStart = Storage().weekdayStart;
     int weekday = (now.weekday - weekdayStart + 7) % 7;
     List<String> shortDayOfWeek = _remapDiff([
       'Sun',

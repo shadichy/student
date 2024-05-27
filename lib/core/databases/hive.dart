@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:alarm/alarm.dart';
+import 'package:alarm/model/alarm_settings.dart';
 import 'package:characters/characters.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/default_configs.dart' as conf;
 import 'package:student/core/notification/alarm.dart';
 import 'package:student/core/notification/notification.dart';
 import 'package:student/core/semester/functions.dart';
@@ -13,11 +20,12 @@ import 'package:student/misc/misc_functions.dart';
 
 final class Storage {
   Storage._instance();
-  static final _notifInstance = Storage._instance();
+  static final _storage = Storage._instance();
   factory Storage() {
-    return _notifInstance;
+    return _storage;
   }
 
+  late final Box _env;
   late final Box _generic;
   late final Box<BaseSubject> _subjects;
   late final Box<String> _teachers;
@@ -28,8 +36,52 @@ final class Storage {
   late final Box<Notif> _notifications;
 
   bool _notificationInitialized = false;
+  late final String _domain;
+  late final String _prefix;
 
-  Future<void> initialize() async {
+  late final int fullStamp;
+  late final DateTime _now;
+  late final int _weekday;
+  late WeekTimetable _thisWeek;
+
+  int _getStartStamp(int timestamp) {
+    int classStartsAt = 0;
+    while (timestamp & (1 << classStartsAt) == 0) {
+      classStartsAt++;
+    }
+    return classStartsAt;
+  }
+
+  int get weekdayStart => fetch<int>("misc.startWeekday")!;
+
+  DateTime get _weekStart => _now.subtract(Duration(
+        days: (_weekday - weekdayStart + 7) % 7,
+      ));
+
+  WeekTimetable get thisWeek => _thisWeek;
+  Iterable<EventTimestamp> get upcomingEvents => thisWeek.timestamps.where((e) {
+        if (e.dayOfWeek != _weekday) return false;
+        int current = _now
+            .difference(DateTime(_now.year, _now.month, _now.day))
+            .inSeconds;
+        if (current >
+            SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1]
+                [1]) {
+          return false;
+        }
+        int startAt = 0;
+        while (current > SPBasics().classTimestamps[startAt][0]) {
+          startAt++;
+          if (startAt == SPBasics().classTimestamps.length) {
+            break;
+          }
+        }
+        if (startAt > 0) startAt--;
+        return e.intStamp & (fullStamp << startAt) != 0;
+      });
+
+  Future<void> register() async {
+    await Hive.initFlutter();
     Hive.registerAdapter(BaseSubjectAdapter());
     Hive.registerAdapter(EventTimestampAdapter());
     Hive.registerAdapter(CourseTimestampAdapter());
@@ -43,6 +95,15 @@ final class Storage {
     Hive.registerAdapter(NotifAdapter());
 
     _generic = await Hive.openBox("base");
+    if (_generic.isEmpty) await _generic.putAll(conf.defaultConfig);
+    _env = await Hive.openBox("env");
+    if (_env.isEmpty) await _env.putAll(conf.env);
+  }
+
+  Future<void> initialize() async {
+    _domain = _env.get("fetchDomain")!;
+    _prefix = _env.get("apiPrefix") ?? "";
+
     _subjects = await Hive.openBox<BaseSubject>("subjects");
     _teachers = await Hive.openBox<String>("teachers");
     _learning = await Hive.openBox<Subject>("courses");
@@ -51,59 +112,82 @@ final class Storage {
     _reminders = await Hive.openBox<Reminder>("alarms");
     _notifications = await Hive.openBox<Notif>("notifications");
 
-    await initBasics();
-    await initTeacher();
-    await initSubjects();
-    await initCourses();
-    await initPlan();
-    await initTimetable();
-    initNotifications();
+    await _initBasics();
+    await _initTeacher();
+    await _initSubjects();
+    await _initCourses();
+    await _initPlan();
+    await _initTimetable();
+    await _initReminders();
+    _initNotifications().then((_) => _notificationInitialized = true);
   }
 
-  // TODO: implement download method
-  Future<T> download<T>(String endpoint) async {
-    throw UnimplementedError();
+  Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
+    final res = await http.get(uri, headers: headers);
+
+    if (res.statusCode != 200) {
+      throw http.ClientException("Failed to fetch from $_domain/$endpoint! ");
+    }
+    try {
+      return jsonDecode(res.body) as T;
+    } catch (e) {
+      throw FormatException("Failed to parse body from ${uri.toString()}: $e");
+    }
   }
+
+  Future<T> endpoint<T>(String endpoint) async => await download<T>(
+      Uri.https(_domain, "$_prefix/$endpoint.json"), _env.get("headers"));
 
   T? fetch<T>(String key) => _generic.get(key) as T?;
 
   Future<void> put(String key, dynamic value) async =>
       await _generic.put(key, value);
 
-  Future<void> setUser() async => await put("user", User().toJson());
+  Future<void> setUser(Map<String, dynamic> value) async =>
+      await put("user", value);
 
-  Map<String, dynamic>? getUser() => fetch<Map<String, dynamic>>("user");
+  Map<String, dynamic>? getUser() => fetch<Map<dynamic, dynamic>>("user")
+      ?.map((key, value) => MapEntry(key.toString(), value));
 
-  Future<void> setBasics() async => await put("basics", SPBasics().toJson());
+  Future<void> setEnv<T>(String key, T value) async =>
+      await _env.put(key, value);
 
-  Future<void> initBasics() async {
-    Map<String, dynamic>? basics = fetch<Map<String, dynamic>>("basics");
+  Future<void> _initBasics() async {
+    Map<String, dynamic>? basics = fetch<Map<dynamic, dynamic>>("basics")
+        ?.map((key, value) => MapEntry(key.toString(), value));
     if (basics != null) return SPBasics().setBasics(basics);
-    await SPBasics().initialize();
-    await setBasics();
+    basics = await endpoint<Map<String, dynamic>>("basics");
+    await put("basics", basics);
+    SPBasics().setBasics(basics);
   }
 
-  Future<void> initTeacher() async {
+  Future<void> _initTeacher() async {
     if (_teachers.isNotEmpty) return;
-    await _teachers.putAll(await download<Map<String, String>>("teachers"));
+    await _teachers.putAll(
+      await endpoint<Map<String, dynamic>>("teachers").then(
+        (map) => map.map(
+          (key, value) => MapEntry(key, value.toString()),
+        ),
+      ),
+    );
   }
 
-  Future<void> initSubjects() async {
+  Future<void> _initSubjects() async {
     if (_subjects.isNotEmpty) return;
     await _subjects.putAll(
-      (await download<Map<String, dynamic>>("${User().group.name}/subjects"))
+      (await endpoint<Map<String, dynamic>>("${User().group.name}/subjects"))
           .map(
         (k, v) => MapEntry(k, BaseSubject.fromJson(v as Map<String, dynamic>)),
       ),
     );
   }
 
-  Future<void> initPlan() async {
+  Future<void> _initPlan() async {
     DateTime? startDate = fetch("plan.startDate");
     if (planTable.isNotEmpty && startDate != null) return;
 
     Map<String, dynamic> parsedInfo =
-        await download("${User().group.name}/study_plan");
+        await endpoint("${User().group.name}/study_plan");
 
     int startDateInt = parsedInfo["startDate"];
 
@@ -127,8 +211,8 @@ final class Storage {
       prev++;
 
       _plan.add(SemesterPlan(
-        currentSemester: prev - 1,
-        timetable: chunkedWeek,
+        semester: prev - 1,
+        timetableInt: chunkedWeek,
         studyWeeks: studyWeek,
         startDate: MiscFns.epoch(startDate),
       ));
@@ -137,50 +221,60 @@ final class Storage {
     await put("plan.startDate", startDate);
   }
 
-  Future<void> initCourses() async {
+  Future<void> _initCourses() async {
     if (_learning.isNotEmpty) return;
-    (await download<Map<String, dynamic>>(
+    (await endpoint<Map<String, dynamic>>(
             "${User().group.name}/${User().semester.name}/semester"))
-        .forEach(
-      (k, v) async {
-        try {
-          BaseSubject base = getSubjectBase(k)!;
-          await _learning.put(
-            k,
-            Subject.fromBase(
-              base,
-              (v as Map<String, dynamic>).map(
-                (c, t) => MapEntry(
-                  c,
-                  SubjectCourse.fromList(t as List, c, base.subjectID),
-                ),
+        .forEach((k, v) async {
+      try {
+        BaseSubject base = getSubjectBase(k)!;
+        print(base);
+        print(v);
+        await _learning.put(
+          k,
+          Subject.fromBase(
+            base,
+            (v as Map<String, dynamic>).map(
+              (c, t) => MapEntry(
+                c,
+                SubjectCourse.fromList(t as List, c, base.subjectID),
               ),
             ),
-          );
-        } catch (e) {
-          // database is not correctly set up
-        }
-      },
-    );
+          ),
+        );
+      } catch (e) {
+        // database is not correctly set up
+      }
+    });
   }
 
-  Future<void> initTimetable() async {
+  Future<void> _initTimetable() async {
     DateTime? startDate = fetch("week.startDate");
+    await _week.clear();
     if (_week.isNotEmpty && startDate != null) return;
 
     SemesterPlan plan = currentPlan;
     startDate = plan.startDate;
 
     List<SubjectCourse> registeredCourses = [];
+    // why is _learning empty?
+    print("l test");
+    print(_learning.values.toList());
     for (String id
         in User().learningCourses[SPBasics().currentYear - User().schoolYear]
             [User().semester]!) {
       try {
+        print(id);
+        print(_getCourseID(id));
+        print(getSubjectBaseAlt(id));
+        print(getSubjectAlt(id));
         registeredCourses.add(getCourse(id)!);
       } catch (e) {
         // invalid course
       }
     }
+    print(User().learningCourses[SPBasics().currentYear - User().schoolYear]
+        [User().semester]!);
 
     int prev = 0;
 
@@ -189,6 +283,7 @@ final class Storage {
       for (SubjectCourse course in registeredCourses) {
         for (CourseTimestamp stamp in course.timestamp) {
           DayType d = e.elementAt(stamp.dayOfWeek);
+          print(d);
           if (d != DayType.H && d != DayType.B) continue;
           stamps.add(stamp);
         }
@@ -198,24 +293,67 @@ final class Storage {
         startDate: startDate.add(Duration(days: 7 * prev)),
         weekNo: currentPlan.studyWeeks.indexOf(prev),
       ));
+      prev++;
+      print(stamps);
     }
 
     await put("week.startDate", startDate);
   }
 
-  Future<void> initNotifications() async {
+  Future<void> _initReminders() async {
+    await _reminderFirstRun();
+    await Alarm.init();
+    fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
+    _now = DateTime.now();
+    _weekday = _now.weekday % 7;
+
+    _thisWeek = getWeek(_weekStart);
+    int weekStartInt = _weekStart.millisecondsSinceEpoch ~/ 1000;
+    for (Reminder r in reminders) {
+      String left = MiscFns.durationLeft(r.duration);
+      int rId = weekStartInt - r.duration.inSeconds;
+      for (EventTimestamp t
+          in thisWeek.timestamps.where((e) => e.dayOfWeek % 7 == _weekday)) {
+        int id = rId +
+            24 * 3600 * (t.dayOfWeek % 7) +
+            SPBasics().classTimestamps[_getStartStamp(t.intStamp)][0];
+        if (Alarm.getAlarm(id) != null) continue;
+        Alarm.set(
+            alarmSettings: AlarmSettings(
+          id: id,
+          dateTime: MiscFns.epoch(id),
+          assetAudioPath: r.audio ?? "",
+          notificationTitle: "${t.location} \u2022 $left \u2022 ${t.eventName}",
+          notificationBody: "${t.eventName} will be started in $left!",
+        ));
+      }
+    }
+  }
+
+  Future<void> _reminderFirstRun() async {
+    if (fetch<bool>("alarm.firstRun") == true) return;
+    _reminders.addAll((conf.defaultConfig['notif.reminders'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((e) => Reminder.fromJson(e)));
+    await put("alarm.firstRun", true);
+  }
+
+  Future<void> _initNotifications() async {
     int lastUpdated = notificationLastUpdated;
     try {
       List<int> newNs =
-          (await download<List>("notifications/timestamps")).cast();
+          (await endpoint<List>("notifications/timestamps")).cast();
       if (lastUpdated >= newNs.first) return;
       for (int n in newNs.take(newNs.indexOf((lastUpdated)))) {
-        (await download<List>("notifications/$n"))
+        (await endpoint<List>("notifications/$n"))
             .cast<Map<String, dynamic>>()
-            .forEach((e) {
-          _notifications.add(Notif.fromJson(e));
+            .forEach((e) async {
+          Notif notif = Notif.fromJson(e);
+          if (notif.applyEvent != null) await notif.apply();
+          _notifications.add(notif);
         });
       }
+      put("notifications.lastUpdated", newNs.first);
     } catch (e) {
       return;
     }
@@ -227,6 +365,22 @@ final class Storage {
       await awaitNotificationInitialized();
     });
   }
+
+  Future<void> clear() async {
+    await _env.clear();
+    await _generic.clear();
+    await _subjects.clear();
+    await _teachers.clear();
+    await _learning.clear();
+    await _plan.clear();
+    await _week.clear();
+    await _reminders.clear();
+    await _notifications.clear();
+    await Restart.restartApp();
+  }
+
+  Map<String, dynamic> get env =>
+      _env.toMap().map((key, value) => MapEntry(key.toString(), value));
 
   String _getCourseID(String id) => RegExp(r'([^.]+)').firstMatch(id)![0]!;
 
@@ -349,6 +503,7 @@ final class Storage {
   }
 
   Iterable<Reminder> get reminders => _reminders.values;
+  Future<void> addReminder(Reminder reminder) async => _reminders.add(reminder);
 
   int get notificationLastUpdated => fetch("notifications.lastUpdated") ?? 0;
   Iterable<Notif> get notifications => _notifications.values;

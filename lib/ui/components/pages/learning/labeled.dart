@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/subject.dart';
-import 'package:student/core/databases/subject_courses.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -37,7 +37,7 @@ class LabeledSection extends StatelessWidget {
         ),
         ...List.generate(subjects.length, (index) {
           TypicalPage t = Routing.subject(
-            InStudyCourses().getSubject(subjects[index].name)!,
+            Storage().getSubject(subjects[index].name)!,
           );
           return SubPage(
             label: t.title,

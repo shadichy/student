@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:student/core/configs.dart';
-import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/core/databases/study_plan.dart';
-import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/databases/subject_courses.dart';
-import 'package:student/core/databases/subjects.dart';
-import 'package:student/core/databases/teachers.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
-import 'package:student/core/notification/notification.dart';
-import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/pages/init/loading.dart';
 import 'package:student/ui/pages/init/main.dart';
@@ -30,7 +22,8 @@ class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
-  static bool get start => SharedPrefs.getString("user") != null;
+  // static bool get start => SharedPrefs.getString("user") != null;
+  static bool get start => Storage().getUser() != null;
   bool initializeStart = start;
 
   // bool initializeStart = initStat;
@@ -39,20 +32,18 @@ class _StudentAppState extends State<StudentApp> {
 
   Key key = UniqueKey();
 
-  bool get useSystem =>
-      AppConfig().getConfig<bool>("theme.systemTheme") == true;
+  bool get useSystem => Storage().fetch<bool>("theme.systemTheme") == true;
 
-  int? get colorCode => AppConfig().getConfig<int>("theme.accentColor");
+  int? get colorCode => Storage().fetch<int>("theme.accentColor");
 
   Color? get seed => useSystem
       ? SystemTheme.accentColor.accent
       : colorCode != null
           ? Color(colorCode!)
           : null;
-  int get mode =>
-      useSystem ? 0 : AppConfig().getConfig<int>("theme.themeMode") ?? 1;
+  int get mode => useSystem ? 0 : Storage().fetch<int>("theme.themeMode") ?? 1;
   String? get font =>
-      useSystem ? null : AppConfig().getConfig<String>("theme.appFont");
+      useSystem ? null : Storage().fetch<String>("theme.appFont");
 
   void action(AppAction action) {
     setState(() {
@@ -78,13 +69,18 @@ class _StudentAppState extends State<StudentApp> {
     if (!initializeStart) return;
 
     await User().initialize();
-    await SPBasics().initialize();
-    await Teachers().initialize();
-    await Subjects().initialize();
-    await StudyPlan().initialize();
-    await InStudyCourses().initialize();
-    await SemesterTimetable().initialize();
-    NotificationsGet().initialize();
+    // await SPBasics().initialize();
+    // await Teachers().initialize();
+    // await Subjects().initialize();
+    // await StudyPlan().initialize();
+    // await InStudyCourses().initialize();
+    // await SemesterTimetable().initialize();
+    // NotificationsGet().initialize();
+    // User().setUser(Storage().getUser()!);
+    await Storage().initialize();
+    print(Storage().getUser());
+    print(Storage().planTable);
+    print(Storage().thisWeek.toJson());
     setState(() {
       mainContent = const App();
     });

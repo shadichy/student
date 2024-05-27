@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:restart_app/restart_app.dart';
-import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/core/databases/hive.dart';
+import 'package:student/core/databases/user.dart';
 import 'package:student/ui/pages/help/mdviewer.dart';
 import 'package:student/ui/pages/init/fill_form.dart';
 // import 'package:student/core/databases/user.dart';
@@ -41,21 +40,28 @@ class _InitializerState extends State<Initializer> {
     Barcode? barcode = barcodes.barcodes.firstOrNull;
     if (barcode == null) return;
 
-    Server.iCM.downloadFile(barcode.displayValue!).then((value) {
-      Map<String, dynamic> parsed = jsonDecode(value.file.readAsStringSync());
+    Storage().download(Uri.parse(barcode.displayValue!)).then((parsed) {
+      // Map<String, dynamic> parsed = jsonDecode(value.file.readAsStringSync());
 
       try {
         checkValidUser(parsed["user"]);
-        SharedPrefs.setString("user", parsed["user"]).then((_) {
-          SharedPrefs.setString("env", parsed["env"]).then(
-            (_) => Restart.restartApp(),
-          );
-        });
+        // User().setUser(parsed["user"]);
+        Storage().setUser(parsed["user"]).then((_) {
+          (parsed["env"] as Map<String, dynamic>).forEach((key, value) async {
+            await Storage().setEnv(key, value);
+          });
+        }).then((_) => Restart.restartApp());
+        // SharedPrefs.setString("user", parsed["user"]).then((_) {
+        //   SharedPrefs.setString("env", parsed["env"]).then(
+        //     (_) => Restart.restartApp(),
+        //   );
+        // });
       } catch (e) {
         setState(() {
           invalidOpacity = 1;
         });
-        SharedPrefs.clear();
+        // SharedPrefs.clear();
+        Storage().clear();
         Future.delayed(const Duration(seconds: 3), () {
           setState(() {
             invalidOpacity = 0;
@@ -83,14 +89,14 @@ class _InitializerState extends State<Initializer> {
       padding: const EdgeInsets.all(16),
       fixedSize: Size.fromWidth(MediaQuery.of(context).size.width),
     );
-    Map<MapEntry<String,IconData>, void Function()> btnMap = {
-      const MapEntry("Use picture",Symbols.upload): () {
+    Map<MapEntry<String, IconData>, void Function()> btnMap = {
+      const MapEntry("Use picture", Symbols.upload): () {
         FilePicker.platform.pickFiles(type: FileType.image).then((f) {
           if (f == null) return;
           controller.analyzeImage(f.files.single.path!).then(_handleBarcode);
         });
       },
-      const MapEntry("Fill manually",Symbols.edit): () {
+      const MapEntry("Fill manually", Symbols.edit): () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => const FillForm(),
         ));

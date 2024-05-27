@@ -13,24 +13,27 @@ enum DayType { H, T, N, B, Q, O, S, X }
 @HiveType(typeId: 8)
 class SemesterPlan {
   @HiveField(0)
+  final int semester;
   final UserSemester currentSemester;
   @HiveField(1)
+  final Iterable<Iterable<int>> timetableInt;
   final Iterable<Iterable<DayType>> timetable;
   @HiveField(2)
   final List<int> studyWeeks;
   @HiveField(3)
   final DateTime startDate;
   SemesterPlan({
-    required int currentSemester,
-    required Iterable<Iterable<int>> timetable,
+    required this.semester,
+    required this.timetableInt,
     required this.studyWeeks,
     required this.startDate,
-  })  : currentSemester = UserSemester.values[currentSemester],
-        timetable = timetable.map(
+  })  : currentSemester = UserSemester.values[semester],
+        timetable = timetableInt.map(
           (w) => w.map((e) => DayType.values[e]),
         );
 }
 
+@Deprecated("moving to Hive")
 final class StudyPlan {
   StudyPlan._instance();
   static final _studyPlanInstance = StudyPlan._instance();
@@ -73,8 +76,8 @@ final class StudyPlan {
       prev++;
 
       table.add(SemesterPlan(
-        currentSemester: prev - 1,
-        timetable: chunkedWeek,
+        semester: prev - 1,
+        timetableInt: chunkedWeek,
         studyWeeks: studyWeek,
         startDate: MiscFns.epoch(startDate),
       ));

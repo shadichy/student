@@ -1,4 +1,3 @@
-import 'package:student/core/databases/server.dart';
 // import 'package:student/core/databases/user.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_functions.dart';
@@ -33,7 +32,7 @@ final class SPBasics {
         .toList();
     _onlineClassTypes = (data["onlineClassTypes"] as List).cast<String>();
     _creditPrice = (data["creditPrices"] as Map<dynamic, dynamic>)
-        .map((key, value) => MapEntry(key as int, value as int));
+        .map((key, value) => MapEntry(int.parse("$key"), value as int));
     String cr = ((data["currency"] ?? defaultConfig["misc.currency"]) as String)
         .toLowerCase();
     _currency = Currency.values.firstWhere((c) => c.name == cr);
@@ -46,8 +45,8 @@ final class SPBasics {
         'currency': _currency.name,
       };
 
-  Future<void> initialize() async {
-    Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
-    setBasics(parsedInfo);
-  }
+  // Future<void> initialize() async {
+  //   Map<String, dynamic> parsedInfo = await Server.getStudyProgramBasics;
+  //   setBasics(parsedInfo);
+  // }
 }

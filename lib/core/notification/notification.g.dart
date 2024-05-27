@@ -22,8 +22,8 @@ class NotifAdapter extends TypeAdapter<Notif> {
       uploadDate: fields[2] as DateTime?,
       applyEvent: fields[3] as EventTimeline?,
       applyDates: (fields[4] as List?)?.cast<DateTime>(),
-      applyGroup: fields[5] as UserGroup?,
-      applySemester: fields[6] as UserSemester?,
+      applyGroupInt: fields[5] as int?,
+      applySemesterInt: fields[6] as int?,
       override: fields[7] as bool?,
       applied: fields[8] as bool?,
       read: fields[9] as bool,
@@ -45,9 +45,9 @@ class NotifAdapter extends TypeAdapter<Notif> {
       ..writeByte(4)
       ..write(obj.applyDates)
       ..writeByte(5)
-      ..write(obj.applyGroup)
+      ..write(obj.applyGroupInt)
       ..writeByte(6)
-      ..write(obj.applySemester)
+      ..write(obj.applySemesterInt)
       ..writeByte(7)
       ..write(obj.override)
       ..writeByte(8)

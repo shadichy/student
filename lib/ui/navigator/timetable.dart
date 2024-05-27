@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
@@ -7,18 +8,16 @@ import 'package:student/ui/components/navigator/timetable/upcoming_event_widget.
 import 'package:student/ui/components/navigator/timetable/timetable_widget.dart';
 import 'package:student/ui/components/navigator/timetable/topbar_widget.dart';
 import 'package:student/ui/components/pages/event.dart';
-import 'package:student/ui/components/upcoming.dart';
 
 import 'package:student/ui/components/with_appbar.dart';
 
 class TimetablePage extends StatelessWidget implements TypicalPage {
   TimetablePage({super.key});
 
-  final List<UpcomingEvent> _classStamps = UpcomingData.upcomingEvents
-      .map((e) => e is CourseTimestamp
+  final Iterable<UpcomingEvent> _classStamps = Storage().upcomingEvents.map(
+      (e) => e is CourseTimestamp
           ? NextupClassView(e)
-          : UpcomingEvent.fromTimestamp(e))
-      .toList();
+          : UpcomingEvent.fromTimestamp(e));
 
   bool get hasData => _classStamps.isNotEmpty;
 

@@ -3,11 +3,11 @@
 import 'dart:async';
 
 import 'package:hive/hive.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/shared_prefs.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
-import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
 part 'notification.g.dart';
 
@@ -24,8 +24,10 @@ class Notif extends HiveObject {
   @HiveField(4)
   final List<DateTime>? applyDates;
   @HiveField(5)
+  final int? applyGroupInt;
   final UserGroup? applyGroup;
   @HiveField(6)
+  final int? applySemesterInt;
   final UserSemester? applySemester;
   @HiveField(7)
   final bool? override;
@@ -39,12 +41,17 @@ class Notif extends HiveObject {
     this.uploadDate,
     this.applyEvent,
     this.applyDates,
-    this.applyGroup,
-    this.applySemester,
+    this.applyGroupInt,
+    this.applySemesterInt,
     this.override,
     bool? applied,
     this.read = false,
-  }) : applied = applyEvent != null ? applied ?? false : null;
+  })  : applied = applyEvent != null ? applied ?? false : null,
+        applyGroup =
+            applyGroupInt == null ? null : UserGroup.values[applyGroupInt],
+        applySemester = applySemesterInt == null
+            ? null
+            : UserSemester.values[applySemesterInt];
 
   Notif.fromJson(Map<String, dynamic> map)
       : this(
@@ -70,12 +77,8 @@ class Notif extends HiveObject {
               : MiscFns.list<int>(map["applyDates"] as List)
                   .map((e) => MiscFns.epoch(e))
                   .toList(),
-          applyGroup: map["applyGroup"] == null
-              ? null
-              : UserGroup.values[map["applyGroup"] as int],
-          applySemester: map["applySemester"] == null
-              ? null
-              : UserSemester.values[map["applySemester"] as int],
+          applyGroupInt: map["applyGroup"] as int?,
+          applySemesterInt: map["applySemester"] as int?,
           override: map["override"] as bool?,
           applied: map["applied"] as bool?,
           read: (map["read"] ?? false) as bool,
@@ -104,7 +107,7 @@ class Notif extends HiveObject {
       applied = true;
       return await save();
     }
-    SemesterTimetable().update(
+    await Storage().updateWeekTimetable(
       applyEvent!,
       override: override ?? false,
       days: applyDates,
@@ -119,6 +122,7 @@ class Notif extends HiveObject {
   }
 }
 
+@Deprecated("moving to Hive")
 final class NotificationsGet {
   NotificationsGet._instance();
   static final _notifInstance = NotificationsGet._instance();

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+@Deprecated("Unused")
 abstract final class SharedPrefs {
   static late final SharedPreferences _prefs;
   static Future<void> initialize() async {

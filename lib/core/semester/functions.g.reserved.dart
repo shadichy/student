@@ -62,14 +62,14 @@ class CourseTimestampAdapter extends TypeAdapter<CourseTimestamp> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CourseTimestamp(
+    return CourseTimestamp.fromHive(
       courseID: fields[0] as String,
       intStamp: fields[1] as int,
       dayOfWeek: fields[2] as int,
       room: fields[3] as String,
       teacherID: fields[4] as String,
-      timestampType: fields[5] as TimestampType,
-      courseType: fields[6] as CourseType?,
+      timestampTypeInt: fields[5] as int,
+      courseTypeInt: fields[6] as int?,
     );
   }
 

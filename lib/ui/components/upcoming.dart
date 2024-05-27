@@ -4,6 +4,7 @@ import 'package:student/core/default_configs.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 
+@Deprecated("moving to Hive")
 abstract final class UpcomingData {
   static final int _fullStamp =
       (-1).toUnsigned(SPBasics().classTimestamps.length);

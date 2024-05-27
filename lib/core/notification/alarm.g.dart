@@ -17,10 +17,10 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Reminder(
-      duration: fields[0] as Duration,
-      disabled: fields[1] as bool,
-      vibrate: fields[2] as bool,
-      alarmMode: fields[3] as AlarmMode,
+      fields[0] as int,
+      disabled: fields[1] as bool?,
+      vibrate: fields[2] as bool?,
+      alarmMode: fields[3] as int?,
       audio: fields[4] as String?,
     );
   }
@@ -30,15 +30,15 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
     writer
       ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.duration)
+      ..write(obj._duration.inMinutes)
       ..writeByte(1)
-      ..write(obj.disabled)
+      ..write(obj._disabled)
       ..writeByte(2)
-      ..write(obj.vibrate)
+      ..write(obj._vibrate)
       ..writeByte(3)
-      ..write(obj.alarmMode)
+      ..write(obj._alarmMode)
       ..writeByte(4)
-      ..write(obj.audio);
+      ..write(obj._audio);
   }
 
   @override

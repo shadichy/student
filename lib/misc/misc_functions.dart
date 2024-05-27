@@ -9,14 +9,17 @@ abstract final class MiscFns {
   }) =>
       DateFormat(format).format(time);
 
-  static String timeLeft(DateTime startTime, DateTime endTime) {
-    Duration diffEnd = endTime.difference(DateTime.now());
-    if (diffEnd.inMinutes < 0) return "ended";
-    Duration diffStart = startTime.difference(DateTime.now());
+  static String durationLeft(Duration start) {
     String hour = "";
-    if (diffStart.inHours > 0) hour += "${diffStart.inHours}h";
-    if (diffStart.inMinutes < 0) return "now";
-    return "$hour${diffStart.inMinutes % 60}m";
+    if (start.inHours > 0) hour += "${start.inHours}h";
+    if (start.inMinutes < 0) return "now";
+    return "$hour${start.inMinutes % 60}m";
+  }
+
+  static String timeLeft(DateTime startTime, DateTime endTime) {
+    return (endTime.difference(DateTime.now()).inMinutes > 0)
+        ? durationLeft(startTime.difference(DateTime.now()))
+        : "ended";
   }
 
   static String colorCode(Color color) =>

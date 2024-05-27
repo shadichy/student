@@ -104,15 +104,16 @@ final class Storage {
     _domain = _env.get("fetchDomain")!;
     _prefix = _env.get("apiPrefix") ?? "";
 
-    _subjects = await Hive.openBox<BaseSubject>("subjects");
+    await _initBasics();
+
     _teachers = await Hive.openBox<String>("teachers");
+    _subjects = await Hive.openBox<BaseSubject>("subjects");
     _learning = await Hive.openBox<Subject>("courses");
     _plan = await Hive.openBox<SemesterPlan>("plan");
     _week = await Hive.openBox<WeekTimetable>("week");
     _reminders = await Hive.openBox<Reminder>("alarms");
     _notifications = await Hive.openBox<Notif>("notifications");
 
-    await _initBasics();
     await _initTeacher();
     await _initSubjects();
     await _initCourses();
@@ -228,8 +229,6 @@ final class Storage {
         .forEach((k, v) async {
       try {
         BaseSubject base = getSubjectBase(k)!;
-        print(base);
-        print(v);
         await _learning.put(
           k,
           Subject.fromBase(
@@ -250,7 +249,6 @@ final class Storage {
 
   Future<void> _initTimetable() async {
     DateTime? startDate = fetch("week.startDate");
-    await _week.clear();
     if (_week.isNotEmpty && startDate != null) return;
 
     SemesterPlan plan = currentPlan;
@@ -258,23 +256,15 @@ final class Storage {
 
     List<SubjectCourse> registeredCourses = [];
     // why is _learning empty?
-    print("l test");
-    print(_learning.values.toList());
     for (String id
         in User().learningCourses[SPBasics().currentYear - User().schoolYear]
             [User().semester]!) {
       try {
-        print(id);
-        print(_getCourseID(id));
-        print(getSubjectBaseAlt(id));
-        print(getSubjectAlt(id));
         registeredCourses.add(getCourse(id)!);
       } catch (e) {
         // invalid course
       }
     }
-    print(User().learningCourses[SPBasics().currentYear - User().schoolYear]
-        [User().semester]!);
 
     int prev = 0;
 
@@ -283,7 +273,6 @@ final class Storage {
       for (SubjectCourse course in registeredCourses) {
         for (CourseTimestamp stamp in course.timestamp) {
           DayType d = e.elementAt(stamp.dayOfWeek);
-          print(d);
           if (d != DayType.H && d != DayType.B) continue;
           stamps.add(stamp);
         }
@@ -294,7 +283,6 @@ final class Storage {
         weekNo: currentPlan.studyWeeks.indexOf(prev),
       ));
       prev++;
-      print(stamps);
     }
 
     await put("week.startDate", startDate);
@@ -390,8 +378,7 @@ final class Storage {
   Subject? getSubject(String id) => _learning.get(id);
   Subject? getSubjectAlt(String id) =>
       _learning.values.firstWhereIf((s) => s.subjectAltID == _getCourseID(id));
-  SubjectCourse? getCourse(String id) =>
-      getSubjectAlt(_getCourseID(id))?.getCourse(id);
+  SubjectCourse? getCourse(String id) => getSubjectAlt(id)?.courses[id];
   String? getTeacher(String id) => _teachers.get(id);
   Iterable<SemesterPlan> get planTable => _plan.values;
   SemesterPlan get currentPlan => _plan.getAt(User().semester.index)!;

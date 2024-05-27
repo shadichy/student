@@ -6,7 +6,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/databases/user.dart';
 import 'package:student/ui/pages/help/mdviewer.dart';
 import 'package:student/ui/pages/init/fill_form.dart';
 // import 'package:student/core/databases/user.dart';

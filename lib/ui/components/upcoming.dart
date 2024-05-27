@@ -1,6 +1,5 @@
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/default_configs.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 
@@ -11,9 +10,7 @@ abstract final class UpcomingData {
   static final DateTime _now = DateTime.now();
   static final int _weekday = _now.weekday % 7;
 
-  static int get weekdayStart =>
-      AppConfig().getConfig<int>("misc.startWeekday") ??
-      defaultConfig["misc.startWeekday"];
+  static int get weekdayStart => Storage().fetch<int>("misc.startWeekday")!;
 
   static DateTime get weekStart => _now.subtract(
         Duration(days: (_weekday - weekdayStart + 7) % 7),

@@ -5,6 +5,7 @@ import 'package:student/core/default_configs.dart';
 // import 'package:student/core/databases/user.dart';
 // import 'package:student/misc/misc_functions.dart';
 
+@Deprecated("moving to Hive")
 final class AppConfig {
   AppConfig._instance();
   static final _studyPlanInstance = AppConfig._instance();

@@ -78,9 +78,9 @@ class CourseTimestampAdapter extends TypeAdapter<CourseTimestamp> {
     writer
       ..writeByte(7)
       ..writeByte(5)
-      ..write(obj.timestampType)
+      ..write(obj.timestampTypeInt)
       ..writeByte(6)
-      ..write(obj.courseType)
+      ..write(obj.courseTypeInt)
       ..writeByte(0)
       ..write(obj.eventName)
       ..writeByte(1)

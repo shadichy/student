@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -18,7 +18,8 @@ class OptionLabelWidgets extends StatelessWidget {
     super.key,
     this.headingLabel = "Quick actions",
   }) : _routes = MiscFns.list<String>(
-          AppConfig().getConfig<List>("opts.$id")!, // Must be defined in the default configuration
+          Storage().fetch<List>(
+              "opts.$id")!, // Must be defined in the default configuration
         );
 
   @override

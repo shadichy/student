@@ -1,7 +1,7 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/searchable_selector_dialog.dart';
 import 'package:student/ui/components/pages/settings/svg_theme.dart';
@@ -26,40 +26,39 @@ class SettingsThemesPage extends StatefulWidget implements TypicalPage {
 }
 
 class _SettingsThemesPageState extends State<SettingsThemesPage> {
-  bool useSystem = AppConfig().getConfig<bool>("theme.systemTheme") ?? false;
+  bool useSystem = Storage().fetch<bool>("theme.systemTheme") ?? false;
   late int? colorCode = useSystem
       ? SystemTheme.accentColor.accent.value
-      : AppConfig().getConfig<int>("theme.accentColor");
-  late bool darkMode = AppConfig().getConfig<int>("theme.themeMode") == 2;
-  late String? currentFont = AppConfig().getConfig<String>("theme.appFont");
+      : Storage().fetch<int>("theme.accentColor");
+  late bool darkMode = Storage().fetch<int>("theme.themeMode") == 2;
+  late String? currentFont = Storage().fetch<String>("theme.appFont");
 
   void switchUseSystem(bool newState) {
     setState(() {
       useSystem = newState;
     });
-    AppConfig().setConfig("theme.systemTheme", newState);
+    Storage().put("theme.systemTheme", newState);
   }
 
   void changePalette(int color) {
     setState(() {
       colorCode = color;
     });
-    AppConfig().setConfig("theme.accentColor", color);
+    Storage().put("theme.accentColor", color);
   }
 
   void setDarkMode(bool newState) {
     setState(() {
       darkMode = newState;
     });
-    AppConfig().setConfig("theme.themeMode", newState ? 2 : 1);
+    Storage().put("theme.themeMode", newState ? 2 : 1);
   }
 
   void setFont(String fontName) {
     setState(() {
       currentFont = fontName;
     });
-    AppConfig()
-        .setConfig("theme.appFont", fontName == "System" ? null : fontName);
+    Storage().put("theme.appFont", fontName == "System" ? null : fontName);
   }
 
   @override

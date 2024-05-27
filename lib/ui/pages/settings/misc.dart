@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 
@@ -29,13 +29,13 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
     'Friday',
     'Saturday',
   ];
-  int startWeekday = AppConfig().getConfig<int>("misc.startWeekday") ??
+  int startWeekday = Storage().fetch<int>("misc.startWeekday") ??
       defaultConfig["misc.startWeekday"];
   void setStartWeekday(int day) {
     setState(() {
       startWeekday = day;
     });
-    AppConfig().setConfig("misc.startWeekday", day);
+    Storage().put("misc.startWeekday", day);
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/alarm.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -26,12 +26,12 @@ class SettingsNotificationsPage extends StatefulWidget implements TypicalPage {
 
 class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
   List<Map<String, dynamic>> reminders = MiscFns.list<Map<String, dynamic>>(
-    AppConfig().getConfig<List>("notif.reminders")!,
+    Storage().fetch<List>("notif.reminders")!,
   );
 
   void reminderConf(void Function() fn) {
     setState(fn);
-    AppConfig().setConfig("notif.reminders", reminders);
+    Storage().put("notif.reminders", reminders);
   }
 
   void reminderChange(int index, Map<String, dynamic> value) {
@@ -204,10 +204,8 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                   return Opt(
                     label: expansionNotifPrior[index].value,
                     buttonType: ButtonType.switcher,
-                    switcherDefaultValue:
-                        AppConfig().getConfig<bool>(dataID) ?? true,
-                    switcherAction: (value) =>
-                        AppConfig().setConfig(dataID, value),
+                    switcherDefaultValue: Storage().fetch<bool>(dataID) ?? true,
+                    switcherAction: (value) => Storage().put(dataID, value),
                   );
                 },
                 itemCount: expansionNotifPrior.length,

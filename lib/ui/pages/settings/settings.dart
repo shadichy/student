@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/configs.dart';
+import 'package:student/core/databases/hive.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
     "vi": "Tiếng Việt",
     "en": "English",
   };
-  String lang = AppConfig().getConfig<String>("settings.language") ??
+  String lang = Storage().fetch<String>("settings.language") ??
       defaultConfig["settings.language"]!;
 
   void languageAction(BuildContext context) {
@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       lang = newLang;
     });
-    AppConfig().setConfig("settings.language", newLang);
+    Storage().put("settings.language", newLang);
   }
 
   @override

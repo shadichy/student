@@ -56,6 +56,8 @@ final class Storage {
 
   DateTime get _weekStart => _now.subtract(Duration(
         days: (_weekday - weekdayStart + 7) % 7,
+        hours: _now.timeZoneOffset.inHours,
+        microseconds: _now.microsecondsSinceEpoch % 86400000000,
       ));
 
   WeekTimetable get thisWeek => _thisWeek;
@@ -303,7 +305,7 @@ final class Storage {
       for (EventTimestamp t
           in thisWeek.timestamps.where((e) => e.dayOfWeek % 7 == _weekday)) {
         int id = rId +
-            24 * 3600 * (t.dayOfWeek % 7) +
+            24 * 3600 * ((t.dayOfWeek - weekdayStart + 7) % 7) +
             SPBasics().classTimestamps[_getStartStamp(t.intStamp)][0];
         if (Alarm.getAlarm(id) != null) continue;
         Alarm.set(

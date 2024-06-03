@@ -25,9 +25,11 @@ class SettingsNotificationsPage extends StatefulWidget implements TypicalPage {
 }
 
 class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
-  List<Map<String, dynamic>> reminders = MiscFns.list<Map<String, dynamic>>(
-    Storage().fetch<List>("notif.reminders")!,
-  );
+  List<Map<String, dynamic>> reminders = Storage()
+      .fetch<List>("notif.reminders")!
+      .cast<Map>()
+      .map((e) => e.map((key, value) => MapEntry(key.toString(), value)))
+      .toList();
 
   void reminderConf(void Function() fn) {
     setState(fn);

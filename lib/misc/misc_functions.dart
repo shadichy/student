@@ -11,9 +11,13 @@ abstract final class MiscFns {
 
   static String durationLeft(Duration start) {
     String hour = "";
-    if (start.inHours > 0) hour += "${start.inHours}h";
-    if (start.inMinutes < 0) return "now";
-    return "$hour${start.inMinutes % 60}m";
+    String min = "${start.inMinutes % 60}m";
+    if (start.inHours > 0) {
+      hour += "${start.inHours}h";
+      if (start.inMinutes == 0) min = "";
+    }
+    if (start.inMinutes <= 0) return "now";
+    return "$hour$min";
   }
 
   static String timeLeft(DateTime startTime, DateTime endTime) {

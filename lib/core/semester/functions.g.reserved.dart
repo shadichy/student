@@ -210,10 +210,10 @@ class SubjectCourseAdapter extends TypeAdapter<SubjectCourse> {
       ..writeByte(3)
       ..writeByte(2)
       ..write(obj.subjectID)
-      ..writeByte(3)
-      ..write(obj._timestamp)
       ..writeByte(0)
-      ..write(obj.label);
+      ..write(obj.label)
+      ..writeByte(1)
+      ..write(obj.timestamp);
   }
 
   @override

@@ -31,6 +31,18 @@ class SemesterPlan {
         timetable = timetableInt.map(
           (w) => w.map((e) => DayType.values[e]),
         );
+
+  Map<String, dynamic> toMap() => {
+        'semester': semester,
+        'timetableInt': timetableInt.toList(),
+        'studyWeeks': studyWeeks,
+        'startDate': startDate,
+      };
+
+  Map<String, dynamic> toJson() => toMap();
+
+  @override
+  String toString() => toMap().toString();
 }
 
 @Deprecated("moving to Hive")

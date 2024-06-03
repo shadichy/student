@@ -9,7 +9,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await Storage().register();
   // await SharedPrefs.initialize();
-  // await AppConfig().initialize();
+  // await AppConfig().initialize(`);
   // if (Storage().fetch<bool>("theme.systemTheme") == true) {
   if (Storage().fetch<bool>("theme.systemTheme") == true) {
     await SystemTheme.accentColor.load();

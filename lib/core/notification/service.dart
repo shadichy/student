@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-@Deprecated("moving to Hive")
+// @Deprecated("moving to Hive")
 class NotificationService {
   NotificationService._instance();
   static final _notificationService = NotificationService._instance();

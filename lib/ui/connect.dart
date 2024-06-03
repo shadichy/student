@@ -78,9 +78,11 @@ class _StudentAppState extends State<StudentApp> {
     // NotificationsGet().initialize();
     // User().setUser(Storage().getUser()!);
     await Storage().initialize();
-    print(Storage().getUser());
-    print(Storage().planTable);
-    print(Storage().thisWeek.toJson());
+    print("Running");
+
+    // print(Storage().getUser());
+    // print(Storage().planTable);
+    // print(Storage().thisWeek.toJson());
     setState(() {
       mainContent = const App();
     });

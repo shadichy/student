@@ -40,11 +40,12 @@ final class Storage {
   late final String _prefix;
 
   late final int fullStamp;
-  late final DateTime _now;
+  final DateTime _now = DateTime.now();
   late final int _weekday;
   late WeekTimetable _thisWeek;
 
   int _getStartStamp(int timestamp) {
+    if (timestamp == 0) return -1;
     int classStartsAt = 0;
     while (timestamp & (1 << classStartsAt) == 0) {
       classStartsAt++;
@@ -116,13 +117,20 @@ final class Storage {
     _reminders = await Hive.openBox<Reminder>("alarms");
     _notifications = await Hive.openBox<Notif>("notifications");
 
+    print("Reaches _initTeacher");
     await _initTeacher();
+    print("Reaches _initSubjects");
     await _initSubjects();
+    print("Reaches _initCourses");
     await _initCourses();
+    print("Reaches _initPlan");
     await _initPlan();
+    print("Reaches _initTimetable");
     await _initTimetable();
+    print("Reaches _initReminders");
     await _initReminders();
     _initNotifications().then((_) => _notificationInitialized = true);
+    print("Reaches _endInit");
   }
 
   Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
@@ -294,19 +302,26 @@ final class Storage {
     await _reminderFirstRun();
     await Alarm.init();
     fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
-    _now = DateTime.now();
     _weekday = _now.weekday % 7;
 
     _thisWeek = getWeek(_weekStart);
+    print(_now);
+    print(_weekStart);
     int weekStartInt = _weekStart.millisecondsSinceEpoch ~/ 1000;
+    List<List<int>> cList = SPBasics().classTimestamps;
+    Iterable<EventTimestamp> tList = thisWeek.timestamps.where((e) {
+      return e.dayOfWeek % 7 == _weekday;
+    });
+    print(SPBasics().classTimestamps);
     for (Reminder r in reminders) {
       String left = MiscFns.durationLeft(r.duration);
       int rId = weekStartInt - r.duration.inSeconds;
-      for (EventTimestamp t
-          in thisWeek.timestamps.where((e) => e.dayOfWeek % 7 == _weekday)) {
+      for (EventTimestamp t in tList) {
+        if (t.intStamp == 0) continue;
         int id = rId +
-            24 * 3600 * ((t.dayOfWeek - weekdayStart + 7) % 7) +
-            SPBasics().classTimestamps[_getStartStamp(t.intStamp)][0];
+            24 * 3600 * (t.dayOfWeek % 7) +
+            cList[_getStartStamp(t.intStamp)][0];
+        print(MiscFns.epoch(id));
         if (Alarm.getAlarm(id) != null) continue;
         Alarm.set(
             alarmSettings: AlarmSettings(
@@ -315,6 +330,7 @@ final class Storage {
           assetAudioPath: r.audio ?? "",
           notificationTitle: "${t.location} \u2022 $left \u2022 ${t.eventName}",
           notificationBody: "${t.eventName} will be started in $left!",
+          vibrate: r.vibrate,
         ));
       }
     }

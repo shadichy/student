@@ -180,7 +180,7 @@ final class Storage {
     await _subjects.putAll(
       (await endpoint<Map<String, dynamic>>("${User().group.name}/subjects"))
           .map(
-        (k, v) => MapEntry(k, BaseSubject.fromJson(v as Map<String, dynamic>)),
+        (k, v) => MapEntry(k, BaseSubject.fromJson(v as Map<String, dynamic>, k)),
       ),
     );
   }
@@ -366,6 +366,7 @@ final class Storage {
     await _week.clear();
     await _reminders.clear();
     await _notifications.clear();
+    await Alarm.stopAll();
     await Restart.restartApp();
   }
 

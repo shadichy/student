@@ -1,4 +1,5 @@
 import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/databases/subject.dart';
 import 'package:student/core/semester/functions.dart';
 
 extension MergeLT on SubjectCourse {
@@ -113,18 +114,18 @@ class SampleTimetableData {
       (String subjectID, subjectInfo) {
         List<SubjectCourse> courses =
             _mapToClass(subjectID, subjectInfo["classes"]);
-        return subjects.add(
-          Subject(
-            subjectID: subjectID,
-            name: subjectInfo["name"].toString(),
-            cred: subjectInfo["cred"],
-            courses: courses.asMap().map((_, v) => MapEntry(v.courseID, v)),
-            subjectAltID: courses[0]
+        return subjects.add(Subject.fromBase(
+          BaseSubject.fromJson({
+            "name": subjectInfo["name"].toString(),
+            "cred": subjectInfo["cred"],
+            "coef": subjectInfo["cred"],
+            "subjectAltID": courses[0]
                 .courseID
                 .replaceFirst(RegExp(r"(\.[0-9])+(_[LB]T)?$"), ''),
-            dependencies: [],
-          ),
-        );
+            "dependencies": [],
+          }, subjectID),
+          courses.asMap().map((_, v) => MapEntry(v.courseID, v)),
+        ));
       },
     );
   }
@@ -195,16 +196,19 @@ class SampleTimetableData {
               timestamp: timestamp,
             )));
 
-    tmpTkb.forEach((String subjectID, subjectInfo) => subjects.add(Subject(
-          subjectID: subjectID,
-          name: subjectInfo["name"].toString(),
-          cred: subjectInfo["cred"],
-          courses: _mapToClass(subjectID, subjectInfo["classes"])
-              .asMap()
-              .map((_, v) => MapEntry(v.courseID, v)),
-          subjectAltID: subjectID,
-          dependencies: [],
-        )));
+    tmpTkb.forEach(
+      (String subjectID, subjectInfo) => subjects.add(Subject.fromBase(
+        BaseSubject.fromJson({
+          "name": subjectInfo["name"].toString(),
+          "cred": subjectInfo["cred"],
+          "coef": subjectInfo["coef"],
+          "dependencies": [],
+        }, subjectID),
+        _mapToClass(subjectID, subjectInfo["classes"])
+            .asMap()
+            .map((_, v) => MapEntry(v.courseID, v)),
+      )),
+    );
   }
 
   static String unifyJson(String input) {

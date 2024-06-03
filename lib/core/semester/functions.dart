@@ -252,7 +252,7 @@ final class SubjectCourse extends EventTimeline {
 
 @HiveType(typeId: 10)
 final class Subject extends BaseSubject {
-  @HiveField(5)
+  @HiveField(6)
   final Map<String, SubjectCourse> courses;
 
   const Subject({
@@ -260,6 +260,7 @@ final class Subject extends BaseSubject {
     required super.subjectAltID,
     required super.name,
     required super.cred,
+    required super.coef,
     required super.dependencies,
     required this.courses,
   });
@@ -270,6 +271,7 @@ final class Subject extends BaseSubject {
           subjectAltID: base.subjectAltID,
           name: base.name,
           cred: base.cred,
+          coef: base.coef,
           dependencies: base.dependencies,
         );
 
@@ -286,6 +288,7 @@ final class Subject extends BaseSubject {
       subjectAltID: subjectAltID,
       name: name,
       cred: cred,
+      coef: coef,
       dependencies: dependencies);
 
   @override

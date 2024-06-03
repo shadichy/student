@@ -159,6 +159,7 @@ extension Filter on Subject {
       subjectID: subjectID,
       name: name,
       cred: cred,
+      coef: coef,
       courses: result.asMap().map((_, v) => MapEntry(v.courseID, v)),
       subjectAltID: subjectID,
       dependencies: [],

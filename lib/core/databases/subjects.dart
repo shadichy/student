@@ -36,13 +36,7 @@ final class Subjects {
     _subjects = parsedInfo.map<String, BaseSubject>((key, value) {
       return MapEntry(
         key,
-        BaseSubject(
-          subjectID: key,
-          subjectAltID: value["subjectAltID"] as String,
-          name: value["name"] as String,
-          cred: value["cred"] as int,
-          dependencies: MiscFns.list<String>(value["dependencies"] as List),
-        ),
+        BaseSubject.fromJson(value, key),
       );
     }).values;
   }

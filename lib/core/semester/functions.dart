@@ -268,7 +268,8 @@ final class Subject extends BaseSubject {
   Subject.fromBase(BaseSubject base, this.courses)
       : super(
           subjectID: base.subjectID,
-          subjectAltID: base.subjectAltID,
+          subjectAltID: base.subjectAltID ??
+              RegExp(r'([^.]+)').firstMatch(courses.values.first.courseID)?[0],
           name: base.name,
           cred: base.cred,
           coef: base.coef,

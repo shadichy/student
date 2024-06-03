@@ -66,16 +66,17 @@ void main() {
   // print(DateTime.parse("2023-07-24").millisecondsSinceEpoch);
   // print(2 as String);
   // print(2.5 as String);
-  final DateTime _now = DateTime.now();
+  // final DateTime _now = DateTime.now();
 
-  DateTime _weekStart = _now.subtract(Duration(
-    days: _now.weekday - 1,
-    hours: _now.timeZoneOffset.inHours,
-    microseconds: _now.microsecondsSinceEpoch % 86400000000,
-  ));
+  // DateTime _weekStart = _now.subtract(Duration(
+  //   days: _now.weekday - 1,
+  //   hours: _now.timeZoneOffset.inHours,
+  //   microseconds: _now.microsecondsSinceEpoch % 86400000000,
+  // ));
 
-  print(DateTime.fromMicrosecondsSinceEpoch(
-      _now.microsecondsSinceEpoch % 3600000000));
+  // print(DateTime.fromMicrosecondsSinceEpoch(
+  //     _now.microsecondsSinceEpoch % 3600000000));
 
-  print(_weekStart);
+  // print(_weekStart);
+  print();
 }

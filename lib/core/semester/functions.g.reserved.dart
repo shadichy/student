@@ -242,7 +242,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       subjectAltID: fields[1] as String?,
       name: fields[2] as String,
       cred: fields[3] as int,
-      coef: fields[5] as int,
+      coef: fields[5] as double,
       dependencies: (fields[4] as List).cast<String>(),
       courses: (fields[6] as Map).cast<String, SubjectCourse>(),
     );

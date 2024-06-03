@@ -188,7 +188,8 @@ final class Storage {
     await _subjects.putAll(
       (await endpoint<Map<String, dynamic>>("${User().group.name}/subjects"))
           .map(
-        (k, v) => MapEntry(k, BaseSubject.fromJson(v as Map<String, dynamic>, k)),
+        (k, v) =>
+            MapEntry(k, BaseSubject.fromJson(v as Map<String, dynamic>, k)),
       ),
     );
   }
@@ -259,6 +260,7 @@ final class Storage {
 
   Future<void> _initTimetable() async {
     DateTime? startDate = fetch("week.startDate");
+    await _week.clear();
     if (_week.isNotEmpty && startDate != null) return;
 
     SemesterPlan plan = currentPlan;
@@ -275,6 +277,8 @@ final class Storage {
         // invalid course
       }
     }
+    print(_learning.values.toList());
+    print(registeredCourses);
 
     int prev = 0;
 

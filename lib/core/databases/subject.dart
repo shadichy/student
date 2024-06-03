@@ -15,7 +15,7 @@ class BaseSubject {
   @HiveField(4)
   final List<String> dependencies;
   @HiveField(5)
-  final int coef;
+  final double coef;
   const BaseSubject({
     required this.subjectID,
     this.subjectAltID,
@@ -32,7 +32,9 @@ class BaseSubject {
           subjectAltID: data["subjectAltID"] as String?,
           name: data["name"] as String,
           cred: data["cred"] as int,
-          coef: data["coef"] as int? ?? 1,
+          coef: data["coef"] is int
+              ? (data["coef"] as int).toDouble()
+              : data["coef"] as double? ?? 1,
           dependencies: (data["dependencies"] as List).cast(),
         );
 

@@ -117,20 +117,13 @@ final class Storage {
     _reminders = await Hive.openBox<Reminder>("alarms");
     _notifications = await Hive.openBox<Notif>("notifications");
 
-    print("Reaches _initTeacher");
     await _initTeacher();
-    print("Reaches _initSubjects");
     await _initSubjects();
-    print("Reaches _initCourses");
     await _initCourses();
-    print("Reaches _initPlan");
     await _initPlan();
-    print("Reaches _initTimetable");
     await _initTimetable();
-    print("Reaches _initReminders");
     await _initReminders();
     _initNotifications().then((_) => _notificationInitialized = true);
-    print("Reaches _endInit");
   }
 
   Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
@@ -277,8 +270,6 @@ final class Storage {
         // invalid course
       }
     }
-    print(_learning.values.toList());
-    print(registeredCourses);
 
     int prev = 0;
 
@@ -309,14 +300,11 @@ final class Storage {
     _weekday = _now.weekday % 7;
 
     _thisWeek = getWeek(_weekStart);
-    print(_now);
-    print(_weekStart);
     int weekStartInt = _weekStart.millisecondsSinceEpoch ~/ 1000;
     List<List<int>> cList = SPBasics().classTimestamps;
     Iterable<EventTimestamp> tList = thisWeek.timestamps.where((e) {
       return e.dayOfWeek % 7 == _weekday;
     });
-    print(SPBasics().classTimestamps);
     for (Reminder r in reminders) {
       String left = MiscFns.durationLeft(r.duration);
       int rId = weekStartInt - r.duration.inSeconds;
@@ -325,7 +313,6 @@ final class Storage {
         int id = rId +
             24 * 3600 * (t.dayOfWeek % 7) +
             cList[_getStartStamp(t.intStamp)][0];
-        print(MiscFns.epoch(id));
         if (Alarm.getAlarm(id) != null) continue;
         Alarm.set(
             alarmSettings: AlarmSettings(

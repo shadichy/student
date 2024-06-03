@@ -11,9 +11,15 @@
     "schoolYear": 36,
     "learning": [
       [
-        ["TINHOCAMNHAC.1", "TRUNGSC2.2"],
-        ["NHATSC2.3"],
-        ["PHANMEMTHIETKE.1.1_BT", "KTEHOCDC.5", "MICRO.3"]
+        [],
+        [],
+        [
+          "ANHSTC2.18",
+          "LAPTRINHHUONGDT.1.1_BT",
+          "JAVACOBAN.1",
+          "GIAITICH1.2.2_BT",
+          "KTRUCMAYTINH.3"
+        ]
       ],
       []
     ]

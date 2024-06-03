@@ -254,7 +254,7 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       ..writeByte(7)
       ..writeByte(6)
       ..write(obj.courses)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.coef)
       ..writeByte(0)
       ..write(obj.subjectID)

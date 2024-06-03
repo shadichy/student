@@ -21,6 +21,7 @@ class BaseSubjectAdapter extends TypeAdapter<BaseSubject> {
       subjectAltID: fields[1] as String,
       name: fields[2] as String,
       cred: fields[3] as int,
+      coef: fields[5] as int,
       dependencies: (fields[4] as List).cast<String>(),
     );
   }
@@ -28,7 +29,7 @@ class BaseSubjectAdapter extends TypeAdapter<BaseSubject> {
   @override
   void write(BinaryWriter writer, BaseSubject obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.subjectID)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class BaseSubjectAdapter extends TypeAdapter<BaseSubject> {
       ..writeByte(3)
       ..write(obj.cred)
       ..writeByte(4)
-      ..write(obj.dependencies);
+      ..write(obj.dependencies)
+      ..writeByte(5)
+      ..write(obj.coef);
   }
 
   @override

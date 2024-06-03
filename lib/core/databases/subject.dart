@@ -6,7 +6,7 @@ class BaseSubject {
   @HiveField(0)
   final String subjectID;
   @HiveField(1)
-  final String subjectAltID;
+  final String? subjectAltID;
   @HiveField(2)
   final String name;
   @HiveField(3)
@@ -14,21 +14,25 @@ class BaseSubject {
   // final List<SubjectCourse> courses;
   @HiveField(4)
   final List<String> dependencies;
+  @HiveField(5)
+  final int coef;
   const BaseSubject({
     required this.subjectID,
-    required this.subjectAltID,
+    this.subjectAltID,
     required this.name,
     required this.cred,
+    required this.coef,
     // required this.courses,
     required this.dependencies,
   });
 
-  BaseSubject.fromJson(Map<String, dynamic> data)
+  BaseSubject.fromJson(Map<String, dynamic> data, [String? subjectID])
       : this(
-          subjectID: data["subjectID"] as String,
-          subjectAltID: data["subjectAltID"] as String,
+          subjectID: subjectID ?? data["subjectID"] as String,
+          subjectAltID: data["subjectAltID"] as String?,
           name: data["name"] as String,
           cred: data["cred"] as int,
+          coef: data["coef"] as int? ?? 1,
           dependencies: (data["dependencies"] as List).cast(),
         );
 

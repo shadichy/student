@@ -239,20 +239,23 @@ class SubjectAdapter extends TypeAdapter<Subject> {
     };
     return Subject(
       subjectID: fields[0] as String,
-      subjectAltID: fields[1] as String,
+      subjectAltID: fields[1] as String?,
       name: fields[2] as String,
       cred: fields[3] as int,
+      coef: fields[5] as int,
       dependencies: (fields[4] as List).cast<String>(),
-      courses: (fields[5] as Map).cast<String, SubjectCourse>(),
+      courses: (fields[6] as Map).cast<String, SubjectCourse>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Subject obj) {
     writer
+      ..writeByte(7)
       ..writeByte(6)
-      ..writeByte(5)
       ..write(obj.courses)
+      ..writeByte(6)
+      ..write(obj.coef)
       ..writeByte(0)
       ..write(obj.subjectID)
       ..writeByte(1)

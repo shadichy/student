@@ -1,7 +1,6 @@
 import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
-import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/iterable_extensions.dart';
 
 @Deprecated("moving to Hive")

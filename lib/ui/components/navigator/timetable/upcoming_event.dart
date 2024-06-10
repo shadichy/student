@@ -25,7 +25,13 @@ class _TimetableUpcomingCardAltState extends State<TimetableUpcomingCardAlt> {
       widget.upcomingEvent.startTime,
       widget.upcomingEvent.endTime,
     );
-    Timer.periodic(const Duration(minutes: 1), (Timer t) => _getTime());
+    Timer.periodic(const Duration(minutes: 1), (Timer t) {
+      try {
+        _getTime();
+      } catch (e) {
+        //
+      }
+    });
     super.initState();
   }
 
@@ -209,7 +215,7 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
                 ),
               ),
               child: Text(
-                widget.upcomingEvent.courseId,
+                widget.upcomingEvent.courseID,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(

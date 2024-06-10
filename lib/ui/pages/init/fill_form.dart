@@ -68,7 +68,7 @@ class _FillFormState extends State<FillForm> {
     );
 
     InputDecoration inputDecoration =
-        InputDecoration().applyDefaults(inputDecorationTheme);
+        const InputDecoration().applyDefaults(inputDecorationTheme);
 
     ButtonStyle style = TextButton.styleFrom(
       backgroundColor: colorScheme.primaryContainer,
@@ -152,7 +152,7 @@ class _FillFormState extends State<FillForm> {
             label: group.name.toUpperCase(),
           );
         }).toList(),
-        label: Text("Current Group"),
+        label: const Text("Current Group"),
         hintText: "Select your current student group",
         width: MediaQuery.of(context).size.width,
         inputDecorationTheme: inputDecorationTheme,
@@ -166,7 +166,7 @@ class _FillFormState extends State<FillForm> {
             label: semester.name.toUpperCase(),
           );
         }).toList(),
-        label: Text("Current Semester"),
+        label: const Text("Current Semester"),
         hintText: "Select your current semester",
         width: MediaQuery.of(context).size.width,
         inputDecorationTheme: inputDecorationTheme,
@@ -179,7 +179,7 @@ class _FillFormState extends State<FillForm> {
           hintText: "Enter your currently learning courses ID/name",
           suffixIcon: IconButton(
             onPressed: lCOCSAdd,
-            icon: Icon(Symbols.add),
+            icon: const Icon(Symbols.add),
           ),
         ),
       ),
@@ -190,7 +190,7 @@ class _FillFormState extends State<FillForm> {
           return Chip(
             label: Text(e),
             backgroundColor: Theme.of(context).primaryColor.withOpacity(0.05),
-            deleteIcon: Icon(Symbols.close),
+            deleteIcon: const Icon(Symbols.close),
             onDeleted: () => lCOCSRemove(e),
           );
         }).toList(),

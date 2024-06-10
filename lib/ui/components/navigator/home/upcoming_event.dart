@@ -30,7 +30,13 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
       widget.nextupClass.startTime,
       widget.nextupClass.endTime,
     );
-    Timer.periodic(const Duration(minutes: 1), (Timer t) => _getTime());
+    Timer.periodic(const Duration(minutes: 1), (Timer t) {
+      try {
+        _getTime();
+      } catch (e) {
+        //
+      }
+    });
     super.initState();
   }
 
@@ -128,7 +134,7 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
                   ),
                   Text(
                     event is NextupClassView
-                        ? event.courseId
+                        ? event.courseID
                         : event.eventLabel,
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleLarge!.copyWith(

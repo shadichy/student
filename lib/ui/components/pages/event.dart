@@ -47,6 +47,7 @@ class UpcomingEvent {
   static final DateTime _today = DateTime(_now.year, _now.month, _now.day);
 
   static int _getStartStamp(int timestamp) {
+    if (timestamp == 0) return -1;
     int classStartsAt = 0;
     while (timestamp & (1 << classStartsAt) == 0) {
       classStartsAt++;
@@ -84,7 +85,7 @@ class UpcomingEvent {
 
 class NextupClassView extends UpcomingEvent {
   final CourseTimestamp stamp;
-  final String courseId;
+  final String courseID;
 
   String get classDesc => eventLabel;
   String get teacher => heldBy!;
@@ -92,11 +93,13 @@ class NextupClassView extends UpcomingEvent {
   // more info required, including ca, teacher id, subject id, kì học, tuần thứ n
 
   // should be init'd like
-  NextupClassView(this.stamp)
-      : courseId = stamp.courseID,
+  NextupClassView(this.stamp, [String? subjectName])
+      : courseID = stamp.courseID,
         super(
-          eventLabel:
-              Storage().getSubjectBaseAlt(stamp.courseID)?.name ?? "Unknown",
+          eventLabel: subjectName ??
+              Storage().getSubjectBaseAlt(stamp.courseID)?.name ??
+              Storage().getSubjectAlt(stamp.courseID)?.name ??
+              "Unknown",
           location: stamp.room,
           heldBy: Storage().getTeacher(stamp.teacherID) ?? "Unknown",
           startTime: UpcomingEvent._getStart(stamp.intStamp),
@@ -104,7 +107,7 @@ class NextupClassView extends UpcomingEvent {
         );
 
   NextupClassView.manual({
-    required this.courseId,
+    required this.courseID,
     required String classDesc,
     required String teacher,
     required super.startTime,
@@ -113,7 +116,7 @@ class NextupClassView extends UpcomingEvent {
   })  : stamp = CourseTimestamp(
           intStamp: 0,
           dayOfWeek: 0,
-          courseID: courseId,
+          courseID: courseID,
           teacherID: teacher,
           room: room,
           timestampType: TimestampType.offline,

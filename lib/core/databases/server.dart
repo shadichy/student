@@ -9,7 +9,7 @@ import 'package:student/core/databases/user.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_functions.dart';
 
-@Deprecated("Unused")
+@Deprecated('Moving to Hive instead')
 abstract final class Server {
   static final Map<String, dynamic> _env = SharedPrefs.getString("env");
   static final String _domain = _env["fetchDomain"] ?? env["fetchDomain"]!;

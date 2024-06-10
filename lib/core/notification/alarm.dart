@@ -59,4 +59,14 @@ class Reminder extends HiveObject {
     if (audio != null) _audio = audio;
     await save();
   }
+
+  Future<void> editFromJson(Map<String, dynamic> data) async {
+    return await edit(
+      duration: data["duration"] as int?,
+      disabled: data["disabled"] as bool?,
+      vibrate: data["vibrate"] as bool?,
+      alarmMode: data["alarmMode"] as int?,
+      audio: data["audio"] as String?,
+    );
+  }
 }

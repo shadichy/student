@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:alarm/alarm.dart';
 import 'package:alarm/model/alarm_settings.dart';
 import 'package:characters/characters.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:restart_app/restart_app.dart';
@@ -41,8 +42,18 @@ final class Storage {
 
   late final int fullStamp;
   final DateTime _now = DateTime.now();
-  late final int _weekday;
+  late final int _weekday = _now.weekday % 7;
   late WeekTimetable _thisWeek;
+
+  late final int _weekStartInt;
+  late final List<List<int>> _cList;
+  late final Iterable<EventTimestamp> _tList;
+
+  late final dynamic defaultAlarmSound;
+  late final dynamic defaultRingtoneSound;
+  late final dynamic defaultNotificationSound;
+
+  static const platform = MethodChannel("dev.tlu.student.methods");
 
   int _getStartStamp(int timestamp) {
     if (timestamp == 0) return -1;
@@ -60,28 +71,36 @@ final class Storage {
         hours: _now.timeZoneOffset.inHours,
         microseconds: _now.microsecondsSinceEpoch % 86400000000,
       ));
+  DateTime get _unshiftedWeekStart => _now.subtract(Duration(
+        days: _weekday,
+        hours: _now.timeZoneOffset.inHours,
+        microseconds: _now.microsecondsSinceEpoch % 86400000000,
+      ));
 
   WeekTimetable get thisWeek => _thisWeek;
-  Iterable<EventTimestamp> get upcomingEvents => thisWeek.timestamps.where((e) {
-        if (e.dayOfWeek != _weekday) return false;
-        int current = _now
-            .difference(DateTime(_now.year, _now.month, _now.day))
-            .inSeconds;
-        if (current >
-            SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1]
-                [1]) {
-          return false;
+  List<EventTimestamp> get upcomingEvents {
+    List<EventTimestamp> unsorted = thisWeek.timestamps.where((e) {
+      if (e.dayOfWeek != _weekday) return false;
+      int current =
+          _now.difference(DateTime(_now.year, _now.month, _now.day)).inSeconds;
+      if (current >
+          SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1]
+              [1]) {
+        return false;
+      }
+      int startAt = 0;
+      while (current > SPBasics().classTimestamps[startAt][0]) {
+        startAt++;
+        if (startAt == SPBasics().classTimestamps.length) {
+          break;
         }
-        int startAt = 0;
-        while (current > SPBasics().classTimestamps[startAt][0]) {
-          startAt++;
-          if (startAt == SPBasics().classTimestamps.length) {
-            break;
-          }
-        }
-        if (startAt > 0) startAt--;
-        return e.intStamp & (fullStamp << startAt) != 0;
-      });
+      }
+      if (startAt > 0) startAt--;
+      return e.intStamp & (fullStamp << startAt) != 0;
+    }).toList();
+    unsorted.sort((a, b) => a.intStamp.compareTo(b.intStamp));
+    return unsorted;
+  }
 
   Future<void> register() async {
     await Hive.initFlutter();
@@ -124,6 +143,16 @@ final class Storage {
     await _initTimetable();
     await _initReminders();
     _initNotifications().then((_) => _notificationInitialized = true);
+    // if (await platform.invokeMethod("getEntrypointName") != "main") return;
+    try {
+      defaultAlarmSound = await platform.invokeMethod("defaultAlarmSound");
+      defaultRingtoneSound =
+          await platform.invokeMethod("defaultRingtoneSound");
+      defaultNotificationSound =
+          await platform.invokeMethod("defaultNotificationSound");
+    } catch (e) {
+      //   do nothing
+    }
   }
 
   Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
@@ -297,33 +326,15 @@ final class Storage {
     await _reminderFirstRun();
     await Alarm.init();
     fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
-    _weekday = _now.weekday % 7;
 
     _thisWeek = getWeek(_weekStart);
-    int weekStartInt = _weekStart.millisecondsSinceEpoch ~/ 1000;
-    List<List<int>> cList = SPBasics().classTimestamps;
-    Iterable<EventTimestamp> tList = thisWeek.timestamps.where((e) {
-      return e.dayOfWeek % 7 == _weekday;
+    _weekStartInt = _unshiftedWeekStart.millisecondsSinceEpoch ~/ 1000;
+    _cList = SPBasics().classTimestamps;
+    _tList = getWeek(_unshiftedWeekStart).timestamps.where((e) {
+      return e.dayOfWeek % 7 >= _weekday;
     });
     for (Reminder r in reminders) {
-      String left = MiscFns.durationLeft(r.duration);
-      int rId = weekStartInt - r.duration.inSeconds;
-      for (EventTimestamp t in tList) {
-        if (t.intStamp == 0) continue;
-        int id = rId +
-            24 * 3600 * (t.dayOfWeek % 7) +
-            cList[_getStartStamp(t.intStamp)][0];
-        if (Alarm.getAlarm(id) != null) continue;
-        Alarm.set(
-            alarmSettings: AlarmSettings(
-          id: id,
-          dateTime: MiscFns.epoch(id),
-          assetAudioPath: r.audio ?? "",
-          notificationTitle: "${t.location} \u2022 $left \u2022 ${t.eventName}",
-          notificationBody: "${t.eventName} will be started in $left!",
-          vibrate: r.vibrate,
-        ));
-      }
+      reminderUpdate(r);
     }
   }
 
@@ -333,6 +344,48 @@ final class Storage {
         .cast<Map<String, dynamic>>()
         .map((e) => Reminder.fromJson(e)));
     await put("alarm.firstRun", true);
+  }
+
+  Future<void> reminderUpdate(Reminder reminder) async {
+    if (reminder.disabled) return;
+    String left = MiscFns.durationLeft(reminder.duration);
+    int rId = _weekStartInt - reminder.duration.inSeconds;
+    for (EventTimestamp t in _tList) {
+      if (t.intStamp == 0) continue;
+      int id = rId +
+          86400 * (t.dayOfWeek % 7) +
+          _cList[_getStartStamp(t.intStamp)][0];
+
+      if (id < _now.millisecondsSinceEpoch ~/ 1000) {
+        if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
+        continue;
+      }
+
+      if (Alarm.getAlarm(id) != null) continue;
+      await Alarm.set(
+          alarmSettings: AlarmSettings(
+        id: id,
+        dateTime: MiscFns.epoch(id),
+        assetAudioPath: reminder.audio ?? "",
+        notificationTitle: "${t.location} \u2022 $left \u2022 ${t.eventName}",
+        notificationBody: "${t.eventName} will be started in $left!",
+        vibrate: reminder.vibrate,
+      ));
+    }
+  }
+
+  Future<void> reminderRemove(int index) async {
+    Reminder? reminder = _reminders.getAt(index);
+    if (reminder == null || reminder.disabled) return;
+    for (EventTimestamp t in _tList) {
+      if (t.intStamp == 0) continue;
+      int id = _weekStartInt -
+          reminder.duration.inSeconds +
+          86400 * (t.dayOfWeek % 7) +
+          _cList[_getStartStamp(t.intStamp)][0];
+      if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
+    }
+    _reminders.deleteAt(index);
   }
 
   Future<void> _initNotifications() async {
@@ -500,7 +553,10 @@ final class Storage {
   }
 
   Iterable<Reminder> get reminders => _reminders.values;
-  Future<void> addReminder(Reminder reminder) async => _reminders.add(reminder);
+  Future<void> addReminder(Reminder reminder) async {
+    await reminderUpdate(reminder);
+    await _reminders.add(reminder);
+  }
 
   int get notificationLastUpdated => fetch("notifications.lastUpdated") ?? 0;
   Iterable<Notif> get notifications => _notifications.values;

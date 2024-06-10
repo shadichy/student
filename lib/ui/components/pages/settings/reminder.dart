@@ -14,15 +14,16 @@ class ReminderCard extends StatefulWidget {
   final bool vibrate;
   final AlarmMode alarmMode;
   final String? audio;
-  const ReminderCard(
-    this.duration, {
+  ReminderCard(
+    Reminder reminder, {
     super.key,
     required this.action,
-    this.disabled = false,
-    this.vibrate = true,
-    this.alarmMode = AlarmMode.follow,
-    this.audio,
-  }) : assert(alarmMode != AlarmMode.custom || audio != null,
+  })  : disabled = reminder.disabled,
+        vibrate = reminder.vibrate,
+        alarmMode = reminder.alarmMode,
+        audio = reminder.audio,
+        duration = reminder.duration,
+        assert(reminder.alarmMode != AlarmMode.custom || reminder.audio != null,
             'Missing custom alarm');
 
   @override

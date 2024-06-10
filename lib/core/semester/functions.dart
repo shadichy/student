@@ -232,8 +232,10 @@ final class SubjectCourse extends EventTimeline {
       [String? subjectID])
       : this(
           courseID: courseID,
-          subjectID:
-              subjectID ?? Storage().getSubjectBaseAlt(courseID)!.subjectID,
+          subjectID: subjectID ??
+              Storage().getSubjectBaseAlt(courseID)?.subjectID ??
+              Storage().getSubjectAlt(courseID)?.subjectID ??
+              "Unknown",
           timestamp: timestamp
               .cast<Map<String, dynamic>>()
               .map((t) => CourseTimestamp.fromJson(t, courseID))

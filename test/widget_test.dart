@@ -78,5 +78,4 @@ void main() {
   //     _now.microsecondsSinceEpoch % 3600000000));
 
   // print(_weekStart);
-  print();
 }

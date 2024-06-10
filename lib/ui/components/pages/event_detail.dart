@@ -20,9 +20,7 @@ class EventPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: Navigator.of(context).pop,
           icon: const Icon(Symbols.arrow_back, size: 28),
         ),
         title: Text(

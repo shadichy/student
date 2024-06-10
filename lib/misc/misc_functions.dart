@@ -14,7 +14,7 @@ abstract final class MiscFns {
     String min = "${start.inMinutes % 60}m";
     if (start.inHours > 0) {
       hour += "${start.inHours}h";
-      if (start.inMinutes == 0) min = "";
+      if (start.inMinutes % 60 == 0) min = "";
     }
     if (start.inMinutes <= 0) return "now";
     return "$hour$min";

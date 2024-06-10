@@ -1,15 +1,17 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/notification.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
-import 'package:student/ui/components/navigator/home/upcoming_event_widget.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
+import 'package:student/ui/components/navigator/home/upcoming_event_widget.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/navigator/quick_navigators.dart';
+import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/with_appbar.dart';
 
 class HomePage extends StatefulWidget implements TypicalPage {
@@ -62,6 +64,14 @@ class _HomePageState extends State<HomePage> {
           textAlign: TextAlign.center,
         ),
         MWds.divider(16),
+        SubPage(
+          label: "test",
+          action: (context) {
+            MethodChannel("dev.tlu.student.methods")
+                .invokeMethod("alarm")
+                .then((_) {});
+          },
+        ),
       ],
     );
   }

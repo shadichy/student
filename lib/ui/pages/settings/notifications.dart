@@ -2,7 +2,6 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/alarm.dart';
-import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
@@ -25,11 +24,7 @@ class SettingsNotificationsPage extends StatefulWidget implements TypicalPage {
 }
 
 class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
-  List<Map<String, dynamic>> reminders = Storage()
-      .fetch<List>("notif.reminders")!
-      .cast<Map>()
-      .map((e) => e.map((key, value) => MapEntry(key.toString(), value)))
-      .toList();
+  List<Reminder> reminders = Storage().reminders.toList();
 
   void reminderConf(void Function() fn) {
     setState(fn);
@@ -38,20 +33,22 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
 
   void reminderChange(int index, Map<String, dynamic> value) {
     reminderConf(() {
-      reminders[index] = value;
+      reminders[index]
+          .editFromJson(value)
+          .then((_) => Storage().reminderUpdate(reminders[index]));
     });
   }
 
-  void reminderAdd(Map<String, dynamic> value) {
-    reminderConf(() {
-      reminders.add(value);
-    });
+  void reminderAdd(Reminder value) {
+    Storage()
+        .addReminder(value)
+        .then((_) => reminderConf(() => reminders.add(value)));
   }
 
   void reminderDelete(int index) {
-    reminderConf(() {
-      reminders.removeAt(index);
-    });
+    Storage()
+        .reminderRemove(index)
+        .then((_) => reminderConf(() => reminders.removeAt(index)));
   }
 
   bool notifPriorExpand = false;
@@ -94,12 +91,10 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                   initialTime: const TimeOfDay(hour: 0, minute: 0),
                 ).then((time) {
                   if (time == null) return;
-                  reminderAdd({
-                    "duration": Duration(
-                      hours: time.hour,
-                      minutes: time.minute,
-                    ).inMinutes
-                  });
+                  reminderAdd(Reminder(Duration(
+                    hours: time.hour,
+                    minutes: time.minute,
+                  ).inMinutes));
                 }),
               )
             ],
@@ -122,23 +117,8 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(vertical: 16),
             itemBuilder: ((context, index) {
-              Map<String, dynamic> data = reminders[index];
               return ReminderCard(
-                Duration(
-                  minutes: data["duration"] is int
-                      ? data["duration"]
-                      : int.tryParse("${data['duration']}") ?? 0,
-                ),
-                disabled: data["disabled"] is bool
-                    ? data["disabled"]
-                    : bool.tryParse("${data['disabled']}") ?? false,
-                vibrate: data["vibrate"] is bool
-                    ? data["vibrate"]
-                    : bool.tryParse("${data['vibrate']}") ?? true,
-                alarmMode: AlarmMode.values[data["alarmMode"] is int
-                    ? data["alarmMode"]
-                    : int.tryParse("${data['alarmMode']}") ?? 0],
-                audio: data["audio"] as String?,
+                reminders[index],
                 action: ((actionType, value) {
                   switch (actionType) {
                     case ActionType.change:

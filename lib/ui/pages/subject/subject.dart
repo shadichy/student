@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/ui/components/interpolator.dart';
-import 'package:student/ui/components/pages/event_detail.dart';
-
 import 'package:student/ui/components/navigator/navigator.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:student/ui/components/pages/event_detail.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/pages/subject/course.dart';
 
@@ -42,7 +40,7 @@ class _SubjectPageState extends State<SubjectPage> {
         if (widget.subject.subjectAltID != null)
           SubPage(
             label: "Subject acronym",
-            desc: widget.subject.subjectID,
+            desc: widget.subject.subjectAltID,
           ),
         SubPage(
           label: "Subject credit",

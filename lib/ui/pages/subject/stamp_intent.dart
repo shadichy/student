@@ -1,5 +1,5 @@
-import 'package:alarm/alarm.dart';
-import 'package:alarm/model/alarm_settings.dart';
+import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/notification/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -10,44 +10,47 @@ import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 
 class SubjectStampIntent extends StatefulWidget {
-  final AlarmSettings alarm;
-  const SubjectStampIntent(this.alarm, {super.key});
+  final int alarmId;
+  const SubjectStampIntent(this.alarmId, {super.key});
 
   @override
   State<SubjectStampIntent> createState() => _SubjectStampIntentState();
 }
 
 class _SubjectStampIntentState extends State<SubjectStampIntent> {
-  late final AlarmSettings alarm;
+  late final int alarmId;
+  late final int intStamp;
+  late final int dayOfWeek;
+  late final int scheduleDuration;
   late final EventTimestamp stamp;
-  final Map<String, String> data = {};
+  final Map<String, String?> data = {};
 
   @override
   void initState() {
     super.initState();
-    alarm = widget.alarm;
-    List<String> title = alarm.notificationTitle.split(' \u2022 ');
+    alarmId = widget.alarmId;
+    intStamp = alarmId & EventTimestamp.maxStamp;
+    dayOfWeek = (alarmId >> SPBasics().classTimestamps.length) & 3;
+    scheduleDuration = alarmId >> (SPBasics().classTimestamps.length + 2);
+
+    stamp = Storage().thisWeek.timestamps.firstWhere((e) {
+      return e.dayOfWeek == dayOfWeek && e.intStamp == intStamp;
+    });
     try {
       // if is a school class
-      Subject subject = Storage().getSubjectAlt(title[2])!;
-      stamp = subject.courses[title[2]]!.timestamp.firstWhere(
-        (e) =>
-            e.dayOfWeek == DateTime.now().weekday % 7 && e.location == title[0],
-      );
+      Subject subject = Storage().getSubjectAlt(stamp.eventName)!;
       data["Subject Name"] = subject.name;
-      data["Course Name"] = title[2];
+      data["Course Name"] = stamp.eventName;
       if ((stamp as CourseTimestamp).timestampType == TimestampType.offline) {
-        data["Room"] = title[0];
+        data["Room"] = stamp.location;
       } else {
         data["Location"] = "Elearning";
       }
       data["Instructor/Teacher"] =
           "(${stamp.heldBy}) ${Storage().getTeacher(stamp.heldBy!)}";
-    } catch (e, s) {
+    } catch (e) {
       // if is a custom event
-      stamp = Storage().thisWeek.timestamps.firstWhere((e) =>
-          e.dayOfWeek == DateTime.now().weekday % 7 && e.location == title[0]);
-      data["Event name"] = title[2];
+      data["Event name"] = stamp.eventName;
       if (stamp.location != null) data["Location"] = stamp.location!;
       if (stamp.heldBy != null) data["Held by"] = stamp.heldBy!;
     }
@@ -73,7 +76,7 @@ class _SubjectStampIntentState extends State<SubjectStampIntent> {
               ),
               // Big text using MiscFns.durationLeft
               Text(
-                MiscFns.durationLeft(alarm.dateTime.difference(DateTime.now())),
+                MiscFns.durationLeft(Duration(minutes: scheduleDuration)),
                 style: textTheme.headlineLarge!.copyWith(
                   color: colorScheme.primary,
                 ),
@@ -97,7 +100,7 @@ class _SubjectStampIntentState extends State<SubjectStampIntent> {
               height: 160,
               padding: const EdgeInsets.all(20),
               child: TextButton(
-                onPressed: () => Alarm.stop(alarm.id).then((_) {
+                onPressed: () => Alarm.stop(alarmId).then((_) {
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   } else {

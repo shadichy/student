@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'alarm.dart';
+part of 'reminder.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -18,6 +18,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
     };
     return Reminder(
       fields[0] as int,
+      fields[5] as int,
       disabled: fields[1] as bool?,
       vibrate: fields[2] as bool?,
       alarmMode: fields[3] as int?,
@@ -28,9 +29,9 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
   @override
   void write(BinaryWriter writer, Reminder obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj._duration.inMinutes)
+      ..write(obj._scheduleDuration.inMinutes)
       ..writeByte(1)
       ..write(obj._disabled)
       ..writeByte(2)
@@ -38,7 +39,9 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       ..writeByte(3)
       ..write(obj._alarmMode)
       ..writeByte(4)
-      ..write(obj._audio);
+      ..write(obj._audio)
+      ..writeByte(5)
+      ..write(obj._ringDuration.inMinutes);
   }
 
   @override

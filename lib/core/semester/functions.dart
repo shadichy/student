@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:bitcount/bitcount.dart';
 import 'package:hive/hive.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
@@ -11,6 +14,8 @@ enum CourseType { course, subcourse }
 
 @HiveType(typeId: 1)
 class EventTimestamp {
+  static int get maxStamp => (-1).toUnsigned(SPBasics().classTimestamps.length);
+
   @HiveField(0)
   final String eventName;
   @HiveField(1)
@@ -39,6 +44,31 @@ class EventTimestamp {
           location: jsonData["location"],
         );
 
+  int operator &(Object other) {
+    if (other is! EventTimestamp) {
+      throw Exception("Can only operate with EventTimestamp");
+    }
+    return intStamp & other.intStamp;
+  }
+
+  int operator |(Object other) {
+    if (other is! EventTimestamp) {
+      throw Exception("Can only operate with EventTimestamp");
+    }
+    return intStamp | other.intStamp;
+  }
+
+  int get startStamp {
+    if (intStamp == 0) return SPBasics().classTimestamps.length;
+    int classStartsAt = 0;
+    while (intStamp & (1 << classStartsAt) == 0) {
+      classStartsAt++;
+    }
+    return classStartsAt;
+  }
+
+  int get stampLength => intStamp.bitCount();
+
   Map<String, dynamic> toJson() => toMap();
 
   Map<String, dynamic> toMap() => {
@@ -50,7 +80,7 @@ class EventTimestamp {
       };
 
   @override
-  String toString() => toMap.toString();
+  String toString() => jsonEncode(toMap());
 }
 
 @HiveType(typeId: 2)
@@ -72,6 +102,9 @@ final class CourseTimestamp extends EventTimestamp {
   String get courseID => eventName;
   String get teacherID => heldBy!;
   String get room => location!;
+
+  bool get isOnlineClass => timestampType == TimestampType.online;
+
   CourseTimestamp({
     required super.intStamp,
     required super.dayOfWeek,
@@ -158,6 +191,20 @@ class EventTimeline {
 
   int get length => timestamp.length;
 
+  BigInt operator &(Object other) {
+    if (other is! EventTimeline) {
+      throw ArgumentError("Can only operate with EventTimeline");
+    }
+    return intEvent & other.intEvent;
+  }
+
+  BigInt operator |(Object other) {
+    if (other is! EventTimeline) {
+      throw ArgumentError("Can only operate with EventTimeline");
+    }
+    return intEvent | other.intEvent;
+  }
+
   Map<String, dynamic> toJson() => toMap();
 
   Map<String, dynamic> toMap() => {
@@ -168,7 +215,7 @@ class EventTimeline {
       };
 
   @override
-  String toString() => toMap.toString();
+  String toString() => jsonEncode(toMap());
 }
 
 @HiveType(typeId: 4)

@@ -2,9 +2,9 @@ import 'package:currency_converter/currency.dart';
 
 Map<String, dynamic> defaultConfig = {
   'notif.reminders': [
-    {"duration": 0},
-    {"duration": 30},
-    {"duration": 60},
+    {"scheduleDuration": 0},
+    {"scheduleDuration": 30},
+    {"scheduleDuration": 60},
   ],
   'notif.reminder': true,
   'notif.topEvents': true,

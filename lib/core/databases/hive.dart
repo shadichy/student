@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:alarm/alarm.dart';
-import 'package:alarm/model/alarm_settings.dart';
 import 'package:characters/characters.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -13,7 +11,9 @@ import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/default_configs.dart' as conf;
 import 'package:student/core/notification/alarm.dart';
+import 'package:student/core/notification/model/alarm_settings.dart';
 import 'package:student/core/notification/notification.dart';
+import 'package:student/core/notification/reminder.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/iterable_extensions.dart';
@@ -33,6 +33,7 @@ final class Storage {
   late final Box<Subject> _learning;
   late final Box<SemesterPlan> _plan;
   late final Box<WeekTimetable> _week;
+  late final Box<AlarmSettings> _alarms;
   late final Box<Reminder> _reminders;
   late final Box<Notif> _notifications;
 
@@ -54,15 +55,6 @@ final class Storage {
   late final dynamic defaultNotificationSound;
 
   static const platform = MethodChannel("dev.tlu.student.methods");
-
-  int _getStartStamp(int timestamp) {
-    if (timestamp == 0) return -1;
-    int classStartsAt = 0;
-    while (timestamp & (1 << classStartsAt) == 0) {
-      classStartsAt++;
-    }
-    return classStartsAt;
-  }
 
   int get weekdayStart => fetch<int>("misc.startWeekday")!;
 
@@ -113,6 +105,7 @@ final class Storage {
     Hive.registerAdapter(SubjectAdapter());
     Hive.registerAdapter(SemesterPlanAdapter());
     Hive.registerAdapter(WeekTimetableAdapter());
+    Hive.registerAdapter(AlarmSettingsAdapter());
     Hive.registerAdapter(ReminderAdapter());
     Hive.registerAdapter(NotifAdapter());
 
@@ -133,15 +126,22 @@ final class Storage {
     _learning = await Hive.openBox<Subject>("courses");
     _plan = await Hive.openBox<SemesterPlan>("plan");
     _week = await Hive.openBox<WeekTimetable>("week");
-    _reminders = await Hive.openBox<Reminder>("alarms");
+    _alarms = await Hive.openBox<AlarmSettings>("alarms");
+    _reminders = await Hive.openBox<Reminder>("reminders");
     _notifications = await Hive.openBox<Notif>("notifications");
 
     await _initTeacher();
+    alarmPrint("Initialized Teacher");
     await _initSubjects();
+    alarmPrint("Initialized Subjects");
     await _initCourses();
+    alarmPrint("Initialized Courses");
     await _initPlan();
+    alarmPrint("Initialized Plan");
     await _initTimetable();
+    alarmPrint("Initialized Timetable");
     await _initReminders();
+    alarmPrint("Initialized Reminders");
     _initNotifications().then((_) => _notificationInitialized = true);
     // if (await platform.invokeMethod("getEntrypointName") != "main") return;
     try {
@@ -150,9 +150,11 @@ final class Storage {
           await platform.invokeMethod("defaultRingtoneSound");
       defaultNotificationSound =
           await platform.invokeMethod("defaultNotificationSound");
-    } catch (e) {
-      //   do nothing
+    } catch (e, s) {
+      alarmPrint(e.toString());
+      alarmPrint(s.toString());
     }
+    alarmPrint("Done Hive init");
   }
 
   Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
@@ -274,8 +276,10 @@ final class Storage {
             ),
           ),
         );
-      } catch (e) {
+      } catch (e, s) {
         // database is not correctly set up
+        alarmPrint(e.toString());
+        alarmPrint(s.toString());
       }
     });
   }
@@ -295,7 +299,9 @@ final class Storage {
             [User().semester]!) {
       try {
         registeredCourses.add(getCourse(id)!);
-      } catch (e) {
+      } catch (e, s) {
+        alarmPrint(e.toString());
+        alarmPrint(s.toString());
         // invalid course
       }
     }
@@ -323,16 +329,21 @@ final class Storage {
   }
 
   Future<void> _initReminders() async {
-    await _reminderFirstRun();
-    await Alarm.init();
-    fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
-
     _thisWeek = getWeek(_weekStart);
     _weekStartInt = _unshiftedWeekStart.millisecondsSinceEpoch ~/ 1000;
     _cList = SPBasics().classTimestamps;
     _tList = getWeek(_unshiftedWeekStart).timestamps.where((e) {
       return e.dayOfWeek % 7 >= _weekday;
     });
+    await _reminderFirstRun();
+    for (AlarmSettings alarm in alarms) {
+      if (alarm.dateTime.add(alarm.timeout).isAfter(DateTime.now())) {
+        await alarm.delete();
+      }
+    }
+    await Alarm.init();
+    fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
+
     for (Reminder r in reminders) {
       reminderUpdate(r);
     }
@@ -348,27 +359,31 @@ final class Storage {
 
   Future<void> reminderUpdate(Reminder reminder) async {
     if (reminder.disabled) return;
-    String left = MiscFns.durationLeft(reminder.duration);
-    int rId = _weekStartInt - reminder.duration.inSeconds;
+    String left = MiscFns.durationLeft(reminder.scheduleDuration);
+    int rTime = _weekStartInt - reminder.scheduleDuration.inSeconds;
     for (EventTimestamp t in _tList) {
       if (t.intStamp == 0) continue;
-      int id = rId +
-          86400 * (t.dayOfWeek % 7) +
-          _cList[_getStartStamp(t.intStamp)][0];
+      int time = rTime + 86400 * (t.dayOfWeek % 7) + _cList[t.startStamp][0];
+      int id = (reminder.scheduleDuration.inMinutes <<
+              (SPBasics().classTimestamps.length + 2)) |
+          (t.dayOfWeek << SPBasics().classTimestamps.length) |
+          t.intStamp;
 
-      if (id < _now.millisecondsSinceEpoch ~/ 1000) {
+      if (time < _now.millisecondsSinceEpoch ~/ 1000) {
         if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
         continue;
       }
 
       if (Alarm.getAlarm(id) != null) continue;
-      await Alarm.set(
-          alarmSettings: AlarmSettings(
+      await Alarm.set(AlarmSettings(
         id: id,
-        dateTime: MiscFns.epoch(id),
-        assetAudioPath: reminder.audio ?? "",
-        notificationTitle: "${t.location} \u2022 $left \u2022 ${t.eventName}",
-        notificationBody: "${t.eventName} will be started in $left!",
+        dateTime: MiscFns.epoch(time),
+        timeout: reminder.ringDuration.inMinutes != 0
+            ? reminder.ringDuration
+            : Duration(hours: t.stampLength),
+        audio: AlarmSettings.uriFromString(reminder.audio),
+        title: "${t.location} \u2022 $left \u2022 ${t.eventName}",
+        body: "${t.eventName} will be started in $left!",
         vibrate: reminder.vibrate,
       ));
     }
@@ -379,10 +394,10 @@ final class Storage {
     if (reminder == null || reminder.disabled) return;
     for (EventTimestamp t in _tList) {
       if (t.intStamp == 0) continue;
-      int id = _weekStartInt -
-          reminder.duration.inSeconds +
-          86400 * (t.dayOfWeek % 7) +
-          _cList[_getStartStamp(t.intStamp)][0];
+      int id = (reminder.scheduleDuration.inMinutes <<
+              (SPBasics().classTimestamps.length + 2)) |
+          (t.dayOfWeek << SPBasics().classTimestamps.length) |
+          t.intStamp;
       if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
     }
     _reminders.deleteAt(index);
@@ -427,6 +442,7 @@ final class Storage {
     await _reminders.clear();
     await _notifications.clear();
     await Alarm.stopAll();
+    await _alarms.clear();
     await Restart.restartApp();
   }
 
@@ -557,6 +573,30 @@ final class Storage {
     await reminderUpdate(reminder);
     await _reminders.add(reminder);
   }
+
+  Iterable<AlarmSettings> get alarms => _alarms.values;
+
+  Future<void> addAlarm(AlarmSettings alarm) async =>
+      await _alarms.put(alarm.id, alarm);
+
+  Future<void> removeAlarm(int id) async => await _alarms.delete(id);
+
+  bool get hasAlarm => _alarms.isNotEmpty;
+
+  Future<void> setNotificationContentOnAppKill(
+    String title,
+    String body,
+  ) async {
+    await put("alarmNTitle", title);
+    await put("alarmNBody", body);
+  }
+
+  String getNotificationOnAppKillTitle() =>
+      fetch("alarmNTitle") ?? 'Your alarms may not ring';
+
+  String getNotificationOnAppKillBody() =>
+      fetch("alarmNBody") ??
+      'You killed the app. Please reopen so your alarms can be rescheduled.';
 
   int get notificationLastUpdated => fetch("notifications.lastUpdated") ?? 0;
   Iterable<Notif> get notifications => _notifications.values;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:hive/hive.dart';
 part 'subject.g.dart';
 
@@ -55,5 +57,5 @@ class BaseSubject {
       };
 
   @override
-  String toString() => toMap.toString();
+  String toString() => jsonEncode(toMap());
 }

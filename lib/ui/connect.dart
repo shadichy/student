@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:alarm/alarm.dart';
-import 'package:alarm/model/alarm_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/notification/alarm.dart';
+import 'package:student/core/notification/model/alarm_settings.dart';
+import 'package:student/core/routing.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/pages/init/loading.dart';
 import 'package:student/ui/pages/init/main.dart';
@@ -18,7 +19,9 @@ enum AppAction { init, reload, deinit }
 
 class StudentApp extends StatefulWidget {
   final String initialRoute;
-  const StudentApp(this.initialRoute, {super.key});
+  final Map<String, dynamic> arguments;
+
+  const StudentApp(this.initialRoute, this.arguments, {super.key});
 
   static void action(BuildContext context, AppAction action) {
     context.findAncestorStateOfType<_StudentAppState>()?.action(action);
@@ -29,6 +32,7 @@ class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
+  late final Map<String, dynamic>? arguments;
   // static bool get start => SharedPrefs.getString("user") != null;
   static bool get start => Storage().getUser() != null;
   bool initializeStart = start;
@@ -71,6 +75,7 @@ class _StudentAppState extends State<StudentApp> {
   @override
   void initState() {
     super.initState();
+    arguments = widget.arguments;
     initialize();
     // setConfigs();
   }
@@ -100,18 +105,11 @@ class _StudentAppState extends State<StudentApp> {
       try {
         mainContent = <String, Widget>{
           '/': const App(),
-          '/alarm': (() {
-            List<AlarmSettings> alarms = Alarm.getAlarms();
-            if (alarms.isEmpty) {
-              return const App();
-            }
-            alarms.sort((a, b) => a.dateTime.millisecondsSinceEpoch
-                .compareTo(b.dateTime.millisecondsSinceEpoch));
-            return SubjectStampIntent(alarms.first);
-          })()
+          '/alarm': SubjectStampIntent(widget.arguments["id"] ?? -1),
         }[widget.initialRoute]!;
-      } catch (e) {
-        // route not exist
+      } catch (e, s) {
+        alarmPrint(e.toString());
+        alarmPrint(s.toString());
       }
     });
   }
@@ -119,9 +117,12 @@ class _StudentAppState extends State<StudentApp> {
   Future<void> doRing(AlarmSettings alarmSettings) async {
     // invoke method alarm
     try {
-      await platform.invokeMethod("alarm");
+      await platform.invokeMethod("alarm", {
+        "id": alarmSettings.id,
+      });
     } on PlatformException catch (e) {
-      //
+      alarmPrint(e.message);
+      alarmPrint(e.stacktrace);
     }
   }
 
@@ -178,6 +179,14 @@ class _StudentAppState extends State<StudentApp> {
           bodyColor: textColor,
         ),
       );
+    }
+
+    if (arguments?["route"] != null) {
+      try {
+        Routing.goto(context, Routing.getRoute(arguments?["route"])!);
+      } catch (e) {
+        //   route not found
+      }
     }
 
     return KeyedSubtree(

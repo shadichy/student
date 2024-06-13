@@ -1,7 +1,6 @@
 // import 'package:student/core/databases/server.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/databases/shared_prefs.dart';
-import 'package:student/core/default_configs.dart';
+// import 'package:student/core/default_configs.dart';
 // import 'package:student/core/databases/user.dart';
 // import 'package:student/misc/misc_functions.dart';
 
@@ -15,13 +14,13 @@ final class AppConfig {
 
   Map<String, dynamic> data = {};
 
-  Future<void> initialize() async {
-    data = SharedPrefs.getString("config", defaultConfig)!;
-  }
+  // Future<void> initialize() async {
+  //   data = SharedPrefs.getString("config", defaultConfig)!;
+  // }
 
-  Future<void> _write() async {
-    await SharedPrefs.setString("config", data);
-  }
+  // Future<void> _write() async {
+  //   await SharedPrefs.setString("config", data);
+  // }
 
   Future<void> setConfig(String id, Object? value) async {
     return await Storage().put(id, value);

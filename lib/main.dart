@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/ui/connect.dart';
 import 'package:system_theme/system_theme.dart';
 
-void main() async {
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await Storage().register();
@@ -15,20 +17,16 @@ void main() async {
     await SystemTheme.accentColor.load();
   }
   // await NotificationService().initialize();
-  runApp(const StudentApp('/'));
+  Map<String, dynamic> argMap = jsonDecode(args.firstOrNull ?? "{}");
+  runApp(StudentApp(argMap["initialRoute"] ?? '/', argMap));
 }
 
 @pragma('vm:entry-point')
-void alarm() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  await Storage().register();
-  // await SharedPrefs.initialize();
-  // await AppConfig().initialize(`);
-  // if (Storage().fetch<bool>("theme.systemTheme") == true) {
-  if (Storage().fetch<bool>("theme.systemTheme") == true) {
-    await SystemTheme.accentColor.load();
-  }
-  runApp(const StudentApp('/alarm'));
+void alarm(List<String> args) async {
+  main([
+    jsonEncode({
+      "initialRoute": '/alarm',
+      "id": args.firstOrNull ?? -1,
+    })
+  ]);
 }
-

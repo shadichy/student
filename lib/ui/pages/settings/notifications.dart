@@ -1,13 +1,12 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/notification/alarm.dart';
+import 'package:student/core/notification/reminder.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/reminder.dart';
-
-import 'package:student/ui/components/navigator/navigator.dart';
 
 class SettingsNotificationsPage extends StatefulWidget implements TypicalPage {
   @override
@@ -54,6 +53,12 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
   bool notifPriorExpand = false;
 
   @override
+  void initState() {
+    super.initState();
+    reminders.sort((a, b) => a.scheduleDuration.compareTo(b.scheduleDuration));
+  }
+
+  @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -91,10 +96,11 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                   initialTime: const TimeOfDay(hour: 0, minute: 0),
                 ).then((time) {
                   if (time == null) return;
-                  reminderAdd(Reminder(Duration(
-                    hours: time.hour,
-                    minutes: time.minute,
-                  ).inMinutes));
+                  int scheduleDuration = time.hour * 60 + time.minute;
+                  reminderAdd(Reminder(
+                    scheduleDuration,
+                    scheduleDuration == 0 ? 0 : scheduleDuration,
+                  ));
                 }),
               )
             ],

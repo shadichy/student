@@ -8,7 +8,6 @@ import 'package:student/misc/misc_functions.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
 // import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
-import 'package:bitcount/bitcount.dart';
 // import 'package:web/web.dart';
 
 // class ColorTimetable extends BaseTimetable {
@@ -211,11 +210,8 @@ class TimetableBox extends StatelessWidget {
     // for (SubjectCourse c in timetable.classes) {
     for (EventTimestamp s in timetable.timestamps) {
       if (s.intStamp == 0) continue;
-      int classStartsAt = 0;
-      while (s.intStamp & (1 << classStartsAt) == 0) {
-        classStartsAt++;
-      }
-      int classLength = s.intStamp.bitCount();
+      int classStartsAt = s.startStamp;
+      int classLength = s.stampLength;
       timetableMap[(s.dayOfWeek - weekdayStart + 7) % 7].add(Positioned(
         width: _cellSize,
         height: _cellSize * classLength,

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/clickable_card.dart';
 import 'package:student/ui/components/pages/event.dart';
@@ -191,14 +191,10 @@ class _TimetableUpcomingCardState extends State<TimetableUpcomingCard> {
         ),
       ),
       child: InkWell(
-        onTap: () {
-          showBottomSheet(
-            context: context,
-            builder: ((BuildContext context) {
-              return UpcomingEventSheet(widget.upcomingEvent);
-            }),
-          );
-        },
+        onTap: () async => await showEventPreview(
+          context: context,
+          eventData: widget.upcomingEvent,
+        ),
         borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

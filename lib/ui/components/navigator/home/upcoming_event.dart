@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/pages/event.dart';
+import 'package:student/ui/components/pages/event_preview.dart';
 
 enum CardState { ring, silent }
 
@@ -20,16 +21,14 @@ class HomeNextupClassCard extends StatefulWidget {
   State<HomeNextupClassCard> createState() => _HomeNextupClassCardState();
 }
 
-class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
+class _HomeNextupClassCardState extends State<HomeNextupClassCard>
+    with SingleTickerProviderStateMixin {
   late bool state = widget.state == CardState.ring;
   String _timeString = "";
 
   @override
   void initState() {
-    _timeString = MiscFns.timeLeft(
-      widget.nextupClass.startTime,
-      widget.nextupClass.endTime,
-    );
+    _getTime();
     Timer.periodic(const Duration(minutes: 1), (Timer t) {
       try {
         _getTime();
@@ -92,14 +91,8 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-        onTap: () {
-          // showBottomSheet(
-          //   context: context,
-          //   builder: ((BuildContext context) {
-          //     return UpcomingEventSheet(widget.nextupClass);
-          //   }),
-          // );
-        },
+        onTap: () async =>
+            await showEventPreview(context: context, eventData: event),
         borderRadius: BorderRadius.circular(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

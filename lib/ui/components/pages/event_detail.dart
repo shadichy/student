@@ -1,5 +1,5 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class EventPage extends StatelessWidget {
   final String label;
@@ -27,7 +27,7 @@ class EventPage extends StatelessWidget {
           label,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          style: textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
       body: SingleChildScrollView(

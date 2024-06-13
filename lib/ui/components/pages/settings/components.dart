@@ -1,5 +1,5 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/routing.dart';
 
 class SettingsBase extends StatelessWidget {
@@ -17,7 +17,7 @@ class SettingsBase extends StatelessWidget {
   final double _kToolbarMinHeight = 64;
 
   final double _kTitleMaxPadding = 56;
-  final double _kTitleMinPadding = 16;
+  final double _kTitleMinPadding = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,78 +32,78 @@ class SettingsBase extends StatelessWidget {
           icon: const Icon(Symbols.arrow_back, size: 28),
         ),
       ), */
-      body: PopScope(
-        onPopInvoked: onPopInvoked,
-        /* child: SingleChildScrollView(
-          child: Column(children: [
-            Container(
-              padding: const EdgeInsets.only(
-                top: 64,
-                bottom: 32,
-                left: 16,
-                right: 16,
-              ),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            ...children,
-          ]),
-        ), */
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              toolbarHeight: _kToolbarMinHeight,
-              expandedHeight: _kToolbarMaxHeight,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              surfaceTintColor: Colors.transparent,
-              shadowColor: colorScheme.shadow,
-              floating: true,
-              pinned: true,
-              snap: true,
-              leading: IconButton(
-                onPressed: Navigator.of(context).pop,
-                icon: const Icon(Symbols.arrow_back, size: 28),
-              ),
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    // print(MediaQuery.of(context).size.height);
-                    // print((constraints.biggest.height - _kToolbarMinHeight) /
-                    // (_kToolbarMaxHeight - _kToolbarMinHeight));
-                    return FlexibleSpaceBar(
-                      // collapseMode: CollapseMode.none,
-                      titlePadding: EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: _kTitleMaxPadding -
-                            (_kTitleMaxPadding - _kTitleMinPadding) *
-                                (constraints.biggest.height -
-                                    _kToolbarMinHeight) /
-                                (_kToolbarMaxHeight - _kToolbarMinHeight),
-                      ),
-                      centerTitle: false,
-                      stretchModes: const [StretchMode.fadeTitle],
-                      title: Text(
-                        label,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
-                  },
+      body: SafeArea(
+        child: PopScope(
+          onPopInvoked: onPopInvoked,
+          /* child: SingleChildScrollView(
+            child: Column(children: [
+              Container(
+                padding: const EdgeInsets.only(
+                  top: 64,
+                  bottom: 32,
+                  left: 16,
+                  right: 16,
+                ),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.displaySmall,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([Column(children: children)]),
-            ),
-          ],
+              ...children,
+            ]),
+          ), */
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                toolbarHeight: _kToolbarMinHeight,
+                expandedHeight: _kToolbarMaxHeight,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                surfaceTintColor: Colors.transparent,
+                shadowColor: colorScheme.shadow,
+                floating: true,
+                pinned: true,
+                snap: true,
+                leading: IconButton(
+                  onPressed: Navigator.of(context).pop,
+                  icon: const Icon(Symbols.arrow_back, size: 28),
+                ),
+                flexibleSpace: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double padding = _kTitleMaxPadding -
+                          (_kTitleMaxPadding - _kTitleMinPadding) *
+                              (constraints.biggest.height -
+                                  _kToolbarMinHeight) /
+                              (_kToolbarMaxHeight - _kToolbarMinHeight);
+                      return FlexibleSpaceBar(
+                        // collapseMode: CollapseMode.none,
+                        titlePadding: EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: padding > 0 ? padding : 0,
+                        ),
+                        centerTitle: false,
+                        stretchModes: const [StretchMode.fadeTitle],
+                        title: Text(
+                          label,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([Column(children: children)]),
+              ),
+            ],
+          ),
         ),
       ),
     );

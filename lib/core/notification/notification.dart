@@ -4,8 +4,8 @@ import 'dart:async';
 
 import 'package:hive/hive.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/databases/server.dart';
-import 'package:student/core/databases/shared_prefs.dart';
+import 'package:student/core/databases/server.dart.disabled';
+import 'package:student/core/databases/shared_prefs.dart.disabled';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_functions.dart';

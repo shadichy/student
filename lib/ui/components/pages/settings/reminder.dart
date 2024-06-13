@@ -1,6 +1,6 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:student/core/notification/alarm.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:student/core/notification/reminder.dart';
 
 enum ActionType { change, delete }
 
@@ -22,7 +22,7 @@ class ReminderCard extends StatefulWidget {
         vibrate = reminder.vibrate,
         alarmMode = reminder.alarmMode,
         audio = reminder.audio,
-        duration = reminder.duration,
+        duration = reminder.scheduleDuration,
         assert(reminder.alarmMode != AlarmMode.custom || reminder.audio != null,
             'Missing custom alarm');
 

@@ -33,6 +33,7 @@ class UpcomingEvent {
   final DateTime endTime;
   final String? location;
   final String? heldBy;
+  final EventTimestamp event;
 
   UpcomingEvent({
     required this.eventLabel,
@@ -41,7 +42,14 @@ class UpcomingEvent {
     required this.endTime,
     this.location,
     this.heldBy,
-  });
+    EventTimestamp? event,
+  }) : event = event ??
+            EventTimestamp(
+              eventName: eventLabel,
+              dayOfWeek: DateTime.now().weekday % 7,
+              location: location,
+              heldBy: heldBy,
+            );
 
   static final DateTime _now = DateTime.now();
   static final DateTime _today = DateTime(_now.year, _now.month, _now.day);
@@ -75,11 +83,11 @@ class UpcomingEvent {
   UpcomingEvent.fromTimestamp(EventTimestamp event)
       : this(
           eventLabel: event.eventName,
-          eventDesc: "",
           startTime: _getStart(event.intStamp),
           endTime: _getEnd(event.intStamp),
           location: event.location,
           heldBy: event.heldBy,
+          event: event,
         );
 }
 
@@ -91,6 +99,9 @@ class NextupClassView extends UpcomingEvent {
   String get teacher => heldBy!;
   String get room => location!;
   // more info required, including ca, teacher id, subject id, kì học, tuần thứ n
+
+  @override
+  CourseTimestamp get event => stamp;
 
   // should be init'd like
   NextupClassView(this.stamp, [String? subjectName])
@@ -128,26 +139,26 @@ class NextupClassView extends UpcomingEvent {
         );
 }
 
-  //  {
-  //   startStamp = 0;
-  //   if (SPBasics().onlineClass.contains(room)) {
-  //     endStamp = 0;
-  //     // startStampUnix = 0;
-  //     // endStampUnix = 0;
-  //     // day = "";
-  //     return;
-  //   }
-  //   endStamp = 13;
-  //   int tmpDint = intMatrix;
-  //   while (tmpDint != 0) {
-  //     if ((intMatrix & 1) == 0) {
-  //       endStamp--;
-  //     } else {
-  //       startStamp++;
-  //     }
-  //     tmpDint >>= 1;
-  //  }
-  // startStampUnix = SPBasics().classTimestamps[startStamp][0];
-  // endStampUnix = SPBasics().classTimestamps[endStamp][1];
-  // day = dates[dayOfWeek];
-  // }
+//  {
+//   startStamp = 0;
+//   if (SPBasics().onlineClass.contains(room)) {
+//     endStamp = 0;
+//     // startStampUnix = 0;
+//     // endStampUnix = 0;
+//     // day = "";
+//     return;
+//   }
+//   endStamp = 13;
+//   int tmpDint = intMatrix;
+//   while (tmpDint != 0) {
+//     if ((intMatrix & 1) == 0) {
+//       endStamp--;
+//     } else {
+//       startStamp++;
+//     }
+//     tmpDint >>= 1;
+//  }
+// startStampUnix = SPBasics().classTimestamps[startStamp][0];
+// endStampUnix = SPBasics().classTimestamps[endStamp][1];
+// day = dates[dayOfWeek];
+// }

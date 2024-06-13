@@ -1,7 +1,26 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.tlu.student">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-sdk
         android:minSdkVersion="21"
         android:targetSdkVersion="21" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <application
         android:label="TLU Student"
         android:name="${applicationName}"
@@ -27,6 +46,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ============================================================== -->
+        <!-- Alarm activity.                                                -->
+        <!-- ============================================================== -->
+
         <activity
             android:name=".AlarmActivity"
             android:exported="true"
@@ -34,14 +58,67 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
             android:showWhenLocked="true"
-            android:turnScreenOn="true">
+            android:turnScreenOn="true"
+            android:directBootAware="true"
+            android:excludeFromRecents="true"
+            android:resizeableActivity="false"
+            android:taskAffinity=""
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.ALARM" />
             </intent-filter>
         </activity>
 
+        <!-- ============================================================== -->
+        <!-- AlarmClock API components.                                     -->
+        <!-- ============================================================== -->
+
+        <activity
+            android:name=".HandleAlarmApiCalls"
+            android:permission="com.android.alarm.permission.SET_ALARM"
+            android:directBootAware="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:taskAffinity=""
+            android:exported="true"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.DISMISS_ALARM" />
+                <action android:name="android.intent.action.SHOW_ALARMS" />
+                <action android:name="android.intent.action.SNOOZE_ALARM" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name="dev.tlu.student.HandleSetAlarmApiCalls"
+            android:permission="com.android.alarm.permission.SET_ALARM"
+            android:exported="true"
+            android:targetActivity=".HandleAlarmApiCalls">
+            <intent-filter>
+                <action android:name="android.intent.action.SET_ALARM" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- ============================================================== -->
+        <!-- Alarm components.                                              -->
+        <!-- ============================================================== -->
+
+        <receiver
+            android:name=".alarms.AlarmStateManager"
+            android:directBootAware="true" />
+
+        <service
+            android:name=".alarms.AlarmService"
+            android:directBootAware="true" />
+        
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -59,23 +136,14 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <service android:name="com.gdelataillade.alarm.services.NotificationOnKillService" />
+
+        <!-- <service android:name=".services.NotificationOnKillService" />
+        <receiver android:name=".alarm.AlarmReceiver" />
+        <service
+            android:name=".alarm.AlarmService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
+        </service> -->
 
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 </manifest>

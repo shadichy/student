@@ -31,7 +31,7 @@ class SampleTimetableData {
     Map<String, Map<String, List<CourseTimestamp>>> tmpTkbLT = {};
     // Map<String, List<ClassTimestamp>> tmpClassesLT = {};
 
-    for (List<String> mon in input) {
+    for (var mon in input) {
       String subjectID = mon[1];
       String name = mon[2];
       String classID = mon[3];
@@ -276,11 +276,11 @@ class SampleTimetableData {
 //     input.add(tmp);
 //   });
 //   SubjectList lmao = SubjectList.from2dList(input);
-//   for (Subject s in lmao.timetable) {
+//   for (var s in lmao.timetable) {
 //     print("${s.subjectID}: ");
 //     print("  Name: ${s.name}");
 //     print("  Tin chi: ${s.tin}");
-//     for (SubjectClass c in s.classes) {
+//     for (var c in s.classes) {
 //       print("    Lop: ${c.classID}");
 //       print("    intMatrix: ${c.intMatrix}");
 //     }
@@ -289,9 +289,9 @@ class SampleTimetableData {
 //     "IS222": SubjectFilter(inClass: ["CSODULIEU.7", "CSODULIEU.8"]),
 //     "VC204": SubjectFilter(),
 //   });
-//   for (SampleTkb s in k.output) {
+//   for (var s in k.output) {
 //     print("${s.intMatrix}: ");
-//     for (SubjectClass c in s.classes) {
+//     for (var c in s.classes) {
 //       print("    Lop: ${c.classID}");
 //       print("    intMatrix: ${c.intMatrix}");
 //     }

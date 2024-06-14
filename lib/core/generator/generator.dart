@@ -57,7 +57,7 @@ class SubjectFilter {
       forcefulStamp,
       spareStamp,
     ];
-    for (List property in verifyList) {
+    for (var property in verifyList) {
       if (property.isNotEmpty) {
         length++;
       }
@@ -185,8 +185,8 @@ class GenTimetable {
           .map((c) => SampleTimetable(classes: [c])));
     } else {
       List<SampleTimetable> newOutput = [];
-      for (SampleTimetable sample in output) {
-        for (SubjectCourse target in filteredSubject.courses.values) {
+      for (var sample in output) {
+        for (var target in filteredSubject.courses.values) {
           BigInt tmpDint = BigInt.zero;
           tmpDint = sample.intMatrix & target.intCourse;
           if (tmpDint != BigInt.zero) continue;

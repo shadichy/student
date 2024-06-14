@@ -92,7 +92,7 @@
 //       return MapEntry(startDate, []);
 //     }
 //     List<Iterable<Map<String, dynamic>>> values = [];
-//     for (int notif in notifIdList.take(
+//     for (var notif in notifIdList.take(
 //       notifIdList.indexOf((startDate)),
 //     )) {
 //       values.add((await download<List>("notifications/$notif"))

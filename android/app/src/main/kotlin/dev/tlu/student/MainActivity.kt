@@ -69,7 +69,7 @@ class MainActivity : FlutterActivity() {
 //                    intent.putExtra("loopAudio", call.argument<Boolean>("loopAudio"))
 //                    intent.putExtra("fadeDuration", call.argument<Double>("fadeDuration"))
                     AlarmStateManager.registerInstance(context, alarm)
-                    result.success("[Android] setting alarm $id")
+                    result.success("[Android] Alarm with $id scheduled")
                 }
 
                 "stopAlarm" -> {
@@ -79,7 +79,7 @@ class MainActivity : FlutterActivity() {
                         return@setMethodCallHandler
                     }
                     AlarmStateManager.unregisterInstance(context, id)
-                    result.success("[Android] stopping alarm $id")
+                    result.success("[Android] Alarm with $id stopped")
                 }
 
                 "defaultAlarmSound" -> result.success(

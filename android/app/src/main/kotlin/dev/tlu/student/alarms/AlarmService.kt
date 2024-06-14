@@ -91,7 +91,7 @@ class AlarmService : Service() {
 //        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE)
         sendBroadcast(Intent(ALARM_DONE_ACTION))
 
-        stopForeground(true /* removeNotification */)
+        stopForeground(STOP_FOREGROUND_REMOVE)
 
         mCurrentAlarm = null
         AlarmAlertWakeLock.releaseCpuLock()

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:characters/characters.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:restart_app/restart_app.dart';
@@ -83,20 +82,20 @@ final class Storage {
   late final dynamic defaultRingtoneSound;
   late final dynamic defaultNotificationSound;
 
-  static const platform = MethodChannel(StudentApp.methodChannel);
+  static const platform = StudentApp.methodChannel;
 
   int get weekdayStart => fetch<int>(conf.Config.misc.startWeekday)!;
 
-  DateTime get _weekStart => _now.subtract(Duration(
-        days: (_weekday - weekdayStart + 7) % 7,
-        hours: _now.timeZoneOffset.inHours,
-        microseconds: _now.microsecondsSinceEpoch % 86400000000,
-      ));
-  DateTime get _unshiftedWeekStart => _now.subtract(Duration(
-        days: _weekday,
-        hours: _now.timeZoneOffset.inHours,
-        microseconds: _now.microsecondsSinceEpoch % 86400000000,
-      ));
+  late final DateTime _dayStart = _now.subtract(Duration(
+    hours: _now.timeZoneOffset.inHours,
+    microseconds: _now.microsecondsSinceEpoch % 86400000000,
+  ));
+
+  DateTime get _weekStart =>
+      _dayStart.subtract(Duration(days: (_weekday - weekdayStart + 7) % 7));
+
+  DateTime get _unshiftedWeekStart =>
+      _dayStart.subtract(Duration(days: _weekday));
 
   WeekTimetable get thisWeek => _thisWeek;
   List<EventTimestamp> get upcomingEvents {
@@ -104,17 +103,11 @@ final class Storage {
       if (e.dayOfWeek != _weekday) return false;
       int current =
           _now.difference(DateTime(_now.year, _now.month, _now.day)).inSeconds;
-      if (current >
-          SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1]
-              [1]) {
-        return false;
-      }
+      if (current > _cList[_cList.length - 1][1]) return false;
       int startAt = 0;
-      while (current > SPBasics().classTimestamps[startAt][0]) {
+      while (current > _cList[startAt][0]) {
         startAt++;
-        if (startAt == SPBasics().classTimestamps.length) {
-          break;
-        }
+        if (startAt == _cList.length) break;
       }
       if (startAt > 0) startAt--;
       return e.intStamp & (_fullStamp << startAt) != 0;
@@ -317,7 +310,7 @@ final class Storage {
     startDate = plan.startDate;
 
     List<SubjectCourse> registeredCourses = [];
-    for (String id
+    for (var id
         in User().learningCourses[SPBasics().currentYear - User().schoolYear]
             [User().semester]!) {
       try {
@@ -331,10 +324,10 @@ final class Storage {
 
     int prev = 0;
 
-    for (Iterable<DayType> e in plan.timetable) {
+    for (var e in plan.timetable) {
       List<CourseTimestamp> stamps = [];
-      for (SubjectCourse course in registeredCourses) {
-        for (CourseTimestamp stamp in course.timestamp) {
+      for (var course in registeredCourses) {
+        for (var stamp in course.timestamp) {
           DayType d = e.elementAt(stamp.dayOfWeek);
           if (d != DayType.H && d != DayType.B) continue;
           stamps.add(stamp);
@@ -362,13 +355,15 @@ final class Storage {
 
   Future<void> _initReminders() async {
     await _reminderFirstRun();
-    for (AlarmSettings alarm in alarms) {
-      if (alarm.dateTime.add(alarm.timeout).isAfter(_now)) await alarm.delete();
+    for (var alarm in alarms) {
+      if (alarm.dateTime.add(alarm.timeout).isBefore(_now)) {
+        await alarm.delete();
+      }
     }
     await Alarm.init();
     _fullStamp = EventTimestamp.maxStamp;
 
-    for (Reminder r in reminders) {
+    for (var r in reminders) {
       reminderUpdate(r);
     }
   }
@@ -386,20 +381,19 @@ final class Storage {
     if (reminder.disabled) return;
     String left = MiscFns.durationLeft(reminder.scheduleDuration);
     int rTime = _weekStartInt - reminder.scheduleDuration.inSeconds;
-    for (EventTimestamp t in events ?? _tList) {
+    for (var t in events ?? _tList) {
       if (t.intStamp == 0) continue;
       int time = rTime + 86400 * (t.dayOfWeek % 7) + _cList[t.startStamp][0];
-      int id = (reminder.scheduleDuration.inMinutes <<
-              (SPBasics().classTimestamps.length + 2)) |
-          (t.dayOfWeek << SPBasics().classTimestamps.length) |
+      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 2)) |
+          (t.dayOfWeek << _cList.length) |
           t.intStamp;
 
       if (time < _now.millisecondsSinceEpoch ~/ 1000) {
-        if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
+        if (getAlarm(id) != null) await Alarm.stop(id);
         continue;
       }
 
-      if (Alarm.getAlarm(id) != null) continue;
+      if (getAlarm(id) != null) continue;
       await Alarm.set(AlarmSettings(
         id: id,
         dateTime: MiscFns.epoch(time),
@@ -417,19 +411,18 @@ final class Storage {
   Future<void> reminderRemove(int index, [List<EventTimestamp>? events]) async {
     Reminder? reminder = _reminders.getAt(index);
     if (reminder == null || reminder.disabled) return;
-    for (EventTimestamp t in events ?? _tList) {
+    for (var t in events ?? _tList) {
       if (t.intStamp == 0) continue;
-      int id = (reminder.scheduleDuration.inMinutes <<
-              (SPBasics().classTimestamps.length + 2)) |
-          (t.dayOfWeek << SPBasics().classTimestamps.length) |
+      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 2)) |
+          (t.dayOfWeek << _cList.length) |
           t.intStamp;
-      if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
+      if (getAlarm(id) != null) await Alarm.stop(id);
     }
     _reminders.deleteAt(index);
   }
 
   Future<void> reminderUpdateForEvent(EventTimestamp event) async {
-    for (Reminder r in reminders) {
+    for (var r in reminders) {
       reminderUpdate(r, [event]);
     }
   }
@@ -446,7 +439,7 @@ final class Storage {
       List<int> newNs =
           (await endpoint<List>("notifications/timestamps")).cast();
       if (lastUpdated >= newNs.first) return;
-      for (int n in newNs.take(newNs.indexOf((lastUpdated)))) {
+      for (var n in newNs.take(newNs.indexOf((lastUpdated)))) {
         (await endpoint<List>("notifications/$n"))
             .cast<Map<String, dynamic>>()
             .forEach((e) async {
@@ -542,7 +535,7 @@ final class Storage {
         WeekTimetable currentWeek,
         Iterable<EventTimestamp> targetEvents,
       ) modifier) {
-    for (DateTime day in days) {
+    for (var day in days) {
       int daysDiff = day.difference(semesterStartDate).inDays;
       int week = (daysDiff / 7).floor();
       int doW = daysDiff % 7;
@@ -565,7 +558,7 @@ final class Storage {
       days,
       (c, t) => c.setStamps([
         ...c.timestamps.where((i) {
-          for (EventTimestamp event in t) {
+          for (var event in t) {
             if (event.intStamp | i.intStamp != 0) return false;
           }
           return true;
@@ -616,6 +609,8 @@ final class Storage {
   }
 
   Iterable<AlarmSettings> get alarms => _alarms.values;
+
+  AlarmSettings? getAlarm(int id) => _alarms.get(id);
 
   Future<void> addAlarm(AlarmSettings alarm) async =>
       await _alarms.put(alarm.id, alarm);

@@ -33,7 +33,9 @@ class StudentApp extends StatefulWidget {
 
   static const String defaultRoute = '/';
   static const String alarmRoute = '/alarm';
-  static const String methodChannel = "dev.tlu.student.methods";
+  static const String methodChannelId = "dev.tlu.student.methods";
+  static const String eventChannelId = "dev.tlu.student.events";
+  static const MethodChannel methodChannel = MethodChannel(methodChannelId);
 }
 
 class _StudentAppState extends State<StudentApp> {
@@ -63,7 +65,7 @@ class _StudentAppState extends State<StudentApp> {
       useSystem ? null : Storage().fetch<String>(Config.theme.appFont);
 
   static StreamSubscription<AlarmSettings>? subscription;
-  static const platform = MethodChannel(StudentApp.methodChannel);
+  static const platform = StudentApp.methodChannel;
 
   void action(AppAction action) {
     setState(() {

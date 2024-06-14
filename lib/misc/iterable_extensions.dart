@@ -14,7 +14,7 @@ extension IterableExtensions<E> on Iterable<E> {
   }
 
   E? firstWhereIf(bool Function(E element) test, {E? fallback}) {
-    for (E element in this) {
+    for (var element in this) {
       if (test(element)) return element;
     }
     return fallback;

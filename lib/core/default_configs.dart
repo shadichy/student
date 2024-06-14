@@ -8,37 +8,37 @@ final class _Env {
 }
 
 final class _Settings {
-  final language = "language";
+  final language = "settings.language";
 }
 
 final class _Notif {
-  final reminders = "reminders";
-  final reminder = "reminder";
-  final reminderSound = "reminderSound";
-  final topEvents = "topEvents";
-  final miscEvents = "miscEvents";
-  final impNotif = "impNotif";
-  final clubNotif = "clubNotif";
-  final miscNotif = "miscNotif";
-  final appNotif = "appNotif";
+  final reminders = "notif.reminders";
+  final reminder = "notif.reminder";
+  final reminderSound = "notif.reminderSound";
+  final topEvents = "notif.topEvents";
+  final miscEvents = "notif.miscEvents";
+  final impNotif = "notif.impNotif";
+  final clubNotif = "notif.clubNotif";
+  final miscNotif = "notif.miscNotif";
+  final appNotif = "notif.appNotif";
 }
 
 final class _Theme {
-  final systemTheme = "systemTheme";
-  final themeMode = "themeMode";
-  final accentColor = "accentColor";
-  final appFont = "appFont";
+  final systemTheme = "theme.systemTheme";
+  final themeMode = "theme.themeMode";
+  final accentColor = "theme.accentColor";
+  final appFont = "theme.appFont";
 }
 
 final class _Misc {
-  final startWeekday = "startWeekday";
-  final currency = "currency";
+  final startWeekday = "misc.startWeekday";
+  final currency = "misc.currency";
 }
 
 final class _Opts {
-  final Home = "Home";
-  final School = "School";
-  final Student = "Student";
+  final Home = "opts.Home";
+  final School = "opts.School";
+  final Student = "opts.Student";
 }
 
 abstract final class Config {

@@ -49,9 +49,8 @@ abstract final class Alarm {
 
     if (iOS) await stopAll();
 
-    for (final alarm in alarms) {
+    for (var alarm in alarms) {
       // final now = DateTime.now();
-      print("Alarm init for ${alarm.id}");
       await set(alarm);
       // if (alarm.dateTime.isAfter(now)) {
       // } else {
@@ -68,14 +67,14 @@ abstract final class Alarm {
   static Future<bool> set(AlarmSettings alarmSettings) async {
     alarmSettingsValidation(alarmSettings);
 
-    for (final alarm in Alarm.getAlarms()) {
+    for (var alarm in getAlarms()) {
       if (alarm.id == alarmSettings.id ||
           alarm.dateTime.isSameSecond(alarmSettings.dateTime)) {
         await Alarm.stop(alarm.id);
       }
     }
 
-    // await Storage().addAlarm(alarmSettings);
+    await Storage().addAlarm(alarmSettings);
 
     if (iOS) {
       return await IOSAlarm.setAlarm(
@@ -148,7 +147,7 @@ abstract final class Alarm {
   static Future<void> stopAll() async {
     final alarms = Storage().alarms;
 
-    for (final alarm in alarms) {
+    for (var alarm in alarms) {
       await stop(alarm.id);
     }
   }
@@ -163,14 +162,9 @@ abstract final class Alarm {
 
   /// Returns alarm by given id. Returns null if not found.
   static AlarmSettings? getAlarm(int id) {
-    final alarms = Storage().alarms;
-
-    for (final alarm in alarms) {
-      if (alarm.id == id) return alarm;
-    }
-    alarmPrint('Alarm with id $id not found.');
-
-    return null;
+    final alarm = Storage().getAlarm(id);
+    if (alarm == null) alarmPrint('Alarm with id $id not found.');
+    return alarm;
   }
 
   /// Returns all the alarms.

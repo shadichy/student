@@ -18,8 +18,8 @@ class AlarmSettingsAdapter extends TypeAdapter<AlarmSettings> {
     };
     return AlarmSettings(
       id: fields[0] as int,
-      dateTime: fields[2] as DateTime,
-      timeout: fields[12] as Duration,
+      dateTime: DateTime.fromMillisecondsSinceEpoch(fields[2] as int),
+      timeout: Duration(minutes: fields[12] as int),
       title: fields[8] as String,
       body: fields[9] as String,
       audio: fields[3] as String?,
@@ -42,7 +42,7 @@ class AlarmSettingsAdapter extends TypeAdapter<AlarmSettings> {
       ..writeByte(1)
       ..write(obj.enabled)
       ..writeByte(2)
-      ..write(obj.dateTime)
+      ..write(obj.dateTime.millisecondsSinceEpoch)
       ..writeByte(3)
       ..write(obj.audio)
       ..writeByte(4)
@@ -62,7 +62,7 @@ class AlarmSettingsAdapter extends TypeAdapter<AlarmSettings> {
       ..writeByte(11)
       ..write(obj.androidFullScreenIntent)
       ..writeByte(12)
-      ..write(obj.timeout);
+      ..write(obj.timeout.inMinutes);
   }
 
   @override

@@ -5,14 +5,15 @@ import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/alarm.dart';
 import 'package:student/core/notification/model/alarm_settings.dart';
 import 'package:student/core/notification/utils/alarm_exception.dart';
+import 'package:student/ui/connect.dart';
 
 /// Uses method channel to interact with the native platform.
 abstract final class AndroidAlarm {
   /// Method channel for the alarm operations.
-  static const platform = MethodChannel('dev.tlu.student.methods');
+  static const platform = StudentApp.methodChannel;
 
   /// Event channel for the alarm events.
-  static const eventChannel = EventChannel('dev.tlu.student.events');
+  static const eventChannel = EventChannel(StudentApp.eventChannelId);
 
   /// Whether there are other alarms set.
   static bool get hasOtherAlarms => Storage().alarms.length > 1;
@@ -47,9 +48,11 @@ abstract final class AndroidAlarm {
     try {
       // final delay = settings.dateTime.difference(DateTime.now());
 
-      await platform
-          .invokeMethod('setAlarm', settings.toMap())
-          .then((r) => alarmPrint(r));
+      final res = await platform.invokeMethod('setAlarm', settings.toMap());
+
+      alarmPrint(
+        '''$res at ${settings.dateTime}''',
+      );
     } catch (e) {
       throw AlarmException('nativeAndroidAlarm error: $e');
     }
@@ -67,10 +70,6 @@ abstract final class AndroidAlarm {
         throw AlarmException('NotificationOnKillService error: $e');
       }
     }
-
-    alarmPrint(
-      '''Alarm with id ${settings.id} scheduled at ${settings.dateTime}''',
-    );
 
     return true;
   }

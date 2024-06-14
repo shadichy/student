@@ -24,8 +24,7 @@ void alarm(List<String> args) async {
   int id;
   try {
     id = int.parse(args.first);
-  } catch (e) {
-    print(e);
+  } catch (_) {
     id = -1;
   }
   main([

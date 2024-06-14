@@ -8,7 +8,7 @@ import 'package:student/core/notification/model/alarm_settings.dart';
 import 'package:student/core/notification/utils/alarm_exception.dart';
 
 /// Uses method channel to interact with the native platform.
-class IOSAlarm {
+abstract final class IOSAlarm {
   /// Method channel for the alarm.
   static const methodChannel = MethodChannel('com.gdelataillade/alarm');
 

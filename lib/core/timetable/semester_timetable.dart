@@ -95,7 +95,7 @@ class WeekTimetable extends HiveObject {
 //         WeekTimetable currentWeek,
 //         Iterable<EventTimestamp> targetEvents,
 //       ) modifier) {
-//     for (DateTime day in days) {
+//     for (var day in days) {
 //       int daysDiff = day.difference(_startDate).inDays;
 //       int week = (daysDiff / 7).floor();
 //       int doW = daysDiff % 7;
@@ -120,7 +120,7 @@ class WeekTimetable extends HiveObject {
 //       days,
 //       (c, t) => c.setStamps([
 //         ...c._timestamps.where((i) {
-//           for (EventTimestamp event in t) {
+//           for (var event in t) {
 //             if (event.intStamp | i.intStamp != 0) return false;
 //           }
 //           return true;
@@ -207,8 +207,8 @@ class WeekTimetable extends HiveObject {
 //         .asMap()
 //         .map<int, WeekTimetable>((w, p) {
 //           List<CourseTimestamp> stamps = [];
-//           for (SubjectCourse course in registeredCourses) {
-//             for (CourseTimestamp stamp in course.timestamp) {
+//           for (var course in registeredCourses) {
+//             for (var stamp in course.timestamp) {
 //               DayType d = p.elementAt(stamp.dayOfWeek);
 //               if (d != DayType.H && d != DayType.B) continue;
 //               stamps.add(stamp);

@@ -18,13 +18,42 @@ import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/ui/connect.dart';
+
+final class _Boxes {
+  final base = "base";
+  final env = "env";
+  final teachers = "teachers";
+  final subjects = "subjects";
+  final courses = "courses";
+  final plan = "plan";
+  final week = "week";
+  final alarms = "alarms";
+  final reminders = "reminders";
+  final notifications = "notifications";
+}
+
+final class _Vars {
+  final user = "user";
+  final basics = "basics";
+  final planStartDate = "plan.startDate";
+  final weekStartDate = "week.startDate";
+  final alarmFirstRun = "alarm.firstRun";
+  final notificationsLastUpdated = "notifications.lastUpdated";
+  final alarmNTitle = "alarmNTitle";
+  final alarmNBody = "alarmNBody";
+}
 
 final class Storage {
-  Storage._instance();
-  static final _storage = Storage._instance();
+  Storage._();
+
+  static final _storage = Storage._();
   factory Storage() {
     return _storage;
   }
+
+  static final _boxes = _Boxes();
+  static final _vars = _Vars();
 
   late final Box _env;
   late final Box _generic;
@@ -41,7 +70,7 @@ final class Storage {
   late final String _domain;
   late final String _prefix;
 
-  late final int fullStamp;
+  late final int _fullStamp;
   final DateTime _now = DateTime.now();
   late final int _weekday = _now.weekday % 7;
   late WeekTimetable _thisWeek;
@@ -54,9 +83,9 @@ final class Storage {
   late final dynamic defaultRingtoneSound;
   late final dynamic defaultNotificationSound;
 
-  static const platform = MethodChannel("dev.tlu.student.methods");
+  static const platform = MethodChannel(StudentApp.methodChannel);
 
-  int get weekdayStart => fetch<int>("misc.startWeekday")!;
+  int get weekdayStart => fetch<int>(conf.Config.misc.startWeekday)!;
 
   DateTime get _weekStart => _now.subtract(Duration(
         days: (_weekday - weekdayStart + 7) % 7,
@@ -88,7 +117,7 @@ final class Storage {
         }
       }
       if (startAt > 0) startAt--;
-      return e.intStamp & (fullStamp << startAt) != 0;
+      return e.intStamp & (_fullStamp << startAt) != 0;
     }).toList();
     unsorted.sort((a, b) => a.intStamp.compareTo(b.intStamp));
     return unsorted;
@@ -109,52 +138,47 @@ final class Storage {
     Hive.registerAdapter(ReminderAdapter());
     Hive.registerAdapter(NotifAdapter());
 
-    _generic = await Hive.openBox("base");
+    _generic = await Hive.openBox(_boxes.base);
     if (_generic.isEmpty) await _generic.putAll(conf.defaultConfig);
-    _env = await Hive.openBox("env");
+    _env = await Hive.openBox(_boxes.env);
     if (_env.isEmpty) await _env.putAll(conf.env);
   }
 
-  Future<void> initialize() async {
-    _domain = _env.get("fetchDomain")!;
-    _prefix = _env.get("apiPrefix") ?? "";
-
+  Future<void> initializeMinimal() async {
     await _initBasics();
 
-    _teachers = await Hive.openBox<String>("teachers");
-    _subjects = await Hive.openBox<BaseSubject>("subjects");
-    _learning = await Hive.openBox<Subject>("courses");
-    _plan = await Hive.openBox<SemesterPlan>("plan");
-    _week = await Hive.openBox<WeekTimetable>("week");
-    _alarms = await Hive.openBox<AlarmSettings>("alarms");
-    _reminders = await Hive.openBox<Reminder>("reminders");
-    _notifications = await Hive.openBox<Notif>("notifications");
+    _teachers = await Hive.openBox<String>(_boxes.teachers);
+    _subjects = await Hive.openBox<BaseSubject>(_boxes.subjects);
+    _learning = await Hive.openBox<Subject>(_boxes.courses);
+    _plan = await Hive.openBox<SemesterPlan>(_boxes.plan);
+    _week = await Hive.openBox<WeekTimetable>(_boxes.week);
 
+    // always return if first init has been done
     await _initTeacher();
-    alarmPrint("Initialized Teacher");
     await _initSubjects();
-    alarmPrint("Initialized Subjects");
     await _initCourses();
-    alarmPrint("Initialized Courses");
     await _initPlan();
-    alarmPrint("Initialized Plan");
     await _initTimetable();
-    alarmPrint("Initialized Timetable");
+    await _initBaseFields();
+  }
+
+  Future<void> initialize() async {
+    _domain = _env.get(conf.Config.env.fetchDomain)!;
+    _prefix = _env.get(conf.Config.env.apiPrefix) ?? "";
+
+    await initializeMinimal();
+
+    _alarms = await Hive.openBox<AlarmSettings>(_boxes.alarms);
+    _reminders = await Hive.openBox<Reminder>(_boxes.reminders);
+    _notifications = await Hive.openBox<Notif>(_boxes.notifications);
+
     await _initReminders();
-    alarmPrint("Initialized Reminders");
     _initNotifications().then((_) => _notificationInitialized = true);
-    // if (await platform.invokeMethod("getEntrypointName") != "main") return;
-    try {
-      defaultAlarmSound = await platform.invokeMethod("defaultAlarmSound");
-      defaultRingtoneSound =
-          await platform.invokeMethod("defaultRingtoneSound");
-      defaultNotificationSound =
-          await platform.invokeMethod("defaultNotificationSound");
-    } catch (e, s) {
-      alarmPrint(e.toString());
-      alarmPrint(s.toString());
-    }
-    alarmPrint("Done Hive init");
+    defaultAlarmSound = await platform.invokeMethod("defaultAlarmSound");
+    defaultRingtoneSound = await platform.invokeMethod("defaultRingtoneSound");
+    defaultNotificationSound =
+        await platform.invokeMethod("defaultNotificationSound");
+    // alarmPrint("Done Hive init");
   }
 
   Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
@@ -171,7 +195,8 @@ final class Storage {
   }
 
   Future<T> endpoint<T>(String endpoint) async => await download<T>(
-      Uri.https(_domain, "$_prefix/$endpoint.json"), _env.get("headers"));
+      Uri.https(_domain, "$_prefix/$endpoint.json"),
+      _env.get(conf.Config.env.headers));
 
   T? fetch<T>(String key) => _generic.get(key) as T?;
 
@@ -179,20 +204,20 @@ final class Storage {
       await _generic.put(key, value);
 
   Future<void> setUser(Map<String, dynamic> value) async =>
-      await put("user", value);
+      await put(_vars.user, value);
 
-  Map<String, dynamic>? getUser() => fetch<Map<dynamic, dynamic>>("user")
+  Map<String, dynamic>? getUser() => fetch<Map<dynamic, dynamic>>(_vars.user)
       ?.map((key, value) => MapEntry(key.toString(), value));
 
   Future<void> setEnv<T>(String key, T value) async =>
       await _env.put(key, value);
 
   Future<void> _initBasics() async {
-    Map<String, dynamic>? basics = fetch<Map<dynamic, dynamic>>("basics")
+    Map<String, dynamic>? basics = fetch<Map<dynamic, dynamic>>(_vars.basics)
         ?.map((key, value) => MapEntry(key.toString(), value));
     if (basics != null) return SPBasics().setBasics(basics);
-    basics = await endpoint<Map<String, dynamic>>("basics");
-    await put("basics", basics);
+    basics = await endpoint<Map<String, dynamic>>(_vars.basics);
+    await put(_vars.basics, basics);
     SPBasics().setBasics(basics);
   }
 
@@ -219,7 +244,7 @@ final class Storage {
   }
 
   Future<void> _initPlan() async {
-    DateTime? startDate = fetch("plan.startDate");
+    DateTime? startDate = fetch(_vars.planStartDate);
     if (planTable.isNotEmpty && startDate != null) return;
 
     Map<String, dynamic> parsedInfo =
@@ -254,7 +279,7 @@ final class Storage {
       ));
     });
 
-    await put("plan.startDate", startDate);
+    await put(_vars.planStartDate, startDate);
   }
 
   Future<void> _initCourses() async {
@@ -276,32 +301,30 @@ final class Storage {
             ),
           ),
         );
-      } catch (e, s) {
+      } catch (e) {
         // database is not correctly set up
-        alarmPrint(e.toString());
-        alarmPrint(s.toString());
+        // alarmPrint(e.toString());
+        // alarmPrint(s.toString());
       }
     });
   }
 
   Future<void> _initTimetable() async {
-    DateTime? startDate = fetch("week.startDate");
-    await _week.clear();
+    DateTime? startDate = fetch(_vars.weekStartDate);
     if (_week.isNotEmpty && startDate != null) return;
 
     SemesterPlan plan = currentPlan;
     startDate = plan.startDate;
 
     List<SubjectCourse> registeredCourses = [];
-    // why is _learning empty?
     for (String id
         in User().learningCourses[SPBasics().currentYear - User().schoolYear]
             [User().semester]!) {
       try {
         registeredCourses.add(getCourse(id)!);
-      } catch (e, s) {
-        alarmPrint(e.toString());
-        alarmPrint(s.toString());
+      } catch (e) {
+        // alarmPrint(e.toString());
+        // alarmPrint(s.toString());
         // invalid course
       }
     }
@@ -325,24 +348,25 @@ final class Storage {
       prev++;
     }
 
-    await put("week.startDate", startDate);
+    await put(_vars.weekStartDate, startDate);
   }
 
-  Future<void> _initReminders() async {
+  Future<void> _initBaseFields() async {
     _thisWeek = getWeek(_weekStart);
     _weekStartInt = _unshiftedWeekStart.millisecondsSinceEpoch ~/ 1000;
     _cList = SPBasics().classTimestamps;
     _tList = getWeek(_unshiftedWeekStart).timestamps.where((e) {
       return e.dayOfWeek % 7 >= _weekday;
     });
+  }
+
+  Future<void> _initReminders() async {
     await _reminderFirstRun();
     for (AlarmSettings alarm in alarms) {
-      if (alarm.dateTime.add(alarm.timeout).isAfter(DateTime.now())) {
-        await alarm.delete();
-      }
+      if (alarm.dateTime.add(alarm.timeout).isAfter(_now)) await alarm.delete();
     }
     await Alarm.init();
-    fullStamp = (-1).toUnsigned(SPBasics().classTimestamps.length);
+    _fullStamp = EventTimestamp.maxStamp;
 
     for (Reminder r in reminders) {
       reminderUpdate(r);
@@ -350,18 +374,19 @@ final class Storage {
   }
 
   Future<void> _reminderFirstRun() async {
-    if (fetch<bool>("alarm.firstRun") == true) return;
-    _reminders.addAll((conf.defaultConfig['notif.reminders'] as List)
+    if (fetch<bool>(_vars.alarmFirstRun) == true) return;
+    _reminders.addAll((conf.defaultConfig[conf.Config.notif.reminders] as List)
         .cast<Map<String, dynamic>>()
         .map((e) => Reminder.fromJson(e)));
-    await put("alarm.firstRun", true);
+    await put(_vars.alarmFirstRun, true);
   }
 
-  Future<void> reminderUpdate(Reminder reminder) async {
+  Future<void> reminderUpdate(Reminder reminder,
+      [List<EventTimestamp>? events]) async {
     if (reminder.disabled) return;
     String left = MiscFns.durationLeft(reminder.scheduleDuration);
     int rTime = _weekStartInt - reminder.scheduleDuration.inSeconds;
-    for (EventTimestamp t in _tList) {
+    for (EventTimestamp t in events ?? _tList) {
       if (t.intStamp == 0) continue;
       int time = rTime + 86400 * (t.dayOfWeek % 7) + _cList[t.startStamp][0];
       int id = (reminder.scheduleDuration.inMinutes <<
@@ -381,7 +406,7 @@ final class Storage {
         timeout: reminder.ringDuration.inMinutes != 0
             ? reminder.ringDuration
             : Duration(hours: t.stampLength),
-        audio: AlarmSettings.uriFromString(reminder.audio),
+        audio: reminder.audio,
         title: "${t.location} \u2022 $left \u2022 ${t.eventName}",
         body: "${t.eventName} will be started in $left!",
         vibrate: reminder.vibrate,
@@ -389,10 +414,10 @@ final class Storage {
     }
   }
 
-  Future<void> reminderRemove(int index) async {
+  Future<void> reminderRemove(int index, [List<EventTimestamp>? events]) async {
     Reminder? reminder = _reminders.getAt(index);
     if (reminder == null || reminder.disabled) return;
-    for (EventTimestamp t in _tList) {
+    for (EventTimestamp t in events ?? _tList) {
       if (t.intStamp == 0) continue;
       int id = (reminder.scheduleDuration.inMinutes <<
               (SPBasics().classTimestamps.length + 2)) |
@@ -401,6 +426,18 @@ final class Storage {
       if (Alarm.getAlarm(id) != null) await Alarm.stop(id);
     }
     _reminders.deleteAt(index);
+  }
+
+  Future<void> reminderUpdateForEvent(EventTimestamp event) async {
+    for (Reminder r in reminders) {
+      reminderUpdate(r, [event]);
+    }
+  }
+
+  Future<void> reminderRemoveForEvent(EventTimestamp event) async {
+    for (int r = 0; r < reminders.length; r++) {
+      reminderRemove(r, [event]);
+    }
   }
 
   Future<void> _initNotifications() async {
@@ -418,7 +455,7 @@ final class Storage {
           _notifications.add(notif);
         });
       }
-      put("notifications.lastUpdated", newNs.first);
+      put(_vars.notificationsLastUpdated, newNs.first);
     } catch (e) {
       return;
     }
@@ -461,8 +498,10 @@ final class Storage {
   String? getTeacher(String id) => _teachers.get(id);
   Iterable<SemesterPlan> get planTable => _plan.values;
   SemesterPlan get currentPlan => _plan.getAt(User().semester.index)!;
-  DateTime get planStartDate => fetch("plan.startDate");
-  DateTime get semesterStartDate => fetch("week.startDate");
+
+  DateTime get planStartDate => fetch(_vars.planStartDate);
+
+  DateTime get semesterStartDate => fetch(_vars.weekStartDate);
 
   WeekTimetable getWeek(DateTime startDate) {
     int daysDiff = startDate.difference(semesterStartDate).inDays.abs();
@@ -569,8 +608,10 @@ final class Storage {
   }
 
   Iterable<Reminder> get reminders => _reminders.values;
-  Future<void> addReminder(Reminder reminder) async {
-    await reminderUpdate(reminder);
+
+  Future<void> reminderAdd(Reminder reminder,
+      [List<EventTimestamp>? events]) async {
+    await reminderUpdate(reminder, events);
     await _reminders.add(reminder);
   }
 
@@ -587,18 +628,18 @@ final class Storage {
     String title,
     String body,
   ) async {
-    await put("alarmNTitle", title);
-    await put("alarmNBody", body);
+    await put(_vars.alarmNTitle, title);
+    await put(_vars.alarmNBody, body);
   }
 
   String getNotificationOnAppKillTitle() =>
-      fetch("alarmNTitle") ?? 'Your alarms may not ring';
+      fetch(_vars.alarmNTitle) ?? 'Your alarms may not ring';
 
   String getNotificationOnAppKillBody() =>
-      fetch("alarmNBody") ??
+      fetch(_vars.alarmNBody) ??
       'You killed the app. Please reopen so your alarms can be rescheduled.';
 
-  int get notificationLastUpdated => fetch("notifications.lastUpdated") ?? 0;
+  int get notificationLastUpdated => fetch(_vars.notificationsLastUpdated) ?? 0;
   Iterable<Notif> get notifications => _notifications.values;
   Future<void> clearNotifications() async => await _notifications.clear();
 }

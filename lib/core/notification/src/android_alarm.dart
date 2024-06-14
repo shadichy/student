@@ -45,7 +45,7 @@ abstract final class AndroidAlarm {
     void Function()? onRing,
   ) async {
     try {
-      final delay = settings.dateTime.difference(DateTime.now());
+      // final delay = settings.dateTime.difference(DateTime.now());
 
       await platform
           .invokeMethod('setAlarm', settings.toMap())

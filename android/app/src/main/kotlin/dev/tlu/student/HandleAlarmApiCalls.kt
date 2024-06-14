@@ -71,7 +71,7 @@ class HandleAlarmApiCalls : Activity() {
         } catch (e: Exception) {
             alarm.audio = DataModel.dataModel.defaultAlarmRingtoneUri
         }
-        println("[Android] Alarm received ${alarm.id}")
+        // println("[Android] Alarm received ${alarm.id}")
         AlarmStateManager.registerInstance(this, alarm)
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
+import 'package:student/core/default_configs.dart';
 import 'package:student/core/notification/reminder.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
@@ -27,7 +28,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
 
   void reminderConf(void Function() fn) {
     setState(fn);
-    Storage().put("notif.reminders", reminders);
+    Storage().put(Config.notif.reminders, reminders);
   }
 
   void reminderChange(int index, Map<String, dynamic> value) {
@@ -40,7 +41,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
 
   void reminderAdd(Reminder value) {
     Storage()
-        .addReminder(value)
+        .reminderAdd(value)
         .then((_) => reminderConf(() => reminders.add(value)));
   }
 

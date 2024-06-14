@@ -35,33 +35,37 @@ internal class AlarmModel(
 ) {
 
     /** The uri of the default ringtone to play for new alarms; mirrors last selection.  */
-    private lateinit var mDefaultAlarmRingtoneUri: Uri
-    private lateinit var mDefaultNotificationRingtoneUri: Uri
+    private var mDefaultAlarmRingtoneUri: Uri
+    private var mDefaultNotificationRingtoneUri: Uri
+    private var mDefaultPhoneRingtoneUri: Uri
 
     init {
         // Clear caches affected by system settings when system settings change.
-        val cr: ContentResolver = context.getContentResolver()
+        val cr: ContentResolver = context.contentResolver
         val observer: ContentObserver = SystemAlarmAlertChangeObserver()
         cr.registerContentObserver(Settings.System.DEFAULT_ALARM_ALERT_URI, false, observer)
         mDefaultAlarmRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM)
+        mDefaultPhoneRingtoneUri= RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE)
         mDefaultNotificationRingtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION)
     }
 
     // Never set the silent ringtone as default; new alarms should always make sound by default.
     var defaultAlarmRingtoneUri: Uri
-        get() {
-            return mDefaultAlarmRingtoneUri
-        }
+        get() = mDefaultAlarmRingtoneUri
         set(uri) {
             // Never set the silent ringtone as default; new alarms should always make sound by default.
             mDefaultAlarmRingtoneUri = uri
         }
 
+    var defaultPhoneRingtoneUri: Uri
+        get() = mDefaultPhoneRingtoneUri
+        set(uri) {
+            mDefaultPhoneRingtoneUri = uri
+        }
+
     // Never set the silent ringtone as default; new alarms should always make sound by default.
     var defaultNotificationRingtoneUri: Uri
-        get() {
-            return mDefaultNotificationRingtoneUri
-        }
+        get() = mDefaultNotificationRingtoneUri
         set(uri) {
             // Never set the silent ringtone as default; new alarms should always make sound by default.
             mDefaultNotificationRingtoneUri = uri
@@ -84,10 +88,5 @@ internal class AlarmModel(
      * those system settings must be cleared.
      */
     private inner class SystemAlarmAlertChangeObserver
-        : ContentObserver(Handler(Looper.myLooper()!!)) {
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-//            mDefaultAlarmRingtoneUri = null
-        }
-    }
+        : ContentObserver(Handler(Looper.myLooper()!!))
 }

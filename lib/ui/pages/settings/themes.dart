@@ -1,16 +1,16 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
+import 'package:student/core/default_configs.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/components/pages/settings/searchable_selector_dialog.dart';
 import 'package:student/ui/components/pages/settings/svg_theme.dart';
 import 'package:student/ui/components/pages/settings/theme_preview.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:student/ui/connect.dart';
 import 'package:system_theme/system_theme.dart';
-
-import 'package:student/ui/components/navigator/navigator.dart';
 
 class SettingsThemesPage extends StatefulWidget implements TypicalPage {
   @override
@@ -26,39 +26,39 @@ class SettingsThemesPage extends StatefulWidget implements TypicalPage {
 }
 
 class _SettingsThemesPageState extends State<SettingsThemesPage> {
-  bool useSystem = Storage().fetch<bool>("theme.systemTheme") ?? false;
+  bool useSystem = Storage().fetch<bool>(Config.theme.systemTheme) ?? false;
   late int? colorCode = useSystem
       ? SystemTheme.accentColor.accent.value
-      : Storage().fetch<int>("theme.accentColor");
-  late bool darkMode = Storage().fetch<int>("theme.themeMode") == 2;
-  late String? currentFont = Storage().fetch<String>("theme.appFont");
+      : Storage().fetch<int>(Config.theme.accentColor);
+  late bool darkMode = Storage().fetch<int>(Config.theme.themeMode) == 2;
+  late String? currentFont = Storage().fetch<String>(Config.theme.appFont);
 
   void switchUseSystem(bool newState) {
     setState(() {
       useSystem = newState;
     });
-    Storage().put("theme.systemTheme", newState);
+    Storage().put(Config.theme.systemTheme, newState);
   }
 
   void changePalette(int color) {
     setState(() {
       colorCode = color;
     });
-    Storage().put("theme.accentColor", color);
+    Storage().put(Config.theme.accentColor, color);
   }
 
   void setDarkMode(bool newState) {
     setState(() {
       darkMode = newState;
     });
-    Storage().put("theme.themeMode", newState ? 2 : 1);
+    Storage().put(Config.theme.themeMode, newState ? 2 : 1);
   }
 
   void setFont(String fontName) {
     setState(() {
       currentFont = fontName;
     });
-    Storage().put("theme.appFont", fontName == "System" ? null : fontName);
+    Storage().put(Config.theme.appFont, fontName == "System" ? null : fontName);
   }
 
   @override

@@ -1,8 +1,8 @@
 // import 'package:flutter/widgets.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
-import 'package:student/core/databases/server.dart.disabled';
 import 'package:student/core/databases/user.dart';
+
 part 'study_plan.g.dart';
 
 enum DayType { H, T, N, B, Q, O, S, X }

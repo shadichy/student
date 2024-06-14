@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/default_configs.dart';
 import 'package:student/core/notification/alarm.dart';
 import 'package:student/core/notification/model/alarm_settings.dart';
 import 'package:student/core/routing.dart';
@@ -18,7 +19,7 @@ import 'package:system_theme/system_theme.dart';
 enum AppAction { init, reload, deinit }
 
 class StudentApp extends StatefulWidget {
-  final String initialRoute;
+  final String? initialRoute;
   final Map<String, dynamic> arguments;
 
   const StudentApp(this.initialRoute, this.arguments, {super.key});
@@ -29,6 +30,10 @@ class StudentApp extends StatefulWidget {
 
   @override
   State<StudentApp> createState() => _StudentAppState();
+
+  static const String defaultRoute = '/';
+  static const String alarmRoute = '/alarm';
+  static const String methodChannel = "dev.tlu.student.methods";
 }
 
 class _StudentAppState extends State<StudentApp> {
@@ -43,21 +48,22 @@ class _StudentAppState extends State<StudentApp> {
 
   Key key = UniqueKey();
 
-  bool get useSystem => Storage().fetch<bool>("theme.systemTheme") == true;
+  bool get useSystem => Storage().fetch<bool>(Config.theme.systemTheme) == true;
 
-  int? get colorCode => Storage().fetch<int>("theme.accentColor");
+  int? get colorCode => Storage().fetch<int>(Config.theme.accentColor);
 
   Color? get seed => useSystem
       ? SystemTheme.accentColor.accent
       : colorCode != null
           ? Color(colorCode!)
           : null;
-  int get mode => useSystem ? 0 : Storage().fetch<int>("theme.themeMode") ?? 1;
+  int get mode =>
+      useSystem ? 0 : Storage().fetch<int>(Config.theme.themeMode) ?? 1;
   String? get font =>
-      useSystem ? null : Storage().fetch<String>("theme.appFont");
+      useSystem ? null : Storage().fetch<String>(Config.theme.appFont);
 
   static StreamSubscription<AlarmSettings>? subscription;
-  static const platform = MethodChannel("dev.tlu.student.methods");
+  static const platform = MethodChannel(StudentApp.methodChannel);
 
   void action(AppAction action) {
     setState(() {
@@ -76,6 +82,9 @@ class _StudentAppState extends State<StudentApp> {
   void initState() {
     super.initState();
     arguments = widget.arguments;
+    checkAndroidNotificationPermission();
+    checkAndroidExternalStoragePermission();
+    checkAndroidScheduleExactAlarmPermission();
     initialize();
     // setConfigs();
   }
@@ -83,30 +92,23 @@ class _StudentAppState extends State<StudentApp> {
   Future<void> initialize() async {
     if (!initializeStart) return;
 
-    await User().initialize();
-    // await SPBasics().initialize();
-    // await Teachers().initialize();
-    // await Subjects().initialize();
-    // await StudyPlan().initialize();
-    // await InStudyCourses().initialize();
-    // await SemesterTimetable().initialize();
-    // NotificationsGet().initialize();
-    // User().setUser(Storage().getUser()!);
-    await Storage().initialize();
-    // print("Running");
+    if (StudentApp.defaultRoute == widget.initialRoute) {
+      await User().initialize();
+      await Storage().initialize();
+    } else {
+      await Storage().initializeMinimal();
+    }
 
-    // print(Storage().getUser());
-    // print(Storage().planTable);
-    // print(Storage().thisWeek.toJson());
     subscription ??= Alarm.ringStream.stream.listen(doRing);
 
     setState(() {
       // mainContent = const App();
       try {
         mainContent = <String, Widget>{
-          '/': const App(),
-          '/alarm': SubjectStampIntent(widget.arguments["id"] ?? -1),
-        }[widget.initialRoute]!;
+          StudentApp.defaultRoute: const App(),
+          StudentApp.alarmRoute:
+              SubjectStampIntent(widget.arguments["id"] ?? -1),
+        }[widget.initialRoute ?? StudentApp.defaultRoute]!;
       } catch (e, s) {
         alarmPrint(e.toString());
         alarmPrint(s.toString());

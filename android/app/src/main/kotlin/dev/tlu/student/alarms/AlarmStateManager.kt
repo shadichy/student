@@ -28,7 +28,6 @@ import dev.tlu.student.MainActivity
 import dev.tlu.student.data.DataModel
 import dev.tlu.student.provider.Alarm
 import dev.tlu.student.provider.AlarmState
-import dev.tlu.student.utils.AlarmUtils
 import dev.tlu.student.utils.AsyncHandler
 import dev.tlu.student.utils.Utils
 import java.util.Calendar
@@ -103,7 +102,7 @@ class AlarmStateManager : BroadcastReceiver() {
             stateChangeIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
             val pendingIntent: PendingIntent =
                 PendingIntent.getService(
-                    context, alarm.hashCode(),
+                    context, alarm.id,
                     stateChangeIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
@@ -116,6 +115,7 @@ class AlarmStateManager : BroadcastReceiver() {
             } else {
                 am.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
             }
+            // println("[Android] scheduled ${alarm.id} at ${AlarmUtils.getAlarmText(context, alarm, false)}")
         }
 
         override fun cancelScheduledInstanceStateChange(context: Context, alarm: Alarm) {
@@ -124,7 +124,7 @@ class AlarmStateManager : BroadcastReceiver() {
             // Create a PendingIntent that will match any one set for this instance
             val pendingIntent: PendingIntent? =
                 PendingIntent.getService(
-                    context, alarm.hashCode(),
+                    context, alarm.id,
                     createStateChangeIntent(context, ALARM_MANAGER_TAG, alarm, null),
                     PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
                 )
@@ -349,7 +349,7 @@ class AlarmStateManager : BroadcastReceiver() {
             // fail to occur. To be safer, the call begins in AlarmService, which has the power to
             // display the firing alarm if needed, so no jump is needed.
             val intent: Intent = Intent(context, AlarmService::class.java)
-            intent.putExtra("alarm", alarm)
+            intent.putExtra(Alarm.NAME, alarm)
             intent.setAction(CHANGE_STATE_ACTION)
             intent.addCategory(tag)
 //            intent.putExtra(ALARM_GLOBAL_ID_EXTRA, DataModel.dataModel.globalIntentId)
@@ -404,7 +404,7 @@ class AlarmStateManager : BroadcastReceiver() {
 
             // Setup instance notification and scheduling timers
             AlarmNotifications.clearNotification(context, alarm.id)
-            scheduleInstanceStateChange(context, alarm.startTime, alarm, AlarmState.SILENT_STATE)
+            scheduleInstanceStateChange(context, alarm.startTime, alarm, AlarmState.FIRED_STATE)
         }
 
         /**
@@ -484,7 +484,7 @@ class AlarmStateManager : BroadcastReceiver() {
 //            LogUtils.i("Setting fire state to instance " + alarm.mId)
 
             // Update alarm state in db
-            val contentResolver: ContentResolver = context.getContentResolver()
+//            val contentResolver: ContentResolver = context.getContentResolver()
 //            alarm.mAlarmState = AlarmState.FIRED_STATE
 //            AlarmInstance.updateInstance(contentResolver, alarm)
 
@@ -497,10 +497,18 @@ class AlarmStateManager : BroadcastReceiver() {
 //            Events.sendAlarmEvent(R.string.action_fire, 0)
 
 
-            val timeout = alarm.endTime
-            timeout.let {
-                scheduleInstanceStateChange(context, it, alarm, AlarmState.DISMISSED_STATE)
+            var timeout = alarm.startTime
+            val now = DataModel.dataModel.calendar
+            if (timeout.before(now)) {
+                now.add(Calendar.SECOND, ALARM_FIRE_BUFFER)
+                timeout=now
             }
+            scheduleInstanceStateChange(
+                context,
+                timeout,
+                alarm,
+                AlarmState.FIRED_STATE
+            )
 
             // Instance not valid anymore, so find next alarm that will fire and notify system
 //            updateNextAlarm(context)
@@ -537,7 +545,7 @@ class AlarmStateManager : BroadcastReceiver() {
 
             // Setup instance notification and scheduling timers
 //            AlarmNotifications.showSnoozeNotification(context, alarm)
-            scheduleInstanceStateChange(context, newAlarmTime, alarm, AlarmState.FIRED_STATE)
+            scheduleInstanceStateChange(context, newAlarmTime, alarm, AlarmState.DISMISSED_STATE)
 
             // Display the snooze minutes in a toast.
 //            if (showToast) {
@@ -703,9 +711,10 @@ class AlarmStateManager : BroadcastReceiver() {
             alarm: Alarm,
 //                updateNextAlarm: Boolean
         ) {
-            println("[Android] Alarm with id ${alarm.id} registering at ${AlarmUtils.getAlarmText(context, alarm, false)}")
+            if (!alarm.enabled) return
+            // println("[Android] Alarm with id ${alarm.id} registering at ${AlarmUtils.getAlarmText(context, alarm, false)}")
 //            LogUtils.i("Registering instance: " + instance.mId)
-            val cr: ContentResolver = context.getContentResolver()
+//            val cr: ContentResolver = context.getContentResolver()
             val currentTime = currentTime
             val alarmTime: Calendar = alarm.startTime
             val timeoutTime: Calendar = alarm.endTime
@@ -717,90 +726,23 @@ class AlarmStateManager : BroadcastReceiver() {
             if (currentTime.after(timeoutTime)) {
                 // This should never happen, but add a quick check here
 //                LogUtils.e("Alarm Instance is dismissed, but never deleted")
+                // println("[Android] deleted ${alarm.id}")
                 unregisterInstance(context, alarm.id)
                 return
-            }
-//            else if (currentTime.after(alarmTime) && currentTime.before(timeoutTime)) {
-//                // Keep alarm firing, unless it should be timed out
-//                val hasTimeout = currentTime.after(timeoutTime)
-//                if (!hasTimeout) {
-//                    setFiredState(context, alarm)
-//                    return
-//                }
-//            }
-//            else if (alarm.mAlarmState == AlarmState.MISSED_STATE) {
-//                if (currentTime.before(alarmTime)) {
-//                    if (alarm.mAlarmId == null) {
-//                        LogUtils.i("Cannot restore missed instance for one-time alarm")
-//                        // This instance parent got deleted (ie. deleteAfterUse), so
-//                        // we should not re-activate it.-
-//                        deleteInstanceAndUpdateParent(context, alarm)
-//                        return
-//                    }
-//
-//                    // TODO: This will re-activate missed snoozed alarms, but will
-//                    // use our normal notifications. This is not ideal, but very rare use-case.
-//                    // We should look into fixing this in the future.
-//
-//                    // Make sure we re-enable the parent alarm of the instance
-//                    // because it will get activated by by the below code
-//                    alarm!!.enabled = true
-//                    Alarm.updateAlarm(cr, alarm)
-//                }
-//            } else if (alarm.mAlarmState == AlarmState.PREDISMISSED_STATE) {
-//                if (currentTime.before(alarmTime)) {
-//                    setPreDismissState(context, alarm)
-//                } else {
-//                    deleteInstanceAndUpdateParent(context, alarm)
-//                }
-//                return
-//            }
-
-            // Fix states that are time sensitive
-//            if (currentTime.after(missedTTL)) {
-//                // Alarm is so old, just dismiss it
-//                deleteInstanceAndUpdateParent(context, alarm)
-//            } else
-            else if (currentTime.after(alarmTime)) {
+            } else if (currentTime.after(alarmTime)) {
                 // There is a chance that the TIME_SET occurred right when the alarm should go off,
                 // so we need to add a check to see if we should fire the alarm instead of marking
                 // it missed.
-                val alarmBuffer = Calendar.getInstance()
-                alarmBuffer.time = alarmTime.time
-                alarmBuffer.add(Calendar.SECOND, ALARM_FIRE_BUFFER)
+                val alarmBuffer = alarm.endTime
+                // println("[Android] fired ${alarm.id}")
                 if (currentTime.before(alarmBuffer)) {
                     setFiredState(context, alarm)
                 }
-//                else {
-//                    setMissedState(context, alarm)
-//                }
-            }
-//                else if (alarm.mAlarmState == AlarmState.SNOOZE_STATE) {
-//                // We only want to display snooze notification and not update the time,
-//                // so handle showing the notification directly
-//                AlarmNotifications.showSnoozeNotification(context, alarm)
-//                scheduleInstanceStateChange(context, alarm.alarmTime,
-//                        alarm, AlarmState.FIRED_STATE)
-//            } else if (currentTime.after(highNotificationTime)) {
-//                setHighNotificationState(context, alarm)
-//            } else if (currentTime.after(lowNotificationTime)) {
-//                // Only show low notification if it wasn't hidden in the past
-//                if (alarm.mAlarmState == AlarmState.HIDE_NOTIFICATION_STATE) {
-//                    setHideNotificationState(context, alarm)
-//                } else {
-//                    setLowNotificationState(context, alarm)
-//                }
-//            }
-            else {
+            } else {
                 // Alarm is still active, so initialize as a silent alarm
+                // println("[Android] delayed ${alarm.id}")
                 setSilentState(context, alarm)
             }
-
-            // The caller prefers to handle updateNextAlarm for optimization
-//            if (updateNextAlarm) {
-//                updateNextAlarm(context)
-//            }
-            println("[Android] Alarm with id ${alarm.id} successfully scheduled at ${AlarmUtils.getAlarmText(context, alarm, false)}")
         }
 
         /**
@@ -939,7 +881,7 @@ class AlarmStateManager : BroadcastReceiver() {
 //                val globalId = DataModel.dataModel.globalIntentId
 //                val intentId: Int = intent.getIntExtra(ALARM_GLOBAL_ID_EXTRA, -1)
                 val alarmState: Int = intent.getIntExtra(ALARM_STATE_EXTRA, -1)
-                val alarm: Alarm = intent.getParcelableExtra("alarm") ?: return
+                val alarm: Alarm = intent.getParcelableExtra(Alarm.NAME) ?: return
                 //                if (intentId != globalId) {
 //                    LogUtils.i("IntentId: " + intentId + " GlobalId: " + globalId +
 //                            " AlarmState: " + alarmState)

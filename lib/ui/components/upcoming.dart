@@ -1,4 +1,3 @@
-
 // @Deprecated("moving to Hive")
 // abstract final class UpcomingData {
 //   static final int _fullStamp =
@@ -6,7 +5,7 @@
 //   static final DateTime _now = DateTime.now();
 //   static final int _weekday = _now.weekday % 7;
 
-//   static int get weekdayStart => Storage().fetch<int>("misc.startWeekday")!;
+//   static int get weekdayStart => Storage().fetch<int>(Config.misc.startWeekday)!;
 
 //   static DateTime get weekStart => _now.subtract(
 //         Duration(days: (_weekday - weekdayStart + 7) % 7),

@@ -15,7 +15,7 @@ class EventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextTheme textTheme = Theme.of(context).textTheme;
+    // TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

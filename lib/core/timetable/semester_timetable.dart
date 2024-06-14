@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
-import 'package:student/core/databases/shared_prefs.dart.disabled';
 import 'package:student/core/semester/functions.dart';
+
 part 'semester_timetable.g.dart';
 
 @HiveType(typeId: 9)

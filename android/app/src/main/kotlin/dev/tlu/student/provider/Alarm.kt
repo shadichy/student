@@ -111,14 +111,20 @@ class Alarm: Parcelable {
             return calendar
         }
 
-    companion object CREATOR : Parcelable.Creator<Alarm> {
-        override fun createFromParcel(parcel: Parcel): Alarm {
-            return Alarm(parcel)
-        }
+    companion object {
+        const val NAME = "alarm"
 
-        override fun newArray(size: Int): Array<Alarm?> {
-            return arrayOfNulls(size)
+        @JvmField
+        val CREATOR: Parcelable.Creator<Alarm> = object : Parcelable.Creator<Alarm>
+        {
+            override fun createFromParcel(parcel: Parcel): Alarm {
+                return Alarm(parcel)
+            }
+
+            override fun newArray(size: Int): Array<Alarm?> {
+                return arrayOfNulls(size)
+            }
+
         }
     }
-
 }

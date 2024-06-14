@@ -8,7 +8,7 @@ part 'alarm_settings.g.dart';
 /// [AlarmSettings] is a model that contains all the settings to customize
 /// and set an alarm.
 @HiveType(typeId: 11)
-class AlarmSettings extends HiveObject {
+final class AlarmSettings extends HiveObject {
   /// Model that contains all the settings to customize and set an alarm.
   AlarmSettings({
     required this.id,
@@ -32,7 +32,7 @@ class AlarmSettings extends HiveObject {
           id: json['id'] as int,
           dateTime: MiscFns.epoch(json['dateTime'] as int),
           timeout: Duration(seconds: json['timeout'] as int),
-          audio: Uri.parse(json['audio'] as String),
+          audio: json['audio'] as String?,
           enabled: json['enabled'] as bool,
           loopAudio: json['loopAudio'] as bool,
           vibrate: json['vibrate'] as bool? ?? true,
@@ -79,7 +79,7 @@ class AlarmSettings extends HiveObject {
   /// `AndroidManifest.xml`:
   /// `android.permission.READ_EXTERNAL_STORAGE`
   @HiveField(3)
-  final Uri? audio;
+  final String? audio;
 
   /// If true, [audio] will repeat indefinitely until alarm is stopped.
   @HiveField(4)
@@ -171,7 +171,7 @@ class AlarmSettings extends HiveObject {
     DateTime? dateTime,
     Duration? timeout,
     bool? enabled,
-    Uri? audio,
+    String? audio,
     bool? loopAudio,
     bool? vibrate,
     double? volume,
@@ -198,11 +198,6 @@ class AlarmSettings extends HiveObject {
       androidFullScreenIntent:
           androidFullScreenIntent ?? this.androidFullScreenIntent,
     );
-  }
-
-  static Uri? uriFromString(String? path) {
-    if (path == null) return null;
-    return Uri.tryParse("content://${path.replaceFirst('content://', '')}");
   }
 
   /// Converts this `AlarmSettings` instance to JSON data.

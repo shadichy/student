@@ -696,6 +696,22 @@ class DataModel private constructor() {
             mAlarmModel!!.defaultAlarmRingtoneUri = uri
         }
 
+    var defaultPhoneRingtoneUri: Uri
+        /**
+         * @return the uri of the ringtone to which all new alarms default
+         */
+        get() {
+            Utils.enforceMainLooper()
+            return mAlarmModel!!.defaultPhoneRingtoneUri
+        }
+        /**
+         * @param uri the uri of the ringtone to which future new alarms will default
+         */
+        set(uri) {
+            Utils.enforceMainLooper()
+            mAlarmModel!!.defaultPhoneRingtoneUri = uri
+        }
+
     var defaultNotificationRingtoneUri: Uri
         /**
          * @return the uri of the ringtone to which all new alarms default

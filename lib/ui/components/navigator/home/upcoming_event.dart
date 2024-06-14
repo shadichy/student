@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:student/core/databases/hive.dart';
+import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/pages/event_preview.dart';
@@ -25,9 +27,11 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard>
     with SingleTickerProviderStateMixin {
   late bool state = widget.state == CardState.ring;
   String _timeString = "";
+  late final EventTimestamp event;
 
   @override
   void initState() {
+    event = widget.nextupClass.event;
     _getTime();
     Timer.periodic(const Duration(minutes: 1), (Timer t) {
       try {
@@ -43,6 +47,11 @@ class _HomeNextupClassCardState extends State<HomeNextupClassCard>
     setState(() {
       state = newState;
     });
+    if (newState) {
+      Storage().reminderUpdateForEvent(event);
+    } else {
+      Storage().reminderRemoveForEvent(event);
+    }
   }
 
   void _getTime() {

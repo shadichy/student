@@ -21,6 +21,7 @@ class Reminder extends HiveObject {
   String? _audio;
   @HiveField(5)
   Duration _ringDuration;
+
   Duration get scheduleDuration => _scheduleDuration;
   Duration get ringDuration => _ringDuration;
   bool get disabled => _disabled;
@@ -41,7 +42,9 @@ class Reminder extends HiveObject {
         _alarmMode = alarmMode ?? 0,
         _mode = AlarmMode.values[alarmMode ?? 0],
         _disabled = disabled ?? false,
-        _vibrate = vibrate ?? alarmMode == AlarmMode.follow.index,
+        _vibrate = vibrate ?? alarmMode == AlarmMode.follow.index
+            ? scheduleDuration == 0
+            : false,
         _audio = audio;
 
   Reminder.fromJson(Map<String, dynamic> data)

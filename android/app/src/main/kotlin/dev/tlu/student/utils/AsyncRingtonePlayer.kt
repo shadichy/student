@@ -28,7 +28,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
-import android.telephony.TelephonyManager
 import dev.tlu.student.data.DataModel
 import java.io.IOException
 import java.lang.reflect.Method
@@ -232,7 +231,7 @@ class AsyncRingtonePlayer(private val mContext: Context) {
             var alarmNoise = if (inTelephoneCall) getInCallRingtoneUri(context) else ringtoneUri
             // Fall back to the system default alarm if the database does not have an alarm stored.
             if (alarmNoise == null) {
-                alarmNoise = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+                alarmNoise = DataModel.dataModel.defaultAlarmRingtoneUri
                 // LOGGER.v("Using default alarm: $alarmNoise")
             }
 
@@ -591,8 +590,9 @@ class AsyncRingtonePlayer(private val mContext: Context) {
          * @return `true` iff the device is currently in a telephone call
          */
         private fun isInTelephoneCall(context: Context): Boolean {
-            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            return tm.callState != TelephonyManager.CALL_STATE_IDLE
+            return false
+//            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//            return tm.callState != TelephonyManager.CALL_STATE_IDLE
         }
 
         /**

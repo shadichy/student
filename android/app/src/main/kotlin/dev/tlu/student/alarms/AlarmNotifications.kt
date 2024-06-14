@@ -23,6 +23,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.content.res.Resources
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -128,14 +129,14 @@ internal object AlarmNotifications {
                 AlarmStateManager.ALARM_DISMISS_TAG, alarm, AlarmState.DISMISSED_STATE)
         dismissIntent.putExtra(AlarmStateManager.FROM_NOTIFICATION_EXTRA, true)
         val dismissPendingIntent: PendingIntent = PendingIntent.getService(service,
-                ALARM_FIRING_NOTIFICATION_ID, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            alarm.id, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         notification.addAction(icon, "Got it!", dismissPendingIntent)
 
         // Setup Content Action
         val contentIntent: Intent = Intent(service, AlarmActivity::class.java)
         contentIntent.putExtra("id", alarm.id)
         notification.setContentIntent(PendingIntent.getActivity(service,
-                ALARM_FIRING_NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+            alarm.id, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
         // Setup fullscreen intent
 //        val fullScreenIntent: Intent = Intent(service, AlarmActivity::class.java)
@@ -145,12 +146,31 @@ internal object AlarmNotifications {
         contentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION)
         notification.setFullScreenIntent(PendingIntent.getActivity(service,
-                ALARM_FIRING_NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
+            alarm.id, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
                 true)
         notification.setPriority(NotificationCompat.PRIORITY_MAX)
 
+        val nm: NotificationManagerCompat = NotificationManagerCompat.from(service)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                ALARM_CHANNEL_ID,
+                ALARM_CHANNEL_ID,
+                NotificationManager.IMPORTANCE_MAX)
+            nm.createNotificationChannel(channel)
+        }
         clearNotification(service, alarm.id)
-        service.startForeground(ALARM_FIRING_NOTIFICATION_ID, notification.build())
+        val createNotification = notification.build()
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                service.startForeground(alarm.id, createNotification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+            } else {
+                service.startForeground(alarm.id, notification.build())
+            }
+        } catch (e: Exception) {
+            print(e.message)
+            e.printStackTrace()
+            nm.notify(alarm.id, createNotification)
+        }
     }
 
     @JvmStatic

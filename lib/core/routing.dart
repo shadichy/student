@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/navigator/home.dart';
-import 'package:student/ui/navigator/timetable.dart';
 import 'package:student/ui/navigator/school.dart';
 import 'package:student/ui/navigator/student.dart';
+import 'package:student/ui/navigator/timetable.dart';
 import 'package:student/ui/pages/help/mdviewer.dart';
 import 'package:student/ui/pages/info/edu_program.dart';
 import 'package:student/ui/pages/info/major.dart';
@@ -37,7 +37,31 @@ import 'package:student/ui/pages/subject/subject.dart';
 import 'package:student/ui/pages/subject/upcoming_event.dart';
 import 'package:student/ui/pages/tools/timetable_generator.dart';
 
+final class _RouteNames {
+  final program = "program";
+  final major = "major";
+  final student = "student";
+  final decisions = "decisions";
+  final finance = "finance";
+  final learning_result = "learning_result";
+  final status = "status";
+  final timetable = "timetable";
+  final notif = "notif";
+  final papers = "papers";
+  final search = "search";
+  final about = "about";
+  final misc_settings = "misc_settings";
+  final notif_settings = "notif_settings";
+  final settings = "settings";
+  final themes = "themes";
+  final upcoming = "upcoming";
+  final generator = "generator";
+  final help = "help";
+}
+
 abstract class Routing {
+  static final routeNames = _RouteNames();
+
   static void goto(BuildContext context, Widget target) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => target,
@@ -58,46 +82,46 @@ abstract class Routing {
       ];
 
   static final Map<String, TypicalPage> _map = {
-    'program': const InfoEduProgramPage(),
-    'major': const InfoMajorPage(),
-    'student': const InfoStudentPage(),
-    'decisions': const InfoStudentDecisionsPage(),
-    'finance': const LearningFinance(),
-    'learning_result': const LearningResultPage(),
-    'status': const LearningStatusPage(),
-    'timetable': const LearningTimetablePage(),
-    'notif': const NotificationPage(),
-    'papers': const SchoolNewPapersPage(),
-    'search': const SearchPage(),
-    'about': const SettingsAboutPage(),
-    'misc_settings': const SettingsMiscPage(),
-    'notif_settings': const SettingsNotificationsPage(),
-    'settings': const SettingsPage(),
-    'themes': const SettingsThemesPage(),
-    'upcoming': const SubjectUpComingEventPage(),
-    'generator': const ToolsTimetableGeneratorPage(),
-    'help': const HelpMDViewerPage(),
+    routeNames.program: const InfoEduProgramPage(),
+    routeNames.major: const InfoMajorPage(),
+    routeNames.student: const InfoStudentPage(),
+    routeNames.decisions: const InfoStudentDecisionsPage(),
+    routeNames.finance: const LearningFinance(),
+    routeNames.learning_result: const LearningResultPage(),
+    routeNames.status: const LearningStatusPage(),
+    routeNames.timetable: const LearningTimetablePage(),
+    routeNames.notif: const NotificationPage(),
+    routeNames.papers: const SchoolNewPapersPage(),
+    routeNames.search: const SearchPage(),
+    routeNames.about: const SettingsAboutPage(),
+    routeNames.misc_settings: const SettingsMiscPage(),
+    routeNames.notif_settings: const SettingsNotificationsPage(),
+    routeNames.settings: const SettingsPage(),
+    routeNames.themes: const SettingsThemesPage(),
+    routeNames.upcoming: const SubjectUpComingEventPage(),
+    routeNames.generator: const ToolsTimetableGeneratorPage(),
+    routeNames.help: const HelpMDViewerPage(),
   };
 
-  static TypicalPage get program => _map['program']!;
-  static TypicalPage get major => _map['major']!;
-  static TypicalPage get student => _map['student']!;
-  static TypicalPage get decisions => _map['decisions']!;
-  static TypicalPage get finance => _map['finance']!;
-  static TypicalPage get learning_result => _map['learning_result']!;
-  static TypicalPage get status => _map['status']!;
-  static TypicalPage get timetable => _map['timetable']!;
-  static TypicalPage get notif => _map['notif']!;
-  static TypicalPage get papers => _map['papers']!;
-  static TypicalPage get search => _map['search']!;
-  static TypicalPage get about => _map['about']!;
-  static TypicalPage get misc_settings => _map['misc_settings']!;
-  static TypicalPage get notif_settings => _map['notif_settings']!;
-  static TypicalPage get settings => _map['settings']!;
-  static TypicalPage get themes => _map['themes']!;
-  static TypicalPage get upcoming => _map['upcoming']!;
-  static TypicalPage get generator => _map['generator']!;
-  static TypicalPage get help => _map['help']!;
+  static TypicalPage get program => _map[routeNames.program]!;
+  static TypicalPage get major => _map[routeNames.major]!;
+  static TypicalPage get student => _map[routeNames.student]!;
+  static TypicalPage get decisions => _map[routeNames.decisions]!;
+  static TypicalPage get finance => _map[routeNames.finance]!;
+  static TypicalPage get learning_result => _map[routeNames.learning_result]!;
+  static TypicalPage get status => _map[routeNames.status]!;
+  static TypicalPage get timetable => _map[routeNames.timetable]!;
+  static TypicalPage get notif => _map[routeNames.notif]!;
+  static TypicalPage get papers => _map[routeNames.papers]!;
+  static TypicalPage get search => _map[routeNames.search]!;
+  static TypicalPage get about => _map[routeNames.about]!;
+  static TypicalPage get misc_settings => _map[routeNames.misc_settings]!;
+  static TypicalPage get notif_settings => _map[routeNames.notif_settings]!;
+  static TypicalPage get settings => _map[routeNames.settings]!;
+  static TypicalPage get themes => _map[routeNames.themes]!;
+  static TypicalPage get upcoming => _map[routeNames.upcoming]!;
+  static TypicalPage get generator => _map[routeNames.generator]!;
+  static TypicalPage get help => _map[routeNames.help]!;
 
   static TypicalPage Function(SubjectCourse) get course =>
       (p) => SubjectCoursePage(p);

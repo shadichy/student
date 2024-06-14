@@ -4,11 +4,10 @@ import 'dart:async';
 
 import 'package:hive/hive.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/databases/server.dart.disabled';
-import 'package:student/core/databases/shared_prefs.dart.disabled';
 import 'package:student/core/databases/user.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_functions.dart';
+
 part 'notification.g.dart';
 
 @HiveType(typeId: 7)
@@ -122,67 +121,67 @@ class Notif extends HiveObject {
   }
 }
 
-@Deprecated("moving to Hive")
-final class NotificationsGet {
-  NotificationsGet._instance();
-  static final _notifInstance = NotificationsGet._instance();
-  factory NotificationsGet() {
-    return _notifInstance;
-  }
-
-  bool _initialized = false;
-
-  late final List<Notif> _notifications;
-  List<Notif> get notifications => _notifications;
-  late final int _lastUpdated;
-
-  Future<void> awaitInitialized() async {
-    if (_initialized) return;
-    await Future.delayed(const Duration(seconds: 1), () async {
-      await awaitInitialized();
-    });
-  }
-
-  Notif _parseMap(Map<String, dynamic> map) {
-    Notif notif = Notif.fromJson(map);
-    if (notif.applied == false) notif.apply();
-    return notif;
-  }
-
-  Future<void> write() async {
-    await SharedPrefs.setString(
-      "notifications",
-      {
-        'lastUpdated': _lastUpdated,
-        'data': _notifications,
-      },
-    );
-  }
-
-  Future<void> initialize() async {
-    Map<String, dynamic> parsedInfo =
-        (await Server.getString("notifications")) ?? {};
-
-    // _lastUpdated = parsedInfo["lastUpdated"];
-
-    MapEntry<int, List<Iterable<Map<String, dynamic>>>> updated =
-        await Server.getNotifications(
-      ((parsedInfo["lastUpdated"] ?? 0) as int),
-    );
-
-    _notifications = updated.value
-        .map((v) => v.map((e) => _parseMap(e)))
-        .fold(
-          MiscFns.list<Map<String, dynamic>>(
-            (parsedInfo["data"] ?? []) as List,
-          ).map((e) => _parseMap(e)),
-          (p, n) => [...p, ...n],
-        )
-        .toList();
-    _lastUpdated = updated.key;
-
-    // _teachers = parsedInfo;
-    _initialized = true;
-    await write();
-  }
-}
+// @Deprecated("moving to Hive")
+// final class NotificationsGet {
+//   NotificationsGet._instance();
+//   static final _notifInstance = NotificationsGet._instance();
+//   factory NotificationsGet() {
+//     return _notifInstance;
+//   }
+//
+//   bool _initialized = false;
+//
+//   late final List<Notif> _notifications;
+//   List<Notif> get notifications => _notifications;
+//   late final int _lastUpdated;
+//
+//   Future<void> awaitInitialized() async {
+//     if (_initialized) return;
+//     await Future.delayed(const Duration(seconds: 1), () async {
+//       await awaitInitialized();
+//     });
+//   }
+//
+//   Notif _parseMap(Map<String, dynamic> map) {
+//     Notif notif = Notif.fromJson(map);
+//     if (notif.applied == false) notif.apply();
+//     return notif;
+//   }
+//
+//   Future<void> write() async {
+//     await SharedPrefs.setString(
+//       "notifications",
+//       {
+//         'lastUpdated': _lastUpdated,
+//         'data': _notifications,
+//       },
+//     );
+//   }
+//
+//   Future<void> initialize() async {
+//     Map<String, dynamic> parsedInfo =
+//         (await Server.getString("notifications")) ?? {};
+//
+//     // _lastUpdated = parsedInfo["lastUpdated"];
+//
+//     MapEntry<int, List<Iterable<Map<String, dynamic>>>> updated =
+//         await Server.getNotifications(
+//       ((parsedInfo["lastUpdated"] ?? 0) as int),
+//     );
+//
+//     _notifications = updated.value
+//         .map((v) => v.map((e) => _parseMap(e)))
+//         .fold(
+//           MiscFns.list<Map<String, dynamic>>(
+//             (parsedInfo["data"] ?? []) as List,
+//           ).map((e) => _parseMap(e)),
+//           (p, n) => [...p, ...n],
+//         )
+//         .toList();
+//     _lastUpdated = updated.key;
+//
+//     // _teachers = parsedInfo;
+//     _initialized = true;
+//     await write();
+//   }
+// }

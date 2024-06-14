@@ -24,8 +24,6 @@ import android.content.IntentFilter
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.telephony.PhoneStateListener
-import android.telephony.TelephonyManager
 import dev.tlu.student.AlarmActivity
 import dev.tlu.student.provider.Alarm
 import dev.tlu.student.provider.AlarmState
@@ -46,7 +44,7 @@ class AlarmService : Service() {
     private var mIsBound = false
 
     /** Listener for changes in phone state.  */
-    private val mPhoneStateListener = PhoneStateChangeListener()
+//    private val mPhoneStateListener = PhoneStateChangeListener()
 
     /** Whether the receiver is currently registered  */
     private var mIsRegistered = false
@@ -61,11 +59,11 @@ class AlarmService : Service() {
         return super.onUnbind(intent)
     }
 
-    private lateinit var mTelephonyManager: TelephonyManager
+//    private lateinit var mTelephonyManager: TelephonyManager
     private var mCurrentAlarm: Alarm? = null
 
     private fun startAlarm(alarm: Alarm) {
-//        LogUtils.v("AlarmService.start with instance: " + instance.mId)
+        // println("[Android] AlarmService.start with instance: ${alarm.id}")
         if (mCurrentAlarm != null) {
 //            AlarmStateManager.setMissedState(this, mCurrentAlarm!!)
             stopAlarm()
@@ -75,7 +73,7 @@ class AlarmService : Service() {
 
         mCurrentAlarm = alarm
         AlarmNotifications.showAlarmNotification(this, alarm)
-        mTelephonyManager.listen(mPhoneStateListener.init(), PhoneStateListener.LISTEN_CALL_STATE)
+//        mTelephonyManager.listen(mPhoneStateListener.init(), PhoneStateListener.LISTEN_CALL_STATE)
         AlarmKlaxon.start(this, alarm)
         sendBroadcast(Intent(ALARM_ALERT_ACTION))
     }
@@ -90,7 +88,7 @@ class AlarmService : Service() {
 //        LogUtils.v("AlarmService.stop with instance: %s", instanceId)
 
         AlarmKlaxon.stop(this)
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE)
+//        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE)
         sendBroadcast(Intent(ALARM_DONE_ACTION))
 
         stopForeground(true /* removeNotification */)
@@ -101,7 +99,8 @@ class AlarmService : Service() {
 
     private val mActionsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val action: String? = intent.getAction()
+            val action: String? = intent.action
+            // println("[Android] ServiceReceived!")
 //            val id: Int = intent.getIntExtra("id", -1)
 //            if (id == -1) {
 //                return
@@ -138,7 +137,7 @@ class AlarmService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        mTelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//        mTelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
         // Register the broadcast receiver
         val filter = IntentFilter(ALARM_SNOOZE_ACTION)
@@ -150,24 +149,25 @@ class AlarmService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // println("[Android] ServiceCommandReceived!")
 //        LogUtils.v("AlarmService.onStartCommand() with %s", intent)
         if (intent == null) {
-            return Service.START_NOT_STICKY
+            return START_NOT_STICKY
         }
 
-        val id = intent.getIntExtra("id", -1)
-        if (id == -1) {
-            return Service.START_NOT_STICKY
-        }
-        when (intent.getAction()) {
+//        val id = intent.getIntExtra("id", -1)
+//        if (id == -1) {
+//            return Service.START_NOT_STICKY
+//        }
+        when (intent.action) {
             AlarmStateManager.CHANGE_STATE_ACTION -> {
-                AlarmStateManager.handleIntent(this, intent)
+//                AlarmStateManager.handleIntent(this, intent)
 
                 // If state is changed to firing, actually fire the alarm!
                 val alarmState: Int = intent.getIntExtra(AlarmStateManager.ALARM_STATE_EXTRA, -1)
                 if (alarmState == AlarmState.FIRED_STATE) {
 //                    val cr: ContentResolver = this.getContentResolver()
-                    val alarm: Alarm? = intent.getParcelableExtra("alarm")
+                    val alarm: Alarm? = intent.getParcelableExtra(Alarm.NAME)
                     if (alarm == null) {
 //                        LogUtils.e("No instance found to start alarm: %d", instanceId)
                         if (mCurrentAlarm != null) {
@@ -176,10 +176,8 @@ class AlarmService : Service() {
                         }
                     } else if (mCurrentAlarm != null && mCurrentAlarm!!.id == alarm.id) {
 //                        LogUtils.e("Alarm already started for instance: %d", instanceId)
-                    } else if (alarm.highPrior) {
-                        startAlarm(alarm)
                     } else {
-                        AlarmNotifications.showHighPriorityNotification(this, alarm)
+                        startAlarm(alarm)
                     }
                 } else if (alarmState == AlarmState.DISMISSED_STATE) {
                     stopAlarm()
@@ -198,7 +196,7 @@ class AlarmService : Service() {
             }
         }
 
-        return Service.START_NOT_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -214,25 +212,25 @@ class AlarmService : Service() {
         }
     }
 
-    private inner class PhoneStateChangeListener : PhoneStateListener() {
-        private var mPhoneCallState = 0
-
-        fun init(): PhoneStateChangeListener {
-            mPhoneCallState = -1
-            return this
-        }
-
-        override fun onCallStateChanged(state: Int, ignored: String?) {
-            if (mPhoneCallState == -1) {
-                mPhoneCallState = state
-            }
-
-            if (state != TelephonyManager.CALL_STATE_IDLE && state != mPhoneCallState) {
-                startService(AlarmStateManager.createStateChangeIntent(this@AlarmService,
-                        "AlarmService", mCurrentAlarm!!, 99))
-            }
-        }
-    }
+//    private inner class PhoneStateChangeListener : PhoneStateListener() {
+//        private var mPhoneCallState = 0
+//
+//        fun init(): PhoneStateChangeListener {
+//            mPhoneCallState = -1
+//            return this
+//        }
+//
+//        override fun onCallStateChanged(state: Int, ignored: String?) {
+//            if (mPhoneCallState == -1) {
+//                mPhoneCallState = state
+//            }
+//
+////            if (state != TelephonyManager.CALL_STATE_IDLE && state != mPhoneCallState) {
+////                startService(AlarmStateManager.createStateChangeIntent(this@AlarmService,
+////                        "AlarmService", mCurrentAlarm!!, 99))
+////            }
+//        }
+//    }
 
     companion object {
         /**
@@ -262,7 +260,7 @@ class AlarmService : Service() {
          * or using a different instance.
          *
          * @param context application context
-         * @param instance you are trying to stop
+         * @param id you are trying to stop
          */
         @JvmStatic
         fun stopAlarm(context: Context, id: Int) {

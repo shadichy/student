@@ -6,8 +6,8 @@ enum UserGroup { n1, n2, n3 }
 enum UserSemester { k1, k2, k3 }
 
 class User {
-  User._instance();
-  static final _userInstance = User._instance();
+  User._();
+  static final _userInstance = User._();
   factory User() {
     return _userInstance;
   }
@@ -56,7 +56,7 @@ class User {
     credits = data["credits"];
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
         "picture": pictureUri,
@@ -71,6 +71,8 @@ class User {
           return l.map((key, value) => MapEntry(key.index, value));
         }),
       };
+
+  Map<String, dynamic> toJson() => toMap();
 
   Future<void> initialize() async {
     if (_initialized) return;

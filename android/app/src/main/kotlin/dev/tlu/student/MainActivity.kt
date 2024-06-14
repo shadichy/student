@@ -1,7 +1,6 @@
 package dev.tlu.student
 
 import android.content.Intent
-import android.media.RingtoneManager
 import android.net.Uri
 import dev.tlu.student.alarms.AlarmStateManager
 import dev.tlu.student.data.DataModel
@@ -21,7 +20,7 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        DataModel.dataModel.init(context);
+        DataModel.dataModel.init(context)
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -47,7 +46,7 @@ class MainActivity : FlutterActivity() {
                     )
                     if (alarm.id == -1 || alarm.secondsSinceEpoch == -1 || alarm.duration == -1) {
                         result.error("INVALID_FIELDS", "Fields is invalid!", alarm)
-                        return@setMethodCallHandler;
+                        return@setMethodCallHandler
                     }
                     alarm.vibrate = call.argument<Boolean>("vibrate") ?: alarm.vibrate
                     alarm.label = call.argument<String>("title")
@@ -77,34 +76,22 @@ class MainActivity : FlutterActivity() {
                     val id = call.argument<Int>("id")
                     if (id == null) {
                         result.error("INVALID_ID", "ID field is invalid!", null)
-                        return@setMethodCallHandler;
+                        return@setMethodCallHandler
                     }
-//                    val intent = Intent(ACTION_DISMISS_ALARM)
-//                    intent.setAction(ACTION_DISMISS_ALARM)
-//                    intent.putExtra("id", call.argument<Int>("id"))
                     AlarmStateManager.unregisterInstance(context, id)
                     result.success("[Android] stopping alarm $id")
                 }
 
                 "defaultAlarmSound" -> result.success(
-                    RingtoneManager.getActualDefaultRingtoneUri(
-                        this.context,
-                        RingtoneManager.TYPE_ALARM
-                    ).toString()
+                    DataModel.dataModel.defaultAlarmRingtoneUri.toString()
                 )
 
                 "defaultRingtoneSound" -> result.success(
-                    RingtoneManager.getActualDefaultRingtoneUri(
-                        this.context,
-                        RingtoneManager.TYPE_RINGTONE
-                    ).toString()
+                    DataModel.dataModel.defaultPhoneRingtoneUri.toString()
                 )
 
                 "defaultNotificationSound" -> result.success(
-                    RingtoneManager.getActualDefaultRingtoneUri(
-                        this.context,
-                        RingtoneManager.TYPE_NOTIFICATION
-                    ).toString()
+                    DataModel.dataModel.defaultNotificationRingtoneUri.toString()
                 )
                 else -> result.notImplemented()
             }

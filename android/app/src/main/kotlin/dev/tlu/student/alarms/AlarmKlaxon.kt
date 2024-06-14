@@ -21,9 +21,10 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.os.Build
 import android.os.Vibrator
+import dev.tlu.student.data.DataModel
+import dev.tlu.student.provider.Alarm
 import dev.tlu.student.utils.AsyncRingtonePlayer
 import dev.tlu.student.utils.Utils
-import dev.tlu.student.provider.Alarm
 
 /**
  * Manages playing alarm ringtones and vibrating the device.
@@ -49,12 +50,20 @@ internal object AlarmKlaxon {
     fun start(context: Context, alarm: Alarm) {
         // Make sure we are stopped before starting
         stop(context)
-        // LogUtils.v("AlarmKlaxon.start()")
+         // println("[Android] AlarmKlaxon.start(${alarm.id})")
 
 //        if (!AlarmSettingColumns.NO_RINGTONE_URI.equals(alarm.mRingtone)) {
 //            val crescendoDuration = DataModel.dataModel.alarmCrescendoDuration
 //        }
-        getAsyncRingtonePlayer(context)!!.play(alarm.audio, 100)
+        var audioUri = alarm.audio
+        if (audioUri == null) {
+            if (alarm.highPrior) {
+                audioUri = DataModel.dataModel.defaultAlarmRingtoneUri
+            } else {
+                audioUri = DataModel.dataModel.defaultNotificationRingtoneUri
+            }
+        }
+        getAsyncRingtonePlayer(context)!!.play(audioUri, 100)
 
         if (alarm.vibrate) {
             val vibrator: Vibrator = getVibrator(context)

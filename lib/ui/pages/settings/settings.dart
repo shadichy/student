@@ -1,15 +1,14 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/ui/components/interpolator.dart';
+import 'package:student/ui/components/navigator/navigator.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/pages/settings/about.dart';
 import 'package:student/ui/pages/settings/misc.dart';
 import 'package:student/ui/pages/settings/notifications.dart';
 import 'package:student/ui/pages/settings/themes.dart';
-
-import 'package:student/ui/components/navigator/navigator.dart';
 
 class SettingsPage extends StatefulWidget implements TypicalPage {
   @override
@@ -29,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
     "vi": "Tiếng Việt",
     "en": "English",
   };
-  String lang = Storage().fetch<String>("settings.language") ??
+  String lang = Storage().fetch<String>(Config.settings.language) ??
       defaultConfig["settings.language"]!;
 
   void languageAction(BuildContext context) {
@@ -64,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       lang = newLang;
     });
-    Storage().put("settings.language", newLang);
+    Storage().put(Config.settings.language, newLang);
   }
 
   @override

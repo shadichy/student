@@ -22,7 +22,7 @@ class AlarmSettingsAdapter extends TypeAdapter<AlarmSettings> {
       timeout: fields[12] as Duration,
       title: fields[8] as String,
       body: fields[9] as String,
-      audio: fields[3] as Uri?,
+      audio: fields[3] as String?,
       enabled: fields[1] as bool,
       loopAudio: fields[4] as bool,
       vibrate: fields[5] as bool,

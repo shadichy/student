@@ -18,7 +18,6 @@ class Initializer extends StatefulWidget {
 }
 
 class _InitializerState extends State<Initializer> {
-  double invalidOpacity = 0;
   final MobileScannerController controller = MobileScannerController(
     formats: [BarcodeFormat.qrCode],
     // required options for the scanner
@@ -56,16 +55,11 @@ class _InitializerState extends State<Initializer> {
         //   );
         // });
       } catch (e) {
-        setState(() {
-          invalidOpacity = 1;
-        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("QR Code scanned is invalid, please try again!"),
+        ));
         // SharedPrefs.clear();
         Storage().clear();
-        Future.delayed(const Duration(seconds: 3), () {
-          setState(() {
-            invalidOpacity = 0;
-          });
-        });
       }
     });
   }
@@ -146,24 +140,6 @@ class _InitializerState extends State<Initializer> {
                 })
                 .values
                 .toList(),
-          ),
-        ),
-        Positioned(
-          bottom: 64,
-          child: AnimatedOpacity(
-            opacity: invalidOpacity,
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: colorScheme.surface,
-              ),
-              child: const Text(
-                "QR Code scanned is invalid, please try again!",
-              ),
-            ),
           ),
         )
       ]),

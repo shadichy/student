@@ -75,7 +75,7 @@ class AlarmService : Service() {
         AlarmNotifications.showAlarmNotification(this, alarm)
 //        mTelephonyManager.listen(mPhoneStateListener.init(), PhoneStateListener.LISTEN_CALL_STATE)
         AlarmKlaxon.start(this, alarm)
-        sendBroadcast(Intent(ALARM_ALERT_ACTION))
+        sendBroadcast(Intent(ALARM_ALERT_ACTION).putExtra(Alarm.NAME,alarm))
     }
 
     private fun stopAlarm() {

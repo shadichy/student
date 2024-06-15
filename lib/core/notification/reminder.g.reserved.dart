@@ -18,7 +18,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
     };
     return Reminder(
       fields[0] as int,
-      fields[5] as int,
+      ringDuration: fields[5] as int?,
       disabled: fields[1] as bool?,
       vibrate: fields[2] as bool?,
       alarmMode: fields[3] as int?,

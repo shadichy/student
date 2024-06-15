@@ -43,8 +43,12 @@ import java.util.Calendar
 class AlarmStateManager : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (INDICATOR_ACTION == intent.getAction()) {
+        if (INDICATOR_ACTION == intent.action) {
             return
+        }
+        if (AlarmService.ALARM_ALERT_ACTION==intent.action) {
+            val alarm: Alarm = intent.getParcelableExtra(Alarm.NAME) ?: return;
+            scheduleInstanceStateChange(context, alarm.endTime, alarm, AlarmState.DISMISSED_STATE)
         }
 //        DataModel.dataModel.init(context);
 
@@ -607,7 +611,7 @@ class AlarmStateManager : BroadcastReceiver() {
          * @param context application context
          * @param alarm to set state to
          */
-        @JvmStatic
+//        @JvmStatic
 //        fun setPreDismissState(context: Context, instance: AlarmInstance) {
 //            LogUtils.i("Setting predismissed state to instance " + instance.mId)
 //
@@ -629,24 +633,22 @@ class AlarmStateManager : BroadcastReceiver() {
 //            updateNextAlarm(context)
 //        }
 
-                /**
-                 * This just sets the alarm instance to DISMISSED_STATE.
-                 */
-//        private fun setDismissState(context: Context, instance: AlarmInstance) {
-////            LogUtils.i("Setting dismissed state to instance " + instance.mId)
-//            instance.mAlarmState = AlarmState.DISMISSED_STATE
-//            val contentResolver: ContentResolver = context.getContentResolver()
-//            AlarmInstance.updateInstance(contentResolver, instance)
-//        }
+        /**
+         * This just sets the alarm instance to DISMISSED_STATE.
+         */
+        @JvmStatic
+        fun setDismissState(context: Context, alarm: Alarm) {
+            scheduleInstanceStateChange(context, alarm.endTime, alarm, AlarmState.DISMISSED_STATE)
+        }
 
-                /**
-                 * This will delete the alarm instance, update the application notifications, and schedule
-                 * any state changes that need to occur in the future.
-                 *
-                 * @param context application context
-                 * @param alarm to set state to
-                 */
-//        @JvmStatic
+        /**
+         * This will delete the alarm instance, update the application notifications, and schedule
+         * any state changes that need to occur in the future.
+         *
+         * @param context application context
+         * @param id to set state to
+         */
+        @JvmStatic
         fun deleteInstanceAndUpdateParent(context: Context, id: Int) {
 //            LogUtils.i("Deleting instance " + instance.mId + " and updating parent alarm.")
 

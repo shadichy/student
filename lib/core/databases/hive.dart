@@ -87,8 +87,8 @@ final class Storage {
   int get weekdayStart => fetch<int>(conf.Config.misc.startWeekday)!;
 
   late final DateTime _dayStart = _now.subtract(Duration(
-    hours: _now.timeZoneOffset.inHours,
-    microseconds: _now.microsecondsSinceEpoch % 86400000000,
+    hours: _now.hour,
+    microseconds: _now.microsecondsSinceEpoch % 3600000000,
   ));
 
   DateTime get _weekStart =>
@@ -145,6 +145,7 @@ final class Storage {
     _learning = await Hive.openBox<Subject>(_boxes.courses);
     _plan = await Hive.openBox<SemesterPlan>(_boxes.plan);
     _week = await Hive.openBox<WeekTimetable>(_boxes.week);
+    _alarms = await Hive.openBox<AlarmSettings>(_boxes.alarms);
 
     // always return if first init has been done
     await _initTeacher();
@@ -161,7 +162,6 @@ final class Storage {
 
     await initializeMinimal();
 
-    _alarms = await Hive.openBox<AlarmSettings>(_boxes.alarms);
     _reminders = await Hive.openBox<Reminder>(_boxes.reminders);
     _notifications = await Hive.openBox<Notif>(_boxes.notifications);
 
@@ -370,9 +370,12 @@ final class Storage {
 
   Future<void> _reminderFirstRun() async {
     if (fetch<bool>(_vars.alarmFirstRun) == true) return;
-    _reminders.addAll((conf.defaultConfig[conf.Config.notif.reminders] as List)
-        .cast<Map<String, dynamic>>()
-        .map((e) => Reminder.fromJson(e)));
+    _reminders.putAll(Map.fromEntries(
+      (conf.defaultConfig[conf.Config.notif.reminders] as List).map((e) {
+        var r = Reminder.fromJson(e as Map<String, dynamic>);
+        return MapEntry<int, Reminder>(r.scheduleDuration.inMinutes, r);
+      }),
+    ));
     await put(_vars.alarmFirstRun, true);
   }
 
@@ -383,12 +386,13 @@ final class Storage {
     int rTime = _weekStartInt - reminder.scheduleDuration.inSeconds;
     for (var t in events ?? _tList) {
       if (t.intStamp == 0) continue;
-      int time = rTime + 86400 * (t.dayOfWeek % 7) + _cList[t.startStamp][0];
-      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 2)) |
+      DateTime time = MiscFns.epoch(
+          rTime + 86400 * (t.dayOfWeek % 7) + _cList[t.startStamp][0]);
+      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 3)) |
           (t.dayOfWeek << _cList.length) |
           t.intStamp;
 
-      if (time < _now.millisecondsSinceEpoch ~/ 1000) {
+      if (time.add(reminder.ringDuration).isBefore(_now)) {
         if (getAlarm(id) != null) await Alarm.stop(id);
         continue;
       }
@@ -396,7 +400,7 @@ final class Storage {
       if (getAlarm(id) != null) continue;
       await Alarm.set(AlarmSettings(
         id: id,
-        dateTime: MiscFns.epoch(time),
+        dateTime: time,
         timeout: reminder.ringDuration.inMinutes != 0
             ? reminder.ringDuration
             : Duration(hours: t.stampLength),
@@ -413,12 +417,12 @@ final class Storage {
     if (reminder == null || reminder.disabled) return;
     for (var t in events ?? _tList) {
       if (t.intStamp == 0) continue;
-      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 2)) |
+      int id = (reminder.scheduleDuration.inMinutes << (_cList.length + 3)) |
           (t.dayOfWeek << _cList.length) |
           t.intStamp;
       if (getAlarm(id) != null) await Alarm.stop(id);
     }
-    _reminders.deleteAt(index);
+    _reminders.delete(reminder.scheduleDuration.inMinutes);
   }
 
   Future<void> reminderUpdateForEvent(EventTimestamp event) async {
@@ -428,8 +432,8 @@ final class Storage {
   }
 
   Future<void> reminderRemoveForEvent(EventTimestamp event) async {
-    for (int r = 0; r < reminders.length; r++) {
-      reminderRemove(r, [event]);
+    for (var k in _reminders.keys) {
+      reminderRemove(k as int, [event]);
     }
   }
 
@@ -602,10 +606,17 @@ final class Storage {
 
   Iterable<Reminder> get reminders => _reminders.values;
 
+  Map<int, Reminder> get remindersMap => _reminders.toMap().cast();
+
   Future<void> reminderAdd(Reminder reminder,
       [List<EventTimestamp>? events]) async {
     await reminderUpdate(reminder, events);
-    await _reminders.add(reminder);
+    await _reminders.put(reminder.scheduleDuration.inMinutes, reminder);
+    var prevReminder = remindersMap.keys
+        .lastWhereIf((e) => e > reminder.scheduleDuration.inMinutes);
+    if (prevReminder == null) return;
+    await _reminders.get(prevReminder)?.edit(
+        ringDuration: reminder.scheduleDuration.inMinutes - prevReminder);
   }
 
   Iterable<AlarmSettings> get alarms => _alarms.values;

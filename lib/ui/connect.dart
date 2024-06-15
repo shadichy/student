@@ -94,12 +94,10 @@ class _StudentAppState extends State<StudentApp> {
   Future<void> initialize() async {
     if (!initializeStart) return;
 
-    if (StudentApp.defaultRoute == widget.initialRoute) {
-      await User().initialize();
-      await Storage().initialize();
-    } else {
-      await Storage().initializeMinimal();
-    }
+    await User().initialize();
+    (StudentApp.defaultRoute == widget.initialRoute)
+        ? await Storage().initialize()
+        : await Storage().initializeMinimal();
 
     subscription ??= Alarm.ringStream.stream.listen(doRing);
 

@@ -19,4 +19,12 @@ extension IterableExtensions<E> on Iterable<E> {
     }
     return fallback;
   }
+
+  E? lastWhereIf(bool Function(E element) test, {E Function()? orElse}) {
+    try {
+      return lastWhere(test, orElse: orElse);
+    } catch (_) {
+      return null;
+    }
+  }
 }

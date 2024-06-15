@@ -1,9 +1,9 @@
-import 'package:student/core/databases/study_program_basics.dart';
-import 'package:student/core/notification/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
+import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/notification/alarm.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -30,8 +30,8 @@ class _SubjectStampIntentState extends State<SubjectStampIntent> {
     super.initState();
     alarmId = widget.alarmId;
     intStamp = alarmId & EventTimestamp.maxStamp;
-    dayOfWeek = (alarmId >> SPBasics().classTimestamps.length) & 3;
-    scheduleDuration = alarmId >> (SPBasics().classTimestamps.length + 2);
+    dayOfWeek = (alarmId >> SPBasics().classTimestamps.length) & 7;
+    scheduleDuration = alarmId >> (SPBasics().classTimestamps.length + 3);
 
     stamp = Storage().thisWeek.timestamps.firstWhere((e) {
       return e.dayOfWeek == dayOfWeek && e.intStamp == intStamp;

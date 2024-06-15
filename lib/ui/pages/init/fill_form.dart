@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -84,6 +85,22 @@ class _FillFormState extends State<FillForm> {
         Navigator.pop(context);
       },
       "Submit": () {
+        for (var field in [
+          id,
+          name,
+          group,
+          semester,
+          schoolYear,
+          currentSchoolYear,
+          inLearningCourses.firstOrNull
+        ]) {
+          if (field == null) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Required fields are not fulfilled!"),
+            ));
+            return;
+          }
+        }
         List<List<List<String>>> learningCourses = List.generate(
             currentSchoolYear!,
             (i) => List.generate(UserSemester.values.length, (j) => []));
@@ -96,12 +113,12 @@ class _FillFormState extends State<FillForm> {
           "group": group?.index,
           "semester": semester?.index,
           "schoolYear": schoolYear,
-          "learningCourses": learningCourses,
+          "learning": learningCourses,
           "major": major,
           "majorClass": majorClass,
           "majorCred": majorCred,
           "credits": credits,
-        });
+        }).then((_) => Restart.restartApp());
       }
     };
 

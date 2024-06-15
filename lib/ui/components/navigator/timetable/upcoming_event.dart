@@ -52,7 +52,10 @@ class _TimetableUpcomingCardAltState extends State<TimetableUpcomingCardAlt> {
           displayColor: colorScheme.onPrimary,
         );
     return ClickableCard(
-      target: () {},
+      target: () async => await showEventPreview(
+        context: context,
+        eventData: widget.upcomingEvent,
+      ),
       color: colorScheme.primaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(16),

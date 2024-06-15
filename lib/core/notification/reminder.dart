@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:student/core/databases/hive.dart';
+import 'package:student/misc/iterable_extensions.dart';
 
 part 'reminder.g.reserved.dart';
 
@@ -31,14 +33,22 @@ class Reminder extends HiveObject {
   String? get audio => _audio;
 
   Reminder(
-    int scheduleDuration,
-    int ringDuration, {
+    int scheduleDuration, {
+    int? ringDuration,
     bool? disabled,
     bool? vibrate,
     int? alarmMode,
     String? audio,
   })  : _scheduleDuration = Duration(minutes: scheduleDuration),
-        _ringDuration = Duration(minutes: ringDuration),
+        _ringDuration = Duration(
+            minutes: ringDuration ??
+                (scheduleDuration == 0
+                    ? 0
+                    : Storage()
+                            .remindersMap
+                            .keys
+                            .firstWhereIf((e) => e > scheduleDuration) ??
+                        15)),
         _alarmMode = alarmMode ?? 0,
         _mode = AlarmMode.values[alarmMode ?? 0],
         _disabled = disabled ?? false,
@@ -50,8 +60,7 @@ class Reminder extends HiveObject {
   Reminder.fromJson(Map<String, dynamic> data)
       : this(
           data["scheduleDuration"] as int,
-          data["ringDuration"] as int? ??
-              (data["scheduleDuration"] == 0 ? 0 : data["scheduleDuration"]),
+          ringDuration: data["ringDuration"] as int?,
           disabled: data["disabled"] as bool?,
           vibrate: data["vibrate"] as bool?,
           alarmMode: data["alarmMode"] as int?,
@@ -76,6 +85,7 @@ class Reminder extends HiveObject {
     if (vibrate != null) _vibrate = vibrate;
     if (alarmMode != null) _mode = AlarmMode.values[alarmMode];
     if (audio != null) _audio = audio;
+    await Storage().reminderUpdate(this);
     await save();
   }
 

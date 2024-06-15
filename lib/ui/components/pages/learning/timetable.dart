@@ -4,6 +4,8 @@ import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
+import 'package:student/ui/components/pages/event.dart';
+import 'package:student/ui/components/pages/event_preview.dart';
 // import 'package:student/misc/misc_variables.dart';
 // import 'package:student/ui/components/navigator/upcoming_event.dart';
 // import 'package:student/ui/components/navigator/upcoming_event_preview.dart';
@@ -223,14 +225,11 @@ class TimetableBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: InkWell(
-            onTap: () {
-              showBottomSheet(
+            onTap: () async => await showEventPreview(
                 context: context,
-                builder: (context) {
-                  return Container();
-                },
-              );
-            },
+                eventData: s is CourseTimestamp
+                    ? NextupClassView(s)
+                    : UpcomingEvent.fromTimestamp(s)),
             radius: 12,
             child: Padding(
               padding: const EdgeInsets.all(16),

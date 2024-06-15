@@ -47,7 +47,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
 
   void reminderDelete(int index) {
     Storage()
-        .reminderRemove(index)
+        .reminderRemove(reminders[index].scheduleDuration.inMinutes)
         .then((_) => reminderConf(() => reminders.removeAt(index)));
   }
 
@@ -98,10 +98,7 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
                 ).then((time) {
                   if (time == null) return;
                   int scheduleDuration = time.hour * 60 + time.minute;
-                  reminderAdd(Reminder(
-                    scheduleDuration,
-                    scheduleDuration == 0 ? 0 : scheduleDuration,
-                  ));
+                  reminderAdd(Reminder(scheduleDuration));
                 }),
               )
             ],

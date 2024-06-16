@@ -1,6 +1,5 @@
 package dev.tlu.student.provider
 
-import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.Calendar
@@ -12,9 +11,6 @@ class Alarm: Parcelable {
     var id: Int
 
     @JvmField
-    var enabled = true
-
-    @JvmField
     var secondsSinceEpoch: Int
 
     @JvmField
@@ -24,13 +20,22 @@ class Alarm: Parcelable {
     var vibrate: Boolean
 
     @JvmField
-    var label: String?
+    var label: String
 
     @JvmField
-    var body: String?
+    var body: String
 
     @JvmField
-    var audio: Uri? = null
+    var audio: String
+
+    @JvmField
+    var loopAudio: Boolean
+
+    @JvmField
+    var volume: Double
+
+    @JvmField
+    var fadeDuration: Double
 
     @JvmField
     var highPrior: Boolean
@@ -43,21 +48,26 @@ class Alarm: Parcelable {
         vibrate = true
         label = ""
         body= ""
-        audio = null
-        // depends on the database, formerly 14 is the standard so 14+2=16 is used
-        highPrior = id shl 16 == 0
+        audio = ""
+        loopAudio=true
+        volume=-1.0
+        fadeDuration=0.0
+        // depends on the database, formerly 14 is the standard so 14+3=17 is used
+        highPrior = id shl 17 == 0
     }
 
     internal constructor(p: Parcel) {
         id = p.readInt()
         secondsSinceEpoch = p.readInt()
         duration = p.readInt()
-        enabled = p.readInt() == 1
         vibrate = p.readInt() == 1
         highPrior = p.readInt() == 1
-        label = p.readString()
-        body = p.readString()
-        audio = p.readParcelable(null)
+        loopAudio = p.readInt() == 1
+        volume = p.readDouble()
+        fadeDuration = p.readDouble()
+        label = p.readString() ?: ""
+        body = p.readString() ?: ""
+        audio = p.readString() ?: ""
     }
     override fun describeContents(): Int = 0
 
@@ -66,12 +76,14 @@ class Alarm: Parcelable {
         p.writeInt(id)
         p.writeInt(secondsSinceEpoch)
         p.writeInt(duration)
-        p.writeInt(if (enabled) 1 else 0)
         p.writeInt(if (vibrate) 1 else 0)
         p.writeInt(if (highPrior) 1 else 0)
+        p.writeInt(if (loopAudio)1 else 0)
+        p.writeDouble(volume)
+        p.writeDouble(fadeDuration)
         p.writeString(label)
         p.writeString(body)
-        p.writeParcelable(audio, flags)
+        p.writeString(audio)
     }
 
 
@@ -88,7 +100,6 @@ class Alarm: Parcelable {
         return "Alarm{" +
                 "audio=" + audio +
                 ", id=" + id +
-                ", enabled=" + enabled +
                 ", secondsSinceEpoch=" + secondsSinceEpoch +
                 ", duration=" + duration +
                 ", vibrate=" + vibrate +
@@ -113,6 +124,7 @@ class Alarm: Parcelable {
 
     companion object {
         const val NAME = "alarm"
+        const val ID = "id"
 
         @JvmField
         val CREATOR: Parcelable.Creator<Alarm> = object : Parcelable.Creator<Alarm>

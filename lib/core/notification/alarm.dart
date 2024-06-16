@@ -35,7 +35,7 @@ abstract final class Alarm {
       if (showDebugLogs) print('[Student] $message');
     };
 
-    // if (android) AndroidAlarm.init();
+    if (android) AndroidAlarm.init();
     // await AlarmStorage.init();
     await checkAlarm();
     alarmPrint("Alarm initialized");
@@ -50,13 +50,13 @@ abstract final class Alarm {
     if (iOS) await stopAll();
 
     for (var alarm in alarms) {
-      // final now = DateTime.now();
+      final now = DateTime.now();
       await set(alarm);
-      // if (alarm.dateTime.isAfter(now)) {
-      // } else {
-      //   final isRinging = await Alarm.isRinging(alarm.id);
-      //   isRinging ? ringStream.add(alarm) : await stop(alarm.id);
-      // }
+      if (alarm.dateTime.isAfter(now)) {
+      } else {
+        final isRinging = await Alarm.isRinging(alarm.id);
+        isRinging ? ringStream.add(alarm) : await stop(alarm.id);
+      }
     }
   }
 
@@ -64,7 +64,10 @@ abstract final class Alarm {
   ///
   /// If you set an alarm for the same dateTime as an existing one,
   /// the new alarm will replace the existing one.
-  static Future<bool> set(AlarmSettings alarmSettings) async {
+  static Future<bool> set(
+    AlarmSettings alarmSettings, [
+    Iterable<AlarmSettings>? alarms,
+  ]) async {
     alarmSettingsValidation(alarmSettings);
 
     for (var alarm in getAlarms()) {
@@ -108,17 +111,17 @@ abstract final class Alarm {
         '''Alarm id cannot be set smaller than Int min value (-2147483648). Provided: ${alarmSettings.id}''',
       );
     }
-    // if (alarmSettings.volume != null &&
-    //     (alarmSettings.volume! < 0 || alarmSettings.volume! > 1)) {
-    //   throw AlarmException(
-    //     'Volume must be between 0 and 1. Provided: ${alarmSettings.volume}',
-    //   );
-    // }
-    // if (alarmSettings.fadeDuration < 0) {
-    //   throw AlarmException(
-    //     '''Fade duration must be positive. Provided: ${alarmSettings.fadeDuration}''',
-    //   );
-    // }
+    if (alarmSettings.volume != null &&
+        (alarmSettings.volume! < 0 || alarmSettings.volume! > 1)) {
+      throw AlarmException(
+        'Volume must be between 0 and 1. Provided: ${alarmSettings.volume}',
+      );
+    }
+    if (alarmSettings.fadeDuration < 0) {
+      throw AlarmException(
+        '''Fade duration must be positive. Provided: ${alarmSettings.fadeDuration}''',
+      );
+    }
   }
 
   /// When the app is killed, all the processes are terminated

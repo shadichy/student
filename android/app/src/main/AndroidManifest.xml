@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-feature
         android:name="android.hardware.camera"
@@ -25,7 +27,9 @@
     <application
         android:label="TLU Student"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,6 +48,16 @@
             />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.DISMISS_ALARM" />
+                <action android:name="android.intent.action.SHOW_ALARMS" />
+                <action android:name="android.intent.action.SNOOZE_ALARM" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE" />
+                <action android:name="android.intent.action.SET_ALARM" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,80 +86,25 @@
         </activity>
 
         <!-- ============================================================== -->
-        <!-- AlarmClock API components.                                     -->
-        <!-- ============================================================== -->
-
-        <activity
-            android:name=".HandleAlarmApiCalls"
-            android:permission="com.android.alarm.permission.SET_ALARM"
-            android:directBootAware="true"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:showWhenLocked="true"
-            android:taskAffinity=""
-            android:exported="true"
-            android:theme="@android:style/Theme.NoDisplay">
-            <intent-filter>
-                <action android:name="android.intent.action.DISMISS_ALARM" />
-                <action android:name="android.intent.action.SHOW_ALARMS" />
-                <action android:name="android.intent.action.SNOOZE_ALARM" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.VOICE" />
-            </intent-filter>
-        </activity>
-
-        <activity-alias
-            android:name="dev.tlu.student.HandleSetAlarmApiCalls"
-            android:permission="com.android.alarm.permission.SET_ALARM"
-            android:exported="true"
-            android:targetActivity=".HandleAlarmApiCalls">
-            <intent-filter>
-                <action android:name="android.intent.action.SET_ALARM" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.VOICE" />
-            </intent-filter>
-        </activity-alias>
-
-        <!-- ============================================================== -->
         <!-- Alarm components.                                              -->
         <!-- ============================================================== -->
 
         <receiver
-            android:name=".alarms.AlarmStateManager"
-            android:directBootAware="true" />
+            android:name=".alarm.AlarmReceiver"
+            android:directBootAware="true"
+            android:enableOnBackInvokedCallback="true"/>
 
         <service
-            android:name=".alarms.AlarmService"
+            android:name=".alarm.AlarmService"
             android:directBootAware="true"
-            android:foregroundServiceType="mediaPlayback"/>
+            android:foregroundServiceType="mediaPlayback"
+            android:enableOnBackInvokedCallback="true"/>
         
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-        <receiver android:exported="false"
-            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
-        <receiver android:exported="false"
-            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
-
-        <!-- <service android:name=".services.NotificationOnKillService" />
-        <receiver android:name=".alarm.AlarmReceiver" />
-        <service
-            android:name=".alarm.AlarmService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback">
-        </service> -->
 
     </application>
 </manifest>

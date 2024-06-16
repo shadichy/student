@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:characters/characters.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
@@ -54,6 +57,9 @@ final class Storage {
   static final _boxes = _Boxes();
   static final _vars = _Vars();
 
+  static const _maxRetries = 5;
+  static const _retrySeconds = 120;
+
   late final Box _env;
   late final Box _generic;
   late final Box<BaseSubject> _subjects;
@@ -78,11 +84,15 @@ final class Storage {
   late final List<List<int>> _cList;
   late final Iterable<EventTimestamp> _tList;
 
-  late final dynamic defaultAlarmSound;
-  late final dynamic defaultRingtoneSound;
-  late final dynamic defaultNotificationSound;
+  // late final dynamic defaultAlarmSound;
+  // late final dynamic defaultRingtoneSound;
+  // late final dynamic defaultNotificationSound;
+  late final RootIsolateToken token;
 
   static const platform = StudentApp.methodChannel;
+  bool _initialized = false;
+
+  bool get initialized => _initialized;
 
   int get weekdayStart => fetch<int>(conf.Config.misc.startWeekday)!;
 
@@ -116,7 +126,8 @@ final class Storage {
     return unsorted;
   }
 
-  Future<void> register() async {
+  Future<void> register(RootIsolateToken token) async {
+    this.token = token;
     await Hive.initFlutter();
     Hive.registerAdapter(BaseSubjectAdapter());
     Hive.registerAdapter(EventTimestampAdapter());
@@ -137,7 +148,22 @@ final class Storage {
     if (_env.isEmpty) await _env.putAll(conf.env);
   }
 
+  Future<void> initializeAlarm() async {
+    _alarms = await Hive.openBox<AlarmSettings>(_boxes.alarms);
+
+    for (var alarm in alarms) {
+      var dateTime = alarm.dateTime;
+      if ((alarm.id >> (SPBasics().classTimestamps.length + 3) == 0
+              ? dateTime.add(alarm.timeout)
+              : dateTime)
+          .isBefore(_now)) {
+        await alarm.delete();
+      }
+    }
+  }
+
   Future<void> initializeMinimal() async {
+    _initialized = true;
     await _initBasics();
 
     _teachers = await Hive.openBox<String>(_boxes.teachers);
@@ -145,7 +171,7 @@ final class Storage {
     _learning = await Hive.openBox<Subject>(_boxes.courses);
     _plan = await Hive.openBox<SemesterPlan>(_boxes.plan);
     _week = await Hive.openBox<WeekTimetable>(_boxes.week);
-    _alarms = await Hive.openBox<AlarmSettings>(_boxes.alarms);
+    await initializeAlarm();
 
     // always return if first init has been done
     await _initTeacher();
@@ -167,29 +193,45 @@ final class Storage {
 
     await _initReminders();
     _initNotifications().then((_) => _notificationInitialized = true);
-    defaultAlarmSound = await platform.invokeMethod("defaultAlarmSound");
-    defaultRingtoneSound = await platform.invokeMethod("defaultRingtoneSound");
-    defaultNotificationSound =
-        await platform.invokeMethod("defaultNotificationSound");
+    // defaultAlarmSound = await platform.invokeMethod("defaultAlarmSound");
+    // defaultRingtoneSound = await platform.invokeMethod("defaultRingtoneSound");
+    // defaultNotificationSound =
+    //     await platform.invokeMethod("defaultNotificationSound");
     // alarmPrint("Done Hive init");
   }
 
-  Future<T> download<T>(Uri uri, [Map<String, String>? headers]) async {
+  Future<T> download<T>(
+    Uri uri, {
+    Map<String, String>? headers,
+    int? retry,
+  }) async {
+    int retries = retry ?? _maxRetries;
+    Exception? exception;
     final res = await http.get(uri, headers: headers);
 
     if (res.statusCode != 200) {
-      throw http.ClientException("Failed to fetch from $_domain/$endpoint! ");
+      exception = http.ClientException(
+        "Failed to fetch from $_domain/$endpoint! ",
+      );
     }
     try {
       return jsonDecode(res.body) as T;
     } catch (e) {
-      throw FormatException("Failed to parse body from ${uri.toString()}: $e");
+      exception = FormatException(
+        "Failed to parse body from ${uri.toString()}: $e",
+      );
+    }
+    if (retries == 0) {
+      throw exception;
+    } else {
+      await Future.delayed(const Duration(seconds: _retrySeconds));
+      return await download(uri, headers: headers, retry: retries - 1);
     }
   }
 
-  Future<T> endpoint<T>(String endpoint) async => await download<T>(
-      Uri.https(_domain, "$_prefix/$endpoint.json"),
-      _env.get(conf.Config.env.headers));
+  Future<T> endpoint<T>(String endpoint) async =>
+      await download<T>(Uri.https(_domain, "$_prefix/$endpoint.json"),
+          headers: _env.get(conf.Config.env.headers));
 
   T? fetch<T>(String key) => _generic.get(key) as T?;
 
@@ -355,12 +397,8 @@ final class Storage {
 
   Future<void> _initReminders() async {
     await _reminderFirstRun();
-    for (var alarm in alarms) {
-      if (alarm.dateTime.add(alarm.timeout).isBefore(_now)) {
-        await alarm.delete();
-      }
-    }
     await Alarm.init();
+    // Isolate.spawn((t) => _pendingAlarm(t), token);
     _fullStamp = EventTimestamp.maxStamp;
 
     for (var r in reminders) {
@@ -648,4 +686,29 @@ final class Storage {
   int get notificationLastUpdated => fetch(_vars.notificationsLastUpdated) ?? 0;
   Iterable<Notif> get notifications => _notifications.values;
   Future<void> clearNotifications() async => await _notifications.clear();
+}
+
+Future<void> _pendingAlarm(RootIsolateToken token) async {
+  BackgroundIsolateBinaryMessenger.ensureInitialized(token);
+  Hive.init((await getApplicationDocumentsDirectory()).path);
+  Hive.registerAdapter(AlarmSettingsAdapter());
+  await Storage().initializeAlarm();
+  var now = DateTime.now();
+  var alarms = Storage().alarms.where((a) => a.dateTime.isAfter(now)).toList();
+  if (alarms.isEmpty) {
+    Isolate.current.kill(priority: Isolate.immediate);
+    return;
+  }
+  alarms.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+  var first = alarms.first;
+  // await Alarm.stopAll();
+  await Alarm.set(first, alarms);
+  await Storage().removeAlarm(first.id);
+  await Future.delayed(
+    first.dateTime.add(Duration(minutes: 1)).difference(DateTime.now()),
+    () async {
+      Isolate.spawn((t) => _pendingAlarm(t), token);
+    },
+  );
+  Isolate.current.kill(priority: Isolate.beforeNextEvent);
 }

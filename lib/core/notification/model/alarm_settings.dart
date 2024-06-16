@@ -18,7 +18,7 @@ final class AlarmSettings extends HiveObject {
     required this.body,
     this.audio,
     this.enabled = true,
-    this.loopAudio = true,
+    this.loopAudio = false,
     this.vibrate = true,
     this.volume,
     this.fadeDuration = 0.0,

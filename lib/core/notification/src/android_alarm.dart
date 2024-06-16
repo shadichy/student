@@ -23,21 +23,21 @@ abstract final class AndroidAlarm {
 
   /// Listens to the alarm events.
   static void listenToAlarmEvents() {
-    // eventChannel.receiveBroadcastStream().listen(
-    //   (dynamic event) {
-    //     try {
-    //       final eventMap = Map<String, dynamic>.from(event as Map);
-    //       final id = eventMap['id'] as int;
-    //       final settings = Alarm.getAlarm(id);
-    //       if (settings != null) Alarm.ringStream.add(settings);
-    //     } catch (e) {
-    //       alarmPrint('Error receiving alarm events: $e');
-    //     }
-    //   },
-    //   onError: (dynamic error, StackTrace stackTrace) {
-    //     alarmPrint('Error listening to alarm events: $error, $stackTrace');
-    //   },
-    // );
+    eventChannel.receiveBroadcastStream().listen(
+      (dynamic event) {
+        try {
+          final eventMap = Map<String, dynamic>.from(event as Map);
+          final id = eventMap['id'] as int;
+          final settings = Alarm.getAlarm(id);
+          if (settings != null) Alarm.ringStream.add(settings);
+        } catch (e) {
+          alarmPrint('Error receiving alarm events: $e');
+        }
+      },
+      onError: (dynamic error, StackTrace stackTrace) {
+        alarmPrint('Error listening to alarm events: $error, $stackTrace');
+      },
+    );
   }
 
   /// Schedules a native alarm with given [settings] with its notification.
@@ -51,7 +51,7 @@ abstract final class AndroidAlarm {
       final res = await platform.invokeMethod('setAlarm', settings.toMap());
 
       alarmPrint(
-        '''$res at ${settings.dateTime}''',
+        '''[${settings.dateTime}] $res ''',
       );
     } catch (e) {
       throw AlarmException('nativeAndroidAlarm error: $e');
@@ -79,11 +79,12 @@ abstract final class AndroidAlarm {
   static Future<bool> stop(int id) async {
     try {
       final res = await platform.invokeMethod('stopAlarm', {'id': id});
-      alarmPrint(res);
+      alarmPrint("$res");
       if (!hasOtherAlarms) await stopNotificationOnKillService();
       return true;
-    } catch (e) {
-      alarmPrint('Failed to stop alarm: $e');
+    } catch (e, s) {
+      alarmPrint('Failed to stop alarm $id: $e');
+      alarmPrint(s.toString());
       return false;
     }
   }

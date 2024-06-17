@@ -5,40 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e438bcf4-814d-4e0e-ba19-b751efaf8a74" name="Changes" comment="added second activity for alarm">
-      <change afterPath="$PROJECT_DIR$/android/app/backup.tar.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmPlugin.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmReceiver.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/AudioService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationOnKillService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/VibrationService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/VolumeService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/xml/network_security_config.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/TimetableActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable/ic_launcher_monochrome.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/HandleAlarmApiCalls.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarms/AlarmKlaxon.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarms/AlarmNotifications.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarms/AlarmService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarms/AlarmStateManager.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/data/AlarmModel.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/data/DataModel.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/data/Predicate.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/data/TimeModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/provider/Alarm.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/provider/Alarm.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/utils/AlarmAlertWakeLock.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/utils/AlarmUtils.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/utils/AsyncHandler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/utils/AsyncRingtonePlayer.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/utils/Utils.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/databases/hive.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/databases/hive.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/notification/alarm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/alarm.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/default_configs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/default_configs.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/notification/model/alarm_settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/model/alarm_settings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/notification/src/android_alarm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/src/android_alarm.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/notification/model/alarm_settings.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/model/alarm_settings.g.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/components/pages/learning/timetable.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/pages/learning/timetable.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/connect.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/connect.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

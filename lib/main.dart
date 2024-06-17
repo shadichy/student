@@ -10,7 +10,7 @@ import 'package:system_theme/system_theme.dart';
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  await Storage().register(RootIsolateToken.instance!);
+  await Storage().register();
   if (Storage().fetch<bool>(Config.theme.systemTheme) == true) {
     await SystemTheme.accentColor.load();
   }

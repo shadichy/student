@@ -36,8 +36,11 @@ final class _Misc {
 }
 
 final class _Opts {
+  // ignore: non_constant_identifier_names
   final Home = "opts.Home";
+  // ignore: non_constant_identifier_names
   final School = "opts.School";
+  // ignore: non_constant_identifier_names
   final Student = "opts.Student";
 }
 

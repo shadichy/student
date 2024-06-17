@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.RequiresApi
-import dev.tlu.student.AlarmActivity
 import dev.tlu.student.provider.Alarm
 import dev.tlu.student.services.AudioService
 import dev.tlu.student.services.NotificationHandler
@@ -47,16 +46,16 @@ class AlarmService : Service() {
         }
 
         val action = intent.action
-        val alarm: Alarm = intent.getParcelableExtra(Alarm.NAME) ?: return START_NOT_STICKY
-        if (action == STOP_ALARM && alarm.id != -1) {
-            stopAlarm(alarm.id)
+        if (action.equals(STOP_ALARM)) {
+            val id: Int = intent.getIntExtra(Alarm.ID, -1)
+            if (id != -1) stopAlarm(id)
             return START_NOT_STICKY
         }
 
+        val alarm: Alarm = intent.getParcelableExtra(Alarm.NAME) ?: return START_NOT_STICKY
+
         // Handling notification
         val notificationHandler = NotificationHandler(this)
-        val appIntent = Intent(applicationContext, AlarmActivity::class.java)
-        appIntent.putExtra(Alarm.ID, alarm.id)
         val notification = notificationHandler.buildNotification(alarm)
 
         // Starting foreground service safely
@@ -71,17 +70,14 @@ class AlarmService : Service() {
                 startForeground(alarm.id, notification)
             }
         } catch (e: ForegroundServiceStartNotAllowedException) {
-            val nm =
-                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-            try {
-                nm?.cancel(alarm.id)
-            } catch (_: Exception) {
-            }
             Log.e("AlarmService", "Foreground service start not allowed", e)
             return START_NOT_STICKY // Return if cannot start foreground service
         } catch (e: SecurityException) {
             Log.e("AlarmService", "Security exception in starting foreground service", e)
             return START_NOT_STICKY // Return on security exception
+        } catch (e: Exception) {
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)
+                ?.notify(alarm.id, notification)
         }
 
         AlarmPlugin.eventSink?.success(mapOf(Alarm.ID to alarm.id))
@@ -104,14 +100,20 @@ class AlarmService : Service() {
 
         ringingAlarmIds = audioService?.getPlayingMediaPlayersIds()!!
 
-        if (alarm.vibrate) {
-            vibrationService?.startVibrating(longArrayOf(0, 500, 500), 1)
-        }
+        if (alarm.vibrate) vibrationService?.startVibrating(
+            longArrayOf(0, 500, 500),
+            if (alarm.loopVibrate) 1 else 0
+        )
 
         // Wake up the device
-        val wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
+        (getSystemService(Context.POWER_SERVICE) as PowerManager)
             .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "app:AlarmWakelockTag")
-        wakeLock.acquire(5 * 60 * 1000L) // 5 minutes
+            .acquire(5 * 60 * 1000L) // 5 minutes
+
+        val delayedStopIntent = Intent(this, AlarmReceiver::class.java)
+            .putExtra(Alarm.ID, alarm.id)
+            .setAction(STOP_ALARM)
+        AlarmPlugin.handleDelayedAlarm(this, delayedStopIntent, alarm.endTime, alarm.id)
 
         return START_STICKY
     }
@@ -131,16 +133,15 @@ class AlarmService : Service() {
             vibrationService?.stopVibrating()
             if (audioService?.isMediaPlayerEmpty() == true) stopSelf()
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-            } else {
-                stopForeground(true)
-            }
-            val nm =
-                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
             try {
-                nm?.cancel(id)
-            } catch (_: Exception) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                } else {
+                    stopForeground(true)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(id)
             }
         } catch (e: IllegalStateException) {
             Log.e("AlarmService", "Illegal State: ${e.message}", e)
@@ -156,7 +157,11 @@ class AlarmService : Service() {
         vibrationService?.stopVibrating()
         volumeService?.restorePreviousVolume(showSystemUI)
 
-        stopForeground(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            stopForeground(true)
+        }
 
         // Call the superclass method
         super.onDestroy()

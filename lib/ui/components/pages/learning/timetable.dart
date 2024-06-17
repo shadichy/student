@@ -240,7 +240,7 @@ class TimetableBox extends StatelessWidget {
                     s is CourseTimestamp
                         ? "${s.room}\n${s.courseID}"
                         : s.eventName,
-                    maxLines: 3,
+                    maxLines: 4,
                     overflow: TextOverflow.clip,
                     style: textTheme.labelLarge!.copyWith(
                       fontWeight: FontWeight.w500,

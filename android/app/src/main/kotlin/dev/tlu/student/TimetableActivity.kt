@@ -1,21 +1,17 @@
 package dev.tlu.student
 
 import dev.tlu.student.alarm.AlarmPlugin
-import dev.tlu.student.provider.Alarm
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-class AlarmActivity : FlutterActivity() {
+class TimetableActivity : FlutterActivity() {
     private val methodChannel = MainActivity.methodChannel
-
-
-    override fun getDartEntrypointFunctionName(): String {
-        return Alarm.NAME
-    }
+    private val eventChannel = MainActivity.methodChannel
 
     override fun getDartEntrypointArgs(): List<String> {
-        return List(1) { _ -> "${intent.getIntExtra(Alarm.ID, 0)}" }
+        return List(1) { _ -> """{"route": "timetable"}""" }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -31,5 +27,7 @@ class AlarmActivity : FlutterActivity() {
                 result
             )
         }
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, eventChannel)
+            .setStreamHandler(MainActivity.eventStreamHandler)
     }
 }

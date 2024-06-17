@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:isolate';
 
 import 'package:characters/characters.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/study_plan.dart';
 import 'package:student/core/databases/study_program_basics.dart';
@@ -87,7 +84,7 @@ final class Storage {
   // late final dynamic defaultAlarmSound;
   // late final dynamic defaultRingtoneSound;
   // late final dynamic defaultNotificationSound;
-  late final RootIsolateToken token;
+  // late final RootIsolateToken token;
 
   static const platform = StudentApp.methodChannel;
   bool _initialized = false;
@@ -126,8 +123,8 @@ final class Storage {
     return unsorted;
   }
 
-  Future<void> register(RootIsolateToken token) async {
-    this.token = token;
+  Future<void> register() async {
+    // this.token = token;
     await Hive.initFlutter();
     Hive.registerAdapter(BaseSubjectAdapter());
     Hive.registerAdapter(EventTimestampAdapter());
@@ -688,27 +685,27 @@ final class Storage {
   Future<void> clearNotifications() async => await _notifications.clear();
 }
 
-Future<void> _pendingAlarm(RootIsolateToken token) async {
-  BackgroundIsolateBinaryMessenger.ensureInitialized(token);
-  Hive.init((await getApplicationDocumentsDirectory()).path);
-  Hive.registerAdapter(AlarmSettingsAdapter());
-  await Storage().initializeAlarm();
-  var now = DateTime.now();
-  var alarms = Storage().alarms.where((a) => a.dateTime.isAfter(now)).toList();
-  if (alarms.isEmpty) {
-    Isolate.current.kill(priority: Isolate.immediate);
-    return;
-  }
-  alarms.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-  var first = alarms.first;
-  // await Alarm.stopAll();
-  await Alarm.set(first, alarms);
-  await Storage().removeAlarm(first.id);
-  await Future.delayed(
-    first.dateTime.add(Duration(minutes: 1)).difference(DateTime.now()),
-    () async {
-      Isolate.spawn((t) => _pendingAlarm(t), token);
-    },
-  );
-  Isolate.current.kill(priority: Isolate.beforeNextEvent);
-}
+// Future<void> _pendingAlarm(RootIsolateToken token) async {
+//   BackgroundIsolateBinaryMessenger.ensureInitialized(token);
+//   Hive.init((await getApplicationDocumentsDirectory()).path);
+//   Hive.registerAdapter(AlarmSettingsAdapter());
+//   await Storage().initializeAlarm();
+//   var now = DateTime.now();
+//   var alarms = Storage().alarms.where((a) => a.dateTime.isAfter(now)).toList();
+//   if (alarms.isEmpty) {
+//     Isolate.current.kill(priority: Isolate.immediate);
+//     return;
+//   }
+//   alarms.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+//   var first = alarms.first;
+//   // await Alarm.stopAll();
+//   await Alarm.set(first, alarms);
+//   await Storage().removeAlarm(first.id);
+//   await Future.delayed(
+//     first.dateTime.add(Duration(minutes: 1)).difference(DateTime.now()),
+//     () async {
+//       Isolate.spawn((t) => _pendingAlarm(t), token);
+//     },
+//   );
+//   Isolate.current.kill(priority: Isolate.beforeNextEvent);
+// }

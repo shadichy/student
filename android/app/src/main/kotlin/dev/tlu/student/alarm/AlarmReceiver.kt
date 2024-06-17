@@ -10,7 +10,7 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val serviceIntent = Intent(context, AlarmService::class.java)
         serviceIntent.putExtras(intent)
-
+        serviceIntent.action = intent.action
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val pendingIntent = PendingIntent.getForegroundService(context, 1, serviceIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             pendingIntent.send()

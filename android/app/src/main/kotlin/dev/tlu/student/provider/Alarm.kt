@@ -20,6 +20,9 @@ class Alarm: Parcelable {
     var vibrate: Boolean
 
     @JvmField
+    var loopVibrate: Boolean
+
+    @JvmField
     var label: String
 
     @JvmField
@@ -46,10 +49,11 @@ class Alarm: Parcelable {
         this.secondsSinceEpoch = secondsSinceEpoch
         this.duration = duration
         vibrate = true
+        loopVibrate = false
         label = ""
         body= ""
         audio = ""
-        loopAudio=true
+        loopAudio = false
         volume=-1.0
         fadeDuration=0.0
         // depends on the database, formerly 14 is the standard so 14+3=17 is used
@@ -63,6 +67,7 @@ class Alarm: Parcelable {
         vibrate = p.readInt() == 1
         highPrior = p.readInt() == 1
         loopAudio = p.readInt() == 1
+        loopVibrate = p.readInt() == 1
         volume = p.readDouble()
         fadeDuration = p.readDouble()
         label = p.readString() ?: ""
@@ -78,7 +83,8 @@ class Alarm: Parcelable {
         p.writeInt(duration)
         p.writeInt(if (vibrate) 1 else 0)
         p.writeInt(if (highPrior) 1 else 0)
-        p.writeInt(if (loopAudio)1 else 0)
+        p.writeInt(if (loopAudio) 1 else 0)
+        p.writeInt(if (loopVibrate) 1 else 0)
         p.writeDouble(volume)
         p.writeDouble(fadeDuration)
         p.writeString(label)

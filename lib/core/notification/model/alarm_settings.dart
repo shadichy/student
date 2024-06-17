@@ -20,6 +20,7 @@ final class AlarmSettings extends HiveObject {
     this.enabled = true,
     this.loopAudio = false,
     this.vibrate = true,
+    this.loopVibrate = false,
     this.volume,
     this.fadeDuration = 0.0,
     this.enableNotificationOnKill = false,
@@ -92,6 +93,9 @@ final class AlarmSettings extends HiveObject {
   @HiveField(5)
   final bool vibrate;
 
+  @HiveField(6)
+  final bool loopVibrate;
+
   /// Specifies the system volume level to be set at the designated [dateTime].
   ///
   /// Accepts a value between 0 (mute) and 1 (maximum volume).
@@ -102,20 +106,20 @@ final class AlarmSettings extends HiveObject {
   /// If left unspecified or set to `null`, the current system volume
   /// at the time of the alarm will be used.
   /// Defaults to `null`.
-  @HiveField(6)
+  @HiveField(7)
   final double? volume;
 
   /// Duration, in seconds, over which to fade the alarm ringtone.
   /// Set to 0.0 by default, which means no fade.
-  @HiveField(7)
+  @HiveField(8)
   final double fadeDuration;
 
   /// Title of the notification to be shown when alarm is triggered.
-  @HiveField(8)
+  @HiveField(9)
   final String title;
 
   /// Body of the notification to be shown when alarm is triggered.
-  @HiveField(9)
+  @HiveField(10)
   final String body;
 
   /// Whether to show a notification when application is killed by user.
@@ -126,7 +130,7 @@ final class AlarmSettings extends HiveObject {
   ///
   /// Recommended: set to `Platform.isIOS` to enable it only
   /// on iOS. Defaults to `true`.
-  @HiveField(10)
+  @HiveField(11)
   final bool enableNotificationOnKill;
 
   /// Whether to turn screen on and display full screen notification
@@ -136,33 +140,12 @@ final class AlarmSettings extends HiveObject {
   /// notification. You can check if the permission is granted and request it
   /// with the [auto_start_flutter](https://pub.dev/packages/auto_start_flutter)
   /// package.
-  @HiveField(11)
+  @HiveField(12)
   final bool androidFullScreenIntent;
 
   // Duration of the notification
-  @HiveField(12)
+  @HiveField(13)
   final Duration timeout;
-
-  /// Returns a hash code for this `AlarmSettings` instance using
-  /// Jenkins hash function.
-  @override
-  int get hashCode {
-    var hash = 0;
-
-    hash = hash ^ id.hashCode;
-    hash = hash ^ dateTime.hashCode;
-    hash = hash ^ audio.hashCode;
-    hash = hash ^ loopAudio.hashCode;
-    hash = hash ^ vibrate.hashCode;
-    hash = hash ^ volume.hashCode;
-    hash = hash ^ fadeDuration.hashCode;
-    hash = hash ^ (title.hashCode);
-    hash = hash ^ (body.hashCode);
-    hash = hash ^ enableNotificationOnKill.hashCode;
-    hash = hash & 0x3fffffff;
-
-    return hash;
-  }
 
   /// Creates a copy of `AlarmSettings` but with the given fields replaced with
   /// the new values.
@@ -174,6 +157,7 @@ final class AlarmSettings extends HiveObject {
     String? audio,
     bool? loopAudio,
     bool? vibrate,
+    bool? loopVibrate,
     double? volume,
     double? fadeDuration,
     String? title,
@@ -189,6 +173,7 @@ final class AlarmSettings extends HiveObject {
       audio: audio ?? this.audio,
       loopAudio: loopAudio ?? this.loopAudio,
       vibrate: vibrate ?? this.vibrate,
+      loopVibrate: loopVibrate ?? this.loopVibrate,
       volume: volume ?? this.volume,
       fadeDuration: fadeDuration ?? this.fadeDuration,
       title: title ?? this.title,
@@ -211,6 +196,7 @@ final class AlarmSettings extends HiveObject {
         'body': body,
         'vibrate': vibrate,
         'loopAudio': loopAudio,
+        'loopVibrate': loopVibrate,
         'volume': volume,
         'fadeDuration': fadeDuration,
         'ifKilled': enableNotificationOnKill,
@@ -222,22 +208,4 @@ final class AlarmSettings extends HiveObject {
   /// Returns all the properties of `AlarmSettings` for debug purposes.
   @override
   String toString() => jsonEncode(toMap());
-
-  /// Compares two AlarmSettings.
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AlarmSettings &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          dateTime == other.dateTime &&
-          audio == other.audio &&
-          loopAudio == other.loopAudio &&
-          vibrate == other.vibrate &&
-          volume == other.volume &&
-          fadeDuration == other.fadeDuration &&
-          title == other.title &&
-          body == other.body &&
-          enableNotificationOnKill == other.enableNotificationOnKill &&
-          androidFullScreenIntent == other.androidFullScreenIntent;
 }

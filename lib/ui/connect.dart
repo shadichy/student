@@ -109,6 +109,14 @@ class _StudentAppState extends State<StudentApp> {
           StudentApp.alarmRoute:
               SubjectStampIntent(widget.arguments["id"] ?? -1),
         }[widget.initialRoute ?? StudentApp.defaultRoute]!;
+
+        if (arguments?["route"] != null) {
+          try {
+            Routing.goto(context, Routing.getRoute(arguments?["route"])!);
+          } catch (e) {
+            //   route not found
+          }
+        }
       } catch (e, s) {
         alarmPrint(e.toString());
         alarmPrint(s.toString());
@@ -181,14 +189,6 @@ class _StudentAppState extends State<StudentApp> {
           bodyColor: textColor,
         ),
       );
-    }
-
-    if (arguments?["route"] != null) {
-      try {
-        Routing.goto(context, Routing.getRoute(arguments?["route"])!);
-      } catch (e) {
-        //   route not found
-      }
     }
 
     return KeyedSubtree(

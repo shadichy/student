@@ -28,6 +28,7 @@ import 'package:student/ui/pages/settings/about.dart';
 import 'package:student/ui/pages/settings/misc.dart';
 import 'package:student/ui/pages/settings/notifications.dart';
 import 'package:student/ui/pages/settings/quick_action.dart';
+import 'package:student/ui/pages/settings/reminders.dart';
 import 'package:student/ui/pages/settings/settings.dart';
 import 'package:student/ui/pages/settings/themes.dart';
 import 'package:student/ui/pages/subject/course.dart';
@@ -52,6 +53,7 @@ final class _RouteNames {
   final about = "about";
   final misc_settings = "misc_settings";
   final notif_settings = "notif_settings";
+  final reminders = "reminders";
   final settings = "settings";
   final themes = "themes";
   final upcoming = "upcoming";
@@ -96,6 +98,7 @@ abstract class Routing {
     routeNames.about: const SettingsAboutPage(),
     routeNames.misc_settings: const SettingsMiscPage(),
     routeNames.notif_settings: const SettingsNotificationsPage(),
+    routeNames.reminders: const SettingsRemindersPage(),
     routeNames.settings: const SettingsPage(),
     routeNames.themes: const SettingsThemesPage(),
     routeNames.upcoming: const SubjectUpComingEventPage(),
@@ -117,6 +120,7 @@ abstract class Routing {
   static TypicalPage get about => _map[routeNames.about]!;
   static TypicalPage get misc_settings => _map[routeNames.misc_settings]!;
   static TypicalPage get notif_settings => _map[routeNames.notif_settings]!;
+  static TypicalPage get reminders => _map[routeNames.reminders]!;
   static TypicalPage get settings => _map[routeNames.settings]!;
   static TypicalPage get themes => _map[routeNames.themes]!;
   static TypicalPage get upcoming => _map[routeNames.upcoming]!;

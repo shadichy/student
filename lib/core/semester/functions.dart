@@ -6,6 +6,7 @@ import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/misc/misc_functions.dart';
+
 part 'functions.g.reserved.dart';
 
 enum TimestampType { offline, online }
@@ -175,19 +176,16 @@ class EventTimeline {
   EventTimeline({
     required this.label,
     required this.timestamp,
-  })  : heldBy = timestamp
-            .where((t) => t.heldBy != null)
-            .map((t) => t.heldBy!)
-            .toList(),
-        locations = timestamp
-            .where((t) => t.location != null)
-            .map((t) => t.location!)
-            .toList(),
+  })  : heldBy = _unique(timestamp, (t) => t.heldBy),
+        locations = _unique(timestamp, (t) => t.location),
         intEvent = timestamp.fold(BigInt.zero, (f, i) {
           return f |
               (BigInt.from(i.intStamp) <<
                   (i.dayOfWeek * SPBasics().classTimestamps.length));
         });
+
+  static List<T> _unique<T, E>(Iterable<E> l, T? Function(E) cb) =>
+      l.where((t) => cb(t) != null).map((t) => cb(t)!).toSet().toList();
 
   int get length => timestamp.length;
 

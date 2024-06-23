@@ -1,6 +1,7 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/notification/notification.dart';
+import 'package:student/core/routing.dart';
 
 class NotifExpand extends StatefulWidget {
   final Notif notification;
@@ -55,7 +56,8 @@ class _NotifExpandState extends State<NotifExpand> {
     }
 
     return AnimatedSize(
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 200),
+      alignment: Alignment.topCenter,
       child: InkWell(
         // onTap: isExpanded ? widget.notification.target : null,
         child: Row(
@@ -70,37 +72,58 @@ class _NotifExpandState extends State<NotifExpand> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isExpanded)
-                    textBox(
+                  AnimatedCrossFade(
+                    crossFadeState: isExpanded
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 200),
+                    firstChild: textBox(
                       timeNote,
                       style: noteStyle,
                     ),
+                    secondChild: const SizedBox(),
+                  ),
                   Row(
                     children: [
                       textBox(
                         widget.notification.title,
                         style: titleStyle,
                       ),
-                      if (!isExpanded)
-                        textBox(
+                      AnimatedCrossFade(
+                        crossFadeState: !isExpanded
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        duration: const Duration(milliseconds: 200),
+                        firstChild: textBox(
                           (" \u2022 $timeNote"),
                           style: noteStyle,
                         ),
+                        secondChild: const SizedBox(),
+                      ),
                     ],
                   ),
-                  textBox(
-                    widget.notification.content,
-                    style: contentStyle,
-                    maxLines: isExpanded ? 2 : 1,
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 240),
+                    child: textBox(
+                      widget.notification.content,
+                      style: contentStyle,
+                      maxLines: isExpanded ? 2 : 1,
+                    ),
                   ),
-                  if (isExpanded)
-                    InkWell(
-                      // onTap: widget.notification.target,
+                  AnimatedCrossFade(
+                    crossFadeState: isExpanded
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 200),
+                    firstChild: InkWell(
+                      // onTap: ()=>Routing.goto(context, Routing.notifPage(widget.notification).target),
                       child: textBox(
                         "More...",
                         style: linkStyle,
                       ),
                     ),
+                    secondChild: const SizedBox(),
+                  ),
                 ],
               ),
             ),
@@ -192,69 +215,85 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 200),
+      alignment: Alignment.topCenter,
+      child: InkWell(
+        onTap: () => Routing.goto(context, Routing.notif),
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colorScheme.primary.withOpacity(0.05),
-                ),
-                padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Symbols.notifications,
-                  color: colorScheme.onPrimaryContainer,
-                  size: 16,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    "Latest Notifications",
-                    style: textTheme.labelLarge,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: IconButton(
-                  onPressed: changeState,
-                  icon: Icon(
-                      isExpanded
-                          ? Symbols.keyboard_arrow_up
-                          : Symbols.keyboard_arrow_down,
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.primary.withOpacity(0.05),
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Symbols.notifications,
+                      color: colorScheme.onPrimaryContainer,
                       size: 16,
-                      color: colorScheme.onPrimaryContainer),
-                  style: IconButton.styleFrom(
-                    backgroundColor: colorScheme.primary.withOpacity(0.05),
+                    ),
                   ),
-                  splashRadius: 1,
-                  iconSize: 16,
-                  padding: EdgeInsets.zero,
-                ),
-              )
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        "Latest Notifications",
+                        style: textTheme.labelLarge,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: IconButton(
+                      onPressed: changeState,
+                      icon: Icon(
+                          isExpanded
+                              ? Symbols.keyboard_arrow_up
+                              : Symbols.keyboard_arrow_down,
+                          size: 16,
+                          color: colorScheme.onPrimaryContainer),
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.primary.withOpacity(0.05),
+                      ),
+                      splashRadius: 1,
+                      iconSize: 16,
+                      padding: EdgeInsets.zero,
+                    ),
+                  )
+                ],
+              ),
+              const Divider(
+                color: Colors.transparent,
+                height: 4,
+              ),
+              Column(
+                children: List.generate(notifications.length, (n) {
+                  return Dismissible(
+                    key: Key(notifications[n].title),
+                    onDismissed: (_) => setState(() {
+                      notifications.removeAt(n);
+                    }),
+                    child: AnimatedCrossFade(
+                      firstChild: NotifExpand(notifications[n]),
+                      secondChild: titlePreview(notifications[n]),
+                      crossFadeState: isExpanded
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: const Duration(milliseconds: 200),
+                    ),
+                  );
+                }),
+              ),
             ],
           ),
-          const Divider(
-            color: Colors.transparent,
-            height: 4,
-          ),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 100),
-            child: Column(
-              children: List.generate(notifications.length, (n) {
-                return isExpanded
-                    ? NotifExpand(notifications[n])
-                    : titlePreview(notifications[n]);
-              }),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

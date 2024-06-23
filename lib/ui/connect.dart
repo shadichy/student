@@ -199,14 +199,14 @@ class _StudentAppState extends State<StudentApp> {
         darkTheme: buildTheme(Brightness.dark),
         themeMode: ThemeMode.values[mode],
         home: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(
+          value: SystemUiOverlayStyle(
             systemNavigationBarColor: /* colorScheme.primary.withOpacity(0.08) */
                 Colors.transparent,
             statusBarColor: Colors.transparent,
-            // statusBarIconBrightness:
-            //     Theme.of(context).brightness == Brightness.light
-            //         ? Brightness.dark
-            //         : Brightness.light,
+            statusBarIconBrightness:
+                Theme.of(context).brightness == Brightness.light
+                    ? Brightness.dark
+                    : Brightness.light,
           ),
           child: initializeStart ? mainContent : const Initializer(),
         ),

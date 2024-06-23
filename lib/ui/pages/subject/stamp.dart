@@ -3,7 +3,9 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/semester/functions.dart';
+import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
+import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/pages/event_detail.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/pages/subject/course.dart';
@@ -45,6 +47,7 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
       Storage().getSubjectBaseAlt(courseID)!;
   late SubjectCourse course = Storage().getCourse(courseID)!;
   late String teacher = widget.stamp.teacherID;
+  late final eventData = NextupClassView(widget.stamp, subject.name);
 
   final List<String> dayOfWeek = [
     'Sunday',
@@ -61,7 +64,8 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
     // TextTheme textTheme = Theme.of(context).textTheme;
     return EventPage(
       label: "Thông tin lớp học",
-      title: widget.title,
+      title: subject.name,
+      subtitle: courseID,
       children: [
         SubPage(
           label: "Subject name",
@@ -74,12 +78,20 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
           target: SubjectCoursePage(course),
         ),
         SubPage(
-          label: "Instructor/Teacher",
-          desc: "($teacher) ${Storage().getTeacher(teacher)}",
+          label: "Start time",
+          desc: MiscFns.timeFormat(eventData.startTime),
+        ),
+        SubPage(
+          label: "End time",
+          desc: MiscFns.timeFormat(eventData.endTime),
         ),
         SubPage(
           label: "Week day",
           desc: dayOfWeek[widget.stamp.dayOfWeek],
+        ),
+        SubPage(
+          label: "Instructor/Teacher",
+          desc: "($teacher) ${Storage().getTeacher(teacher)}",
         ),
         if (widget.stamp.timestampType == TimestampType.offline)
           SubPage(

@@ -3,7 +3,6 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/notification/notification.dart';
 import 'package:student/misc/misc_widget.dart';
-import 'package:student/misc/parser.dart';
 import 'package:student/ui/components/navigator/home/glance_widget.dart';
 import 'package:student/ui/components/navigator/home/notification_widget.dart';
 import 'package:student/ui/components/navigator/home/topbar_widget.dart';
@@ -30,15 +29,18 @@ class _HomePageState extends State<HomePage> {
 
   bool get hasNotif => _notif.isNotEmpty;
 
+  void setNotifications(_) {
+    setState(() {
+      _notif = Storage().notifications.where((e) => !e.read).take(4);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
-    Storage().awaitNotificationInitialized().then((_) {
-      setState(() {
-        _notif = Storage().notifications.where((e) => !e.read).take(4);
-      });
-    });
+    if (!mounted) return;
+    Storage().awaitNotificationInitialized().then(setNotifications);
   }
 
   @override
@@ -51,8 +53,15 @@ class _HomePageState extends State<HomePage> {
       appBar: const HomeTopBar(),
       body: [
         const HomeGlance(),
-        if (hasNotif) HomeNotifWidget(_notif.toList()),
-        HomeNextupClassWidget(SampleTimetableData.from2dList([])),
+        const NextupEventWidget(),
+        // HomeNextupClassWidget(SampleTimetableData.from2dList([])),
+        // if (hasNotif) HomeNotifWidget(_notif.toList()),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: hasNotif ? HomeNotifWidget(_notif.toList()) : const SizedBox(),
+        ),
         OptionLabelWidgets(widget.title),
         MWds.divider(16),
         Text(

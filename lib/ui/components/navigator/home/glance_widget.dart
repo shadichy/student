@@ -13,17 +13,19 @@ class _HomeGlanceState extends State<HomeGlance> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme.apply(displayColor: colorScheme.onPrimaryContainer,bodyColor: colorScheme.onPrimaryContainer);
+    TextTheme textTheme = theme.textTheme.apply(
+        displayColor: colorScheme.onPrimaryContainer,
+        bodyColor: colorScheme.onPrimaryContainer);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(16),
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
-        // border: Border.all(color: colorScheme.primaryContainer, width:2,),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      // decoration: BoxDecoration(
+      //   color: colorScheme.primaryContainer,
+      //   // border: Border.all(color: colorScheme.primaryContainer, width:2,),
+      //   shape: BoxShape.rectangle,
+      //   borderRadius: BorderRadius.circular(16.0),
+      // ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

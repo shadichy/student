@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:student/core/databases/hive.dart';
+import 'package:student/core/default_configs.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/misc/misc_widget.dart';
-import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/navigator/timetable/upcoming_event.dart';
+import 'package:student/ui/components/pages/event.dart';
 import 'package:student/ui/components/section_label.dart';
 
 class TimetableUpcomingWidget extends StatefulWidget {
@@ -17,6 +19,7 @@ class TimetableUpcomingWidget extends StatefulWidget {
 
 class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
   late final Iterable<UpcomingEvent> classStamps;
+  final int maxUEventItems = Storage().fetch(Config.misc.maxUEventItems);
 
   int index = 0;
 
@@ -55,7 +58,9 @@ class _TimetableUpcomingWidgetState extends State<TimetableUpcomingWidget> {
             return TimetableUpcomingCardAlt(classStamps.elementAt(index));
           }),
           separatorBuilder: ((context, index) => MWds.divider(8)),
-          itemCount: classStamps.length > 2 ? 2 : classStamps.length,
+          itemCount: classStamps.length > maxUEventItems
+              ? maxUEventItems
+              : classStamps.length,
           // scrollDirection: Axis.vertical,
           shrinkWrap: true,
         ),

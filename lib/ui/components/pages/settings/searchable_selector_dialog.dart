@@ -1,5 +1,5 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class SearchableSelectorDialog<T> extends StatefulWidget {
   final Widget? title;
@@ -37,8 +37,9 @@ class _SearchableSelectorDialogState<T>
     TextTheme textTheme = Theme.of(context).textTheme;
     return SimpleDialog(
       title: widget.title,
-      titleTextStyle:
-          textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+      titleTextStyle: textTheme.bodyMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
       titlePadding: const EdgeInsets.fromLTRB(32.0, 24.0, 32.0, 0.0),
       children: [
         Container(

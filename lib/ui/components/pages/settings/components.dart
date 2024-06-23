@@ -93,6 +93,7 @@ class SettingsBase extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
+                          maxLines: (padding * 3 + 0.1).ceil(),
                         ),
                       );
                     },
@@ -201,8 +202,8 @@ class _OptState extends State<Opt> {
   void switcherChangeState(bool newState) {
     setState(() {
       switcherDefaultValue = newState;
+      widget.switcherAction!(newState);
     });
-    widget.switcherAction!(newState);
   }
 
   @override

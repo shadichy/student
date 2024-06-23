@@ -51,7 +51,7 @@ abstract final class AndroidAlarm {
       final res = await platform.invokeMethod('setAlarm', settings.toMap());
 
       alarmPrint(
-        '''[${settings.dateTime}] $res ''',
+        '''[${settings.dateTime}] [${settings.timeout}] $res ''',
       );
     } catch (e) {
       throw AlarmException('nativeAndroidAlarm error: $e');

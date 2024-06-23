@@ -43,7 +43,7 @@ class NotificationHandler(private val context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun buildNotification(alarm: Alarm): Notification {
-        val appIconResId = context.packageManager.getApplicationInfo(context.packageName, 0).icon
+        val appIconResId = dev.tlu.student.R.drawable.ic_launcher_monochrome
 //        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName) ?: Intent()
         val intent = Intent(context, AlarmActivity::class.java)
         intent.putExtra(Alarm.ID, alarm.id)

@@ -32,6 +32,9 @@ final class _Theme {
 
 final class _Misc {
   final startWeekday = "misc.startWeekday";
+  final maxDlRetries = "misc.maxDlRetries";
+  final dlRetryInterval = "misc.dlRetryInterval";
+  final maxUEventItems = "misc.maxUEventItems";
   final currency = "misc.currency";
 }
 
@@ -72,6 +75,9 @@ abstract final class Config {
     settings.language: 'vi',
     misc.startWeekday: DateTime.monday,
     misc.currency: Currency.vnd.name,
+    misc.maxDlRetries: 5,
+    misc.dlRetryInterval: 120,
+    misc.maxUEventItems: 3,
     opts.Home: [
       Routing.routeNames.settings,
       Routing.routeNames.status,

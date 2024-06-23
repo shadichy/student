@@ -57,7 +57,7 @@ class Alarm: Parcelable {
         volume=-1.0
         fadeDuration=0.0
         // depends on the database, formerly 14 is the standard so 14+3=17 is used
-        highPrior = id shl 17 == 0
+        highPrior = id ushr 17 == 0
     }
 
     internal constructor(p: Parcel) {
@@ -99,7 +99,7 @@ class Alarm: Parcelable {
     }
 
     override fun hashCode(): Int {
-        return java.lang.Integer.valueOf(id).hashCode()
+        return id.hashCode()
     }
 
     override fun toString(): String {

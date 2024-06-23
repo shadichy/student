@@ -4,11 +4,13 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 class EventPage extends StatelessWidget {
   final String label;
   final String title;
+  final String? subtitle;
   final List<Widget> children;
   const EventPage({
     super.key,
     required this.label,
     required this.title,
+    this.subtitle,
     required this.children,
   });
 
@@ -28,6 +30,7 @@ class EventPage extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headlineSmall,
+          maxLines: 3,
         ),
       ),
       body: SingleChildScrollView(
@@ -40,11 +43,24 @@ class EventPage extends StatelessWidget {
               right: 16,
             ),
             alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.displaySmall,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.displaySmall,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+                if (subtitle != null)
+                  Text(
+                    subtitle!,
+                    style: Theme.of(context).textTheme.labelLarge,
+                    maxLines: 3,
+                    textAlign: TextAlign.left,
+                  ),
+              ],
             ),
           ),
           ...children,

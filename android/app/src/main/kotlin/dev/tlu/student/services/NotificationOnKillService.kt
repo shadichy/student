@@ -6,13 +6,12 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
-import android.provider.Settings
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import dev.tlu.student.MainActivity
 import io.flutter.Log
 
 class NotificationOnKillService : Service() {
@@ -31,10 +30,10 @@ class NotificationOnKillService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onTaskRemoved(rootIntent: Intent?) {
         try {
-            val notificationIntent = packageManager.getLaunchIntentForPackage(packageName)
+            val notificationIntent = Intent(this, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val appIconResId = packageManager.getApplicationInfo(packageName, 0).icon
+            val appIconResId = dev.tlu.student.R.drawable.ic_launcher_monochrome
             val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(appIconResId)
                 .setContentTitle(title)

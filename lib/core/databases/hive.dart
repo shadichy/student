@@ -54,9 +54,6 @@ final class Storage {
   static final _boxes = _Boxes();
   static final _vars = _Vars();
 
-  static const _maxRetries = 5;
-  static const _retrySeconds = 120;
-
   late final Box _env;
   late final Box _generic;
   late final Box<BaseSubject> _subjects;
@@ -202,7 +199,7 @@ final class Storage {
     Map<String, String>? headers,
     int? retry,
   }) async {
-    int retries = retry ?? _maxRetries;
+    int retries = retry ?? fetch<int>(conf.Config.misc.maxDlRetries) ?? 5;
     Exception? exception;
     final res = await http.get(uri, headers: headers);
 
@@ -218,11 +215,16 @@ final class Storage {
         "Failed to parse body from ${uri.toString()}: $e",
       );
     }
-    if (retries == 0) {
+    if (retries <= 0) {
       throw exception;
     } else {
-      await Future.delayed(const Duration(seconds: _retrySeconds));
-      return await download(uri, headers: headers, retry: retries - 1);
+      return await Future.delayed(
+        Duration(
+          seconds: fetch<int>(conf.Config.misc.dlRetryInterval) ?? 120,
+        ),
+        () async => await download(uri, headers: headers, retry: retries - 1),
+      );
+      // return await download(uri, headers: headers, retry: retries - 1);
     }
   }
 
@@ -447,8 +449,8 @@ final class Storage {
     }
   }
 
-  Future<void> reminderRemove(int index, [List<EventTimestamp>? events]) async {
-    Reminder? reminder = _reminders.getAt(index);
+  Future<void> reminderRemove(int key, [List<EventTimestamp>? events]) async {
+    Reminder? reminder = _reminders.get(key);
     if (reminder == null || reminder.disabled) return;
     for (var t in events ?? _tList) {
       if (t.intStamp == 0) continue;
@@ -457,7 +459,7 @@ final class Storage {
           t.intStamp;
       if (getAlarm(id) != null) await Alarm.stop(id);
     }
-    _reminders.delete(reminder.scheduleDuration.inMinutes);
+    reminder.delete();
   }
 
   Future<void> reminderUpdateForEvent(EventTimestamp event) async {
@@ -520,6 +522,9 @@ final class Storage {
 
   String _getCourseID(String id) => RegExp(r'([^.]+)').firstMatch(id)![0]!;
 
+  Iterable<BaseSubject> get baseSubjects => _subjects.values;
+
+  Iterable<Subject> get subjects => _learning.values;
   BaseSubject? getSubjectBase(String id) => _subjects.get(id);
   BaseSubject? getSubjectBaseAlt(String id) =>
       _subjects.values.firstWhereIf((s) => s.subjectAltID == _getCourseID(id));

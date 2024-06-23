@@ -25,17 +25,12 @@ class _TimetableUpcomingCardAltState extends State<TimetableUpcomingCardAlt> {
       widget.upcomingEvent.startTime,
       widget.upcomingEvent.endTime,
     );
-    Timer.periodic(const Duration(minutes: 1), (Timer t) {
-      try {
-        _getTime();
-      } catch (e) {
-        //
-      }
-    });
+    Timer.periodic(const Duration(minutes: 1), (Timer t) => _getTime());
     super.initState();
   }
 
   void _getTime() {
+    if (!mounted) return;
     setState(() {
       _timeString = MiscFns.timeLeft(
         widget.upcomingEvent.startTime,

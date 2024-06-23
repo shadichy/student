@@ -3,6 +3,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/core/notification/reminder.dart';
+import 'package:student/core/routing.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/interpolator.dart';
 import 'package:student/ui/components/navigator/navigator.dart';
@@ -65,14 +66,62 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
     TextTheme textTheme = Theme.of(context).textTheme;
 
     List<MapEntry<String, String>> expansionNotifPrior = {
-      "reminder": "Next up classes reminders",
-      "topEvents": "Upcoming important events",
-      "miscEvents": "Other events",
-      "impNotif": "Important school notifications",
-      "clubNotif": "Club notifications",
-      "miscNotif": "Other notifications",
-      "appNotif": "Updates",
+      Config.notif.reminder: "Next up classes reminders",
+      Config.notif.topEvents: "Upcoming important events",
+      Config.notif.miscEvents: "Other events",
+      Config.notif.impNotif: "Important school notifications",
+      Config.notif.clubNotif: "Club notifications",
+      Config.notif.miscNotif: "Other notifications",
+      Config.notif.appNotif: "Updates",
     }.entries.toList();
+
+    reminders.sort((a, b) => a.scheduleDuration.compareTo(b.scheduleDuration));
+    List<Widget> reminderItems = List.generate(
+      reminders.length > 2 ? 4 : reminders.length * 2,
+      (index) {
+        if ((index % 2 == 0)) {
+          int i = index ~/ 2;
+          return ReminderCard(
+            reminders[i],
+            action: ((actionType, value) {
+              switch (actionType) {
+                case ActionType.change:
+                  reminderChange(i, value!);
+                  break;
+                case ActionType.delete:
+                  reminderDelete(i);
+                  break;
+              }
+            }),
+          );
+        } else {
+          return MWds.divider();
+        }
+      },
+      growable: true,
+    );
+    reminderItems.add((reminders.isEmpty)
+        ? Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              "Press the add button on the top right to add new reminder",
+              style: textTheme.bodySmall?.apply(
+                color: colorScheme.onSurface.withOpacity(0.5),
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(16).copyWith(top: 0),
+            child: InkWell(
+              onTap: () => Routing.goto(context, Routing.reminders),
+              child: Text(
+                "Show more...",
+                style: textTheme.bodyLarge?.apply(
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+          ));
     return SettingsBase(
       label: "Notifications & reminders",
       children: [
@@ -104,42 +153,44 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
             ],
           ),
         ),
-        // list of reminders
 
-        if (reminders.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              "Press the add button on the top right to add new reminder",
-              style: textTheme.bodySmall?.apply(
-                color: colorScheme.onSurface.withOpacity(0.5),
-              ),
-            ),
-          )
-        else
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            itemBuilder: ((context, index) {
-              return ReminderCard(
-                reminders[index],
-                action: ((actionType, value) {
-                  switch (actionType) {
-                    case ActionType.change:
-                      reminderChange(index, value!);
-                      break;
-                    case ActionType.delete:
-                      reminderDelete(index);
-                      break;
-                  }
-                }),
-              );
-            }),
-            separatorBuilder: ((context, index) => MWds.divider(8)),
-            itemCount: reminders.length,
-            // scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-          ),
+        // list of reminders
+        ...reminderItems,
+
+        // if (reminders.isEmpty)
+        //   Padding(
+        //     padding: const EdgeInsets.all(16),
+        //     child: Text(
+        //       "Press the add button on the top right to add new reminder",
+        //       style: textTheme.bodySmall?.apply(
+        //         color: colorScheme.onSurface.withOpacity(0.5),
+        //       ),
+        //     ),
+        //   )
+        // else
+        //   ListView.separated(
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     padding: const EdgeInsets.symmetric(vertical: 16),
+        //     itemBuilder: ((context, index) {
+        //       return ReminderCard(
+        //         reminders[index],
+        //         action: ((actionType, value) {
+        //           switch (actionType) {
+        //             case ActionType.change:
+        //               reminderChange(index, value!);
+        //               break;
+        //             case ActionType.delete:
+        //               reminderDelete(index);
+        //               break;
+        //           }
+        //         }),
+        //       );
+        //     }),
+        //     separatorBuilder: ((context, index) => MWds.divider(8)),
+        //     itemCount: reminders.length > 2 ? 2 : reminders.length,
+        //     // scrollDirection: Axis.vertical,
+        //     shrinkWrap: true,
+        //   ),
         // ReminderCard(Duration(minutes: 30), action: (actionType) {}),
         //reminder default sound
         Opt(
@@ -174,6 +225,8 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
         // notification prior
         ExpansionPanelList(
           materialGapSize: 0,
+          expandedHeaderPadding: EdgeInsets.zero,
+          dividerColor: Colors.transparent,
           elevation: 0,
           expansionCallback: (int index, bool isExpanded) {
             setState(() => notifPriorExpand = !notifPriorExpand);
@@ -182,11 +235,12 @@ class _SettingsNotificationsPageState extends State<SettingsNotificationsPage> {
             ExpansionPanel(
               canTapOnHeader: true,
               isExpanded: notifPriorExpand,
-              headerBuilder: (context, b) =>
-                  const SubPage(label: "Notification priority"),
+              headerBuilder: (context, b) => const SubPage(
+                label: "Notification priority",
+              ),
               body: SimpleListBuilder(
                 builder: (index) {
-                  String dataID = "notif.${expansionNotifPrior[index].key}";
+                  String dataID = expansionNotifPrior[index].key;
                   return Opt(
                     label: expansionNotifPrior[index].value,
                     buttonType: ButtonType.switcher,

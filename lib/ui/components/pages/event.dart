@@ -111,32 +111,29 @@ class NextupClassView extends UpcomingEvent {
               Storage().getSubjectBaseAlt(stamp.courseID)?.name ??
               Storage().getSubjectAlt(stamp.courseID)?.name ??
               "Unknown",
+          eventDesc: stamp.courseID,
           location: stamp.room,
           heldBy: Storage().getTeacher(stamp.teacherID) ?? "Unknown",
           startTime: UpcomingEvent._getStart(stamp.intStamp),
           endTime: UpcomingEvent._getEnd(stamp.intStamp),
+          event: stamp,
         );
 
   NextupClassView.manual({
-    required this.courseID,
+    required String courseID,
     required String classDesc,
     required String teacher,
-    required super.startTime,
-    required super.endTime,
+    required DateTime startTime,
+    required DateTime endTime,
     required String room,
-  })  : stamp = CourseTimestamp(
+  }) : this(CourseTimestamp(
           intStamp: 0,
           dayOfWeek: 0,
           courseID: courseID,
           teacherID: teacher,
           room: room,
           timestampType: TimestampType.offline,
-        ),
-        super(
-          eventLabel: classDesc,
-          location: room,
-          heldBy: teacher,
-        );
+        ));
 }
 
 //  {

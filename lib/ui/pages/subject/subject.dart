@@ -52,6 +52,8 @@ class _SubjectPageState extends State<SubjectPage> {
         ),
         ExpansionPanelList(
           materialGapSize: 0,
+          expandedHeaderPadding: EdgeInsets.zero,
+          dividerColor: Colors.transparent,
           elevation: 0,
           expansionCallback: (int index, bool isExpanded) {
             setState(() => expanded[index] = isExpanded);

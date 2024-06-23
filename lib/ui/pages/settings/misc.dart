@@ -75,9 +75,7 @@ class _SettingsMiscPageState extends State<SettingsMiscPage> {
                   ),
                   children: List.generate(7, (d) {
                     return SimpleDialogOption(
-                      child: Text(
-                        dayOfWeek[d],
-                      ),
+                      child: Text(dayOfWeek[d]),
                       onPressed: () => Navigator.of(context).pop(d),
                     );
                   }),

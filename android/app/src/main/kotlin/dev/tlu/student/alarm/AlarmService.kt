@@ -113,7 +113,7 @@ class AlarmService : Service() {
         val delayedStopIntent = Intent(this, AlarmReceiver::class.java)
             .putExtra(Alarm.ID, alarm.id)
             .setAction(STOP_ALARM)
-        AlarmPlugin.handleDelayedAlarm(this, delayedStopIntent, alarm.endTime, alarm.id)
+        AlarmPlugin.handleDelayedAlarm(this, delayedStopIntent, alarm.endTime, alarm.id shl 1)
 
         return START_STICKY
     }

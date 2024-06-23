@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/ui/components/interpolator.dart';
-import 'package:student/ui/components/pages/event_detail.dart';
-
 import 'package:student/ui/components/navigator/navigator.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:student/ui/components/pages/event_detail.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 import 'package:student/ui/pages/subject/stamp.dart';
 import 'package:student/ui/pages/subject/subject.dart';
@@ -36,7 +35,8 @@ class _SubjectCoursePageState extends State<SubjectCoursePage> {
     // TextTheme textTheme = Theme.of(context).textTheme;
     return EventPage(
       label: "Thông tin khoá học",
-      title: widget.title,
+      title: subject.name,
+      subtitle: widget.title,
       children: [
         SubPage(
           label: "Subject name",
@@ -45,6 +45,8 @@ class _SubjectCoursePageState extends State<SubjectCoursePage> {
         ),
         ExpansionPanelList(
           materialGapSize: 0,
+          expandedHeaderPadding: EdgeInsets.zero,
+          dividerColor: Colors.transparent,
           elevation: 0,
           expansionCallback: (int index, bool isExpanded) {
             setState(() => expanded[index] = isExpanded);

@@ -9,7 +9,6 @@ import io.flutter.plugin.common.MethodChannel
 class AlarmActivity : FlutterActivity() {
     private val methodChannel = MainActivity.methodChannel
 
-
     override fun getDartEntrypointFunctionName(): String {
         return Alarm.NAME
     }

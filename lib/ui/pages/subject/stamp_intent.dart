@@ -1,128 +1,280 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
-import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/notification/alarm.dart';
-import 'package:student/core/semester/functions.dart';
-import 'package:student/misc/misc_functions.dart';
-import 'package:student/misc/misc_widget.dart';
-import 'package:student/ui/components/pages/settings/components.dart';
 
-class SubjectStampIntent extends StatefulWidget {
-  final int alarmId;
-  const SubjectStampIntent(this.alarmId, {super.key});
+Widget _colMin(List<Widget> children) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
+    );
 
-  @override
-  State<SubjectStampIntent> createState() => _SubjectStampIntentState();
+Widget _div([double height = 8]) =>
+    Divider(color: Colors.transparent, height: height);
+
+Widget _separated(List<Widget> children, [double gap = 12]) {
+  return _colMin(List.generate(children.length * 2 - 1, (index) {
+    return index % 2 == 0 ? children[index ~/ 2] : _div(gap);
+  }));
 }
 
-class _SubjectStampIntentState extends State<SubjectStampIntent> {
-  late final int alarmId;
-  late final int intStamp;
-  late final int dayOfWeek;
-  late final int scheduleDuration;
-  late final EventTimestamp stamp;
-  final Map<String, String?> data = {};
+class AlarmApp extends StatelessWidget {
+  static const seedColor = "seedColor";
+  static const font = "font";
+  static const themeMode = "themeMode";
+  static const eventTitle = "eventTitle";
+  static const eventSubtitle = "eventSubtitle";
+  static const startTime = "startTime";
+  static const location = "location";
+  static const id = "id";
+
+  final Map data;
+
+  const AlarmApp(this.data, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Color seed = Color(data[AlarmApp.seedColor] as int);
+    String? font = data[AlarmApp.font];
+    ThemeData buildTheme(Brightness brightness) {
+      ColorScheme colorScheme = ColorScheme.fromSeed(
+        seedColor: seed,
+        brightness: brightness,
+      );
+      Color bgColor = colorScheme.primary.withOpacity(0.05);
+      Color textColor = colorScheme.onSurface;
+      ThemeData baseTheme = ThemeData(
+        brightness: brightness,
+        colorScheme: colorScheme,
+        useMaterial3: true,
+        splashColor: bgColor,
+        hoverColor: bgColor,
+        focusColor: bgColor,
+        highlightColor: bgColor,
+        // scaffoldBackgroundColor: colorScheme.surface,
+        cardTheme: CardTheme(
+          color: bgColor,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+      );
+      return baseTheme.copyWith(
+        textTheme: (font != null
+                ? GoogleFonts.getTextTheme(font, baseTheme.textTheme)
+                : baseTheme.textTheme)
+            .apply(
+          displayColor: textColor,
+          bodyColor: textColor,
+        ),
+      );
+    }
+
+    return MaterialApp(
+      title: "Student alarm",
+      theme: buildTheme(Brightness.light),
+      darkTheme: buildTheme(Brightness.dark),
+      themeMode: ThemeMode.values[data[AlarmApp.themeMode] as int],
+      home: AlarmIntent(data),
+    );
+  }
+}
+
+class AlarmIntent extends StatefulWidget {
+  final Map data;
+
+  const AlarmIntent(this.data, {super.key});
+
+  @override
+  State<AlarmIntent> createState() => _AlarmIntentState();
+}
+
+class _AlarmIntentState extends State<AlarmIntent> {
+  double dx = 80;
+  bool inSwipe = false;
+  double maxSize = 0;
 
   @override
   void initState() {
     super.initState();
-    alarmId = widget.alarmId;
-    intStamp = alarmId & EventTimestamp.maxStamp;
-    dayOfWeek = (alarmId >> SPBasics().classTimestamps.length) & 7;
-    scheduleDuration = alarmId >> (SPBasics().classTimestamps.length + 3);
-
-    stamp = Storage().thisWeek.timestamps.firstWhere((e) {
-      return e.dayOfWeek == dayOfWeek && e.intStamp == intStamp;
-    });
-    try {
-      // if is a school class
-      Subject subject = Storage().getSubjectAlt(stamp.eventName)!;
-      data["Subject Name"] = subject.name;
-      data["Course Name"] = stamp.eventName;
-      if ((stamp as CourseTimestamp).timestampType == TimestampType.offline) {
-        data["Room"] = stamp.location;
-      } else {
-        data["Location"] = "Elearning";
-      }
-      data["Instructor/Teacher"] =
-          "(${stamp.heldBy}) ${Storage().getTeacher(stamp.heldBy!)}";
-    } catch (e) {
-      // if is a custom event
-      data["Event name"] = stamp.eventName;
-      if (stamp.location != null) data["Location"] = stamp.location!;
-      if (stamp.heldBy != null) data["Held by"] = stamp.heldBy!;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // design a site that looks similar to [SubjectStampPage], but without `appBar`, [SubPage] must not have `target` parameter and there must be a big `Got it!` button at the bottom
+    maxSize = MediaQuery.of(context).size.width - 64;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(children: [
-              MWds.divider(32),
-              // Big alarm icon
-              Icon(
-                Symbols.alarm,
-                size: 128,
-                color: colorScheme.primary,
-              ),
-              // Big text using MiscFns.durationLeft
-              Text(
-                MiscFns.durationLeft(Duration(minutes: scheduleDuration)),
-                style: textTheme.headlineLarge!.copyWith(
-                  color: colorScheme.primary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              MWds.divider(16),
-              ...data.entries.map(
-                (e) => SubPage(
-                  label: e.key,
-                  desc: e.value,
-                ),
-              ),
-            ]),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 160,
-              padding: const EdgeInsets.all(20),
-              child: TextButton(
-                onPressed: () => Alarm.stop(alarmId).then((_) {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  } else {
-                    SystemNavigator.pop();
-                  }
-                }),
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  backgroundColor: colorScheme.primaryContainer,
-                ),
-                child: Text(
-                  "Got it!",
-                  style: textTheme.headlineMedium!.copyWith(
-                    color: colorScheme.onPrimaryContainer,
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: _separated([
+              _separated([
+                Text(
+                  widget.data[AlarmApp.eventTitle],
+                  style: textTheme.displayMedium?.copyWith(
+                    color: colorScheme.onSurface,
                   ),
                 ),
-              ),
-            ),
+                Text(
+                  widget.data[AlarmApp.eventSubtitle],
+                  style: textTheme.headlineSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ], 4),
+              _colMin([
+                Text(
+                  "Start at",
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  widget.data[AlarmApp.startTime],
+                  style: textTheme.displayLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 144,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  widget.data[AlarmApp.location],
+                  style: textTheme.displayMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 70,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ]),
+              _separated([
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: colorScheme.surfaceContainer,
+                  ),
+                  height: 80,
+                  child: Stack(children: [
+                    Center(
+                      child: Text(
+                        "Swipe to dismiss",
+                        style: textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      // bottom: 0,
+                      // right: 0,
+                      child: GestureDetector(
+                        onPanStart: (details) {
+                          setState(() {
+                            inSwipe = true;
+                          });
+                        },
+                        onPanUpdate: (details) {
+                          // if (details.delta.dx < 0) return;
+                          setState(() {
+                            dx = details.localPosition.dx;
+                            if (dx < 80) dx = 80;
+                            if (dx > maxSize) dx = maxSize;
+                          });
+                          print(dx);
+                        },
+                        onPanCancel: () {
+                          print("cancelled");
+                          setState(() => dx = 80);
+                        },
+                        onPanEnd: (details) {
+                          setState(() {
+                            inSwipe = false;
+                            dx = dx >= maxSize ? maxSize : 80;
+                          });
+                          Storage().register().then((_) {
+                            Storage().initializeMinimal().then((_) {
+                              Alarm.stop(widget.data[AlarmApp.id] as int)
+                                  .then((_) {
+                                Navigator.canPop(context)
+                                    ? Navigator.pop(context)
+                                    : SystemNavigator.pop();
+                              });
+                            });
+                          });
+                        },
+                        // behavior: HitTestBehavior.translucent,
+                        child: AnimatedSize(
+                          alignment: Alignment.centerLeft,
+                          duration: Duration(milliseconds: inSwipe ? 0 : 300),
+                          curve: Curves.ease,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: colorScheme.primary,
+                            ),
+                            height: 80,
+                            width: dx,
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Symbols.chevron_right,
+                                color: colorScheme.onPrimary,
+                                size: 48,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Storage().register().then((_) {
+                      Storage().initializeMinimal().then((_) {
+                        Alarm.stop(widget.data[AlarmApp.id] as int).then((_) {
+                          Navigator.canPop(context)
+                              ? Navigator.pop(context)
+                              : SystemNavigator.pop();
+                        });
+                      });
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    // foregroundColor: colorScheme.onSurface,
+                    surfaceTintColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    overlayColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: colorScheme.outline,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  child: Text(
+                    "Remind me in 5 minutes",
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ], 32),
+            ], 80),
           ),
-        ],
+        ),
       ),
     );
   }

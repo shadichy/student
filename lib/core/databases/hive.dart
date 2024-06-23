@@ -18,10 +18,12 @@ import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/iterable_extensions.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:student/ui/connect.dart';
+import 'package:student/ui/pages/subject/stamp_intent.dart';
 
 final class _Boxes {
   final base = "base";
   final env = "env";
+  final intent = "intent";
   final teachers = "teachers";
   final subjects = "subjects";
   final courses = "courses";
@@ -56,6 +58,7 @@ final class Storage {
 
   late final Box _env;
   late final Box _generic;
+  late final Box _intent;
   late final Box<BaseSubject> _subjects;
   late final Box<String> _teachers;
   late final Box<Subject> _learning;
@@ -140,6 +143,7 @@ final class Storage {
     if (_generic.isEmpty) await _generic.putAll(conf.defaultConfig);
     _env = await Hive.openBox(_boxes.env);
     if (_env.isEmpty) await _env.putAll(conf.env);
+    _intent = await Hive.openBox(_boxes.intent);
   }
 
   Future<void> initializeAlarm() async {
@@ -192,6 +196,12 @@ final class Storage {
     // defaultNotificationSound =
     //     await platform.invokeMethod("defaultNotificationSound");
     // alarmPrint("Done Hive init");
+  }
+
+  Future<Map> initializeIntent() async {
+    await Hive.initFlutter();
+    _intent = await Hive.openBox(_boxes.intent);
+    return _intent.toMap();
   }
 
   Future<T> download<T>(
@@ -446,6 +456,16 @@ final class Storage {
         body: "${t.eventName} will be started in $left!",
         vibrate: reminder.vibrate,
       ));
+      await _intent.put(id, {
+        AlarmApp.seedColor: fetch<int>(conf.Config.theme.accentColor),
+        AlarmApp.font: fetch<String>(conf.Config.theme.appFont),
+        AlarmApp.themeMode: fetch<int>(conf.Config.theme.themeMode),
+        AlarmApp.eventTitle: getSubjectBaseAlt(t.eventName)?.name,
+        AlarmApp.eventSubtitle: t.eventName,
+        AlarmApp.startTime: MiscFns.timeFormat(time),
+        AlarmApp.location: t.location,
+        AlarmApp.id: id,
+      });
     }
   }
 
@@ -648,15 +668,19 @@ final class Storage {
 
   Map<int, Reminder> get remindersMap => _reminders.toMap().cast();
 
-  Future<void> reminderAdd(Reminder reminder,
-      [List<EventTimestamp>? events]) async {
+  Future<void> reminderAdd(
+    Reminder reminder, [
+    List<EventTimestamp>? events,
+  ]) async {
     await reminderUpdate(reminder, events);
     await _reminders.put(reminder.scheduleDuration.inMinutes, reminder);
-    var prevReminder = remindersMap.keys
-        .lastWhereIf((e) => e > reminder.scheduleDuration.inMinutes);
+    var prevReminder = remindersMap.keys.lastWhereIf(
+      (e) => e > reminder.scheduleDuration.inMinutes,
+    );
     if (prevReminder == null) return;
     await _reminders.get(prevReminder)?.edit(
-        ringDuration: reminder.scheduleDuration.inMinutes - prevReminder);
+          ringDuration: reminder.scheduleDuration.inMinutes - prevReminder,
+        );
   }
 
   Iterable<AlarmSettings> get alarms => _alarms.values;
@@ -666,7 +690,10 @@ final class Storage {
   Future<void> addAlarm(AlarmSettings alarm) async =>
       await _alarms.put(alarm.id, alarm);
 
-  Future<void> removeAlarm(int id) async => await _alarms.delete(id);
+  Future<void> removeAlarm(int id) async {
+    await _alarms.delete(id);
+    await _intent.delete(id);
+  }
 
   bool get hasAlarm => _alarms.isNotEmpty;
 

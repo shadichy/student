@@ -6,23 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="e438bcf4-814d-4e0e-ba19-b751efaf8a74" name="Changes" comment="added second activity for alarm">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/alarm/AlarmService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/provider/Alarm.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/provider/Alarm.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationOnKillService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationOnKillService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/services/NotificationService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/databases/hive.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/databases/hive.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/default_configs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/default_configs.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/notification/src/android_alarm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/src/android_alarm.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/misc/misc_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/misc/misc_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/glance_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/glance_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/upcoming_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/upcoming_event.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/upcoming_event_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/upcoming_event_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/timetable/upcoming_event_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/timetable/upcoming_event_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/components/pages/event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/pages/event.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/navigator/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/navigator/home.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/pages/settings/notifications.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/settings/notifications.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/connect.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/connect.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/init/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/init/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/stamp_intent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/stamp_intent.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +69,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "async",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/ui/connect.dart';
+import 'package:student/ui/pages/subject/stamp_intent.dart';
 import 'package:system_theme/system_theme.dart';
 
 void main(List<String> args) async {
@@ -22,15 +23,21 @@ void main(List<String> args) async {
 @pragma('vm:entry-point')
 void alarm(List<String> args) async {
   int id;
+  Map dataD = await Storage().initializeIntent();
   try {
     id = int.parse(args.first);
   } catch (_) {
     id = -1;
   }
-  main([
-    jsonEncode({
-      "initialRoute": StudentApp.alarmRoute,
-      "id": id,
-    })
-  ]);
+  // Map f = {
+  //   "seedColor": Colors.red.value,
+  //   "font": null,
+  //   "themeMode": 0,
+  //   "subjectName": "Giai tich",
+  //   "courseID": "GIAITICH1.1.14_BT",
+  //   "startTime": "10:10",
+  //   "location": "A999",
+  //   "id": -1,
+  // };
+  runApp(AlarmApp(dataD[id] as Map));
 }

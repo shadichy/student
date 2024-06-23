@@ -48,7 +48,7 @@ class _InitializerState extends State<Initializer> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       // width: MediaQuery.of(context).size.width * ,
       // width: 312,
-      duration: Duration(seconds: 10),
+      duration: const Duration(seconds: 10),
       margin: EdgeInsets.only(
         bottom: 136,
         left: margSide,
@@ -60,7 +60,7 @@ class _InitializerState extends State<Initializer> {
         borderRadius: BorderRadius.circular(12),
       ),
       behavior: SnackBarBehavior.floating,
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

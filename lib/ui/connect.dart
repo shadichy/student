@@ -13,7 +13,6 @@ import 'package:student/core/routing.dart';
 import 'package:student/ui/app.dart';
 import 'package:student/ui/pages/init/loading.dart';
 import 'package:student/ui/pages/init/main.dart';
-import 'package:student/ui/pages/subject/stamp_intent.dart';
 import 'package:system_theme/system_theme.dart';
 
 enum AppAction { init, reload, deinit }
@@ -84,9 +83,9 @@ class _StudentAppState extends State<StudentApp> {
   void initState() {
     super.initState();
     arguments = widget.arguments;
-    checkAndroidNotificationPermission();
-    checkAndroidExternalStoragePermission();
-    checkAndroidScheduleExactAlarmPermission();
+    // checkAndroidNotificationPermission();
+    // checkAndroidExternalStoragePermission();
+    // checkAndroidScheduleExactAlarmPermission();
     initialize();
     // setConfigs();
   }
@@ -106,8 +105,7 @@ class _StudentAppState extends State<StudentApp> {
       try {
         mainContent = <String, Widget>{
           StudentApp.defaultRoute: const App(),
-          StudentApp.alarmRoute:
-              SubjectStampIntent(widget.arguments["id"] ?? -1),
+          // StudentApp.alarmRoute: SubjectStampIntent(widget.arguments["id"] ?? -1),
         }[widget.initialRoute ?? StudentApp.defaultRoute]!;
 
         if (arguments?["route"] != null) {

@@ -460,8 +460,12 @@ final class Storage {
         AlarmApp.seedColor: fetch<int>(conf.Config.theme.accentColor),
         AlarmApp.font: fetch<String>(conf.Config.theme.appFont),
         AlarmApp.themeMode: fetch<int>(conf.Config.theme.themeMode),
-        AlarmApp.eventTitle: getSubjectBaseAlt(t.eventName)?.name,
-        AlarmApp.eventSubtitle: t.eventName,
+        AlarmApp.eventTitle: t is CourseTimestamp
+            ? getSubjectBaseAlt(t.eventName)?.name ??
+                getSubjectAlt(t.eventName)?.name ??
+                t.eventName
+            : t.eventName,
+        AlarmApp.eventSubtitle: t is CourseTimestamp ? t.eventName : "",
         AlarmApp.startTime: MiscFns.timeFormat(time),
         AlarmApp.location: t.location,
         AlarmApp.id: id,

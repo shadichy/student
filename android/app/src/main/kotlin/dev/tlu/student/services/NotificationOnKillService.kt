@@ -17,8 +17,11 @@ import io.flutter.Log
 class NotificationOnKillService : Service() {
     private lateinit var title: String
     private lateinit var body: String
-    private val NOTIFICATION_ID = 88888
-    private val CHANNEL_ID = "dev.tlu.student.services_channel"
+
+    companion object {
+        private const val NOTIFICATION_ID = 88888
+        private const val CHANNEL_ID = "dev.tlu.student.services_channel"
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         title = intent?.getStringExtra("title") ?: "Your alarms could not ring"
@@ -33,7 +36,7 @@ class NotificationOnKillService : Service() {
             val notificationIntent = Intent(this, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val appIconResId = dev.tlu.student.R.drawable.ic_launcher_monochrome
+            val appIconResId = dev.tlu.student.R.drawable.ic_launcher_small
             val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(appIconResId)
                 .setContentTitle(title)

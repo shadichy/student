@@ -148,6 +148,7 @@ class _InitializerState extends State<Initializer> {
       }
     };
     return Scaffold(
+      backgroundColor: darkColorScheme.surface,
       body: SafeArea(
         child: Stack(children: [
           MobileScanner(

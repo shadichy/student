@@ -106,7 +106,7 @@ class _SettingsRemindersPageState extends State<SettingsRemindersPage> {
                   )
                 ]
               : List.generate(
-                  reminders.length > 2 ? 4 : reminders.length * 2,
+                  reminders.length * 2,
                   (index) {
                     if ((index % 2 == 0)) {
                       int i = index ~/ 2;

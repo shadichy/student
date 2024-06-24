@@ -60,21 +60,24 @@ class AlarmService : Service() {
 
         // Starting foreground service safely
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                startForeground(
-                    alarm.id,
-                    notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-                )
-            } else {
-                startForeground(alarm.id, notification)
+            if (!alarm.highPrior) throw Exception()
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    startForeground(
+                        alarm.id,
+                        notification,
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                    )
+                } else {
+                    startForeground(alarm.id, notification)
+                }
+            } catch (e: ForegroundServiceStartNotAllowedException) {
+                Log.e("AlarmService", "Foreground service start not allowed", e)
+                throw e;
+            } catch (e: SecurityException) {
+                Log.e("AlarmService", "Security exception in starting foreground service", e)
+                throw e;
             }
-        } catch (e: ForegroundServiceStartNotAllowedException) {
-            Log.e("AlarmService", "Foreground service start not allowed", e)
-            return START_NOT_STICKY // Return if cannot start foreground service
-        } catch (e: SecurityException) {
-            Log.e("AlarmService", "Security exception in starting foreground service", e)
-            return START_NOT_STICKY // Return on security exception
         } catch (e: Exception) {
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)
                 ?.notify(alarm.id, notification)

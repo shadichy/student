@@ -114,10 +114,15 @@ object AlarmPlugin {
 
         alarm.audio = call.argument<String>("audio") ?: "null"
         if (alarm.audio == "null") {
-            val defaultAudio = Settings.System.DEFAULT_ALARM_ALERT_URI.toString()
+            val defaultAudio =
+                if (alarm.highPrior) Settings.System.DEFAULT_ALARM_ALERT_URI.toString() else Settings.System.DEFAULT_NOTIFICATION_URI.toString()
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                alarm.audio = getRingtoneUriForRestore(context.contentResolver, defaultAudio, RingtoneManager.TYPE_ALARM)?.toString() ?: defaultAudio
+                    alarm.audio = getRingtoneUriForRestore(
+                        context.contentResolver,
+                        defaultAudio,
+                        if (alarm.highPrior) RingtoneManager.TYPE_ALARM else RingtoneManager.TYPE_NOTIFICATION
+                    )?.toString() ?: defaultAudio
                 } else {
                     throw Exception()
                 }

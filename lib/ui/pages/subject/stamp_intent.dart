@@ -19,6 +19,21 @@ Widget _separated(List<Widget> children, [double gap = 12]) {
   }));
 }
 
+Future<void> _runStop(BuildContext context, int id) async {
+  try {
+    if (context.mounted && Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      throw Exception();
+    }
+  } catch (_) {
+    await SystemNavigator.pop();
+  }
+  await Storage().register();
+  await Storage().initializeMinimal();
+  await Alarm.stop(id);
+}
+
 class AlarmApp extends StatelessWidget {
   static const seedColor = "seedColor";
   static const font = "font";
@@ -116,12 +131,14 @@ class _AlarmIntentState extends State<AlarmIntent> {
               _separated([
                 Text(
                   widget.data[AlarmApp.eventTitle],
+                  textAlign: TextAlign.center,
                   style: textTheme.displayMedium?.copyWith(
                     color: colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   widget.data[AlarmApp.eventSubtitle],
+                  textAlign: TextAlign.center,
                   style: textTheme.headlineSmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -182,30 +199,27 @@ class _AlarmIntentState extends State<AlarmIntent> {
                         onPanUpdate: (details) {
                           // if (details.delta.dx < 0) return;
                           setState(() {
+                            if (dx == maxSize) return;
                             dx = details.localPosition.dx;
                             if (dx < 80) dx = 80;
                             if (dx > maxSize) dx = maxSize;
                           });
-                          print(dx);
                         },
                         onPanCancel: () {
-                          print("cancelled");
                           setState(() => dx = 80);
                         },
                         onPanEnd: (details) {
                           setState(() {
                             inSwipe = false;
-                            dx = dx >= maxSize ? maxSize : 80;
-                          });
-                          Storage().register().then((_) {
-                            Storage().initializeMinimal().then((_) {
-                              Alarm.stop(widget.data[AlarmApp.id] as int)
-                                  .then((_) {
-                                Navigator.canPop(context)
-                                    ? Navigator.pop(context)
-                                    : SystemNavigator.pop();
-                              });
-                            });
+                            if (dx >= maxSize) {
+                              dx = maxSize;
+                              _runStop(
+                                context,
+                                widget.data[AlarmApp.id] as int,
+                              );
+                            } else {
+                              dx = 80;
+                            }
                           });
                         },
                         // behavior: HitTestBehavior.translucent,
@@ -238,17 +252,10 @@ class _AlarmIntentState extends State<AlarmIntent> {
                   ]),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Storage().register().then((_) {
-                      Storage().initializeMinimal().then((_) {
-                        Alarm.stop(widget.data[AlarmApp.id] as int).then((_) {
-                          Navigator.canPop(context)
-                              ? Navigator.pop(context)
-                              : SystemNavigator.pop();
-                        });
-                      });
-                    });
-                  },
+                  onPressed: () => _runStop(
+                    context,
+                    widget.data[AlarmApp.id] as int,
+                  ),
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     // foregroundColor: colorScheme.onSurface,

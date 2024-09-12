@@ -71,7 +71,7 @@ class _SubjectCoursePageState extends State<SubjectCoursePage> {
             ExpansionPanel(
               canTapOnHeader: true,
               isExpanded: expanded[1],
-              headerBuilder: (context, b) =>
+              headerBuilder: (_, b) =>
                   const SubPage(label: "Course timestamps"),
               body: SimpleListBuilder(
                 builder: (index) {

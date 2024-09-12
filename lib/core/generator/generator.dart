@@ -4,10 +4,10 @@ import 'package:student/core/semester/functions.dart';
 class SampleTimetable {
   final List<SubjectCourse> classes;
   final BigInt intMatrix;
-  final int length;
+  int get length => classes.length;
+
   SampleTimetable({required this.classes})
-      : length = classes.length,
-        intMatrix = classes.fold(BigInt.zero, (f, i) => f = i.intCourse);
+      : intMatrix = classes.fold(BigInt.zero, (f, i) => f = i.intCourse);
 }
 
 class SubjectFilter {
@@ -31,149 +31,144 @@ class SubjectFilter {
     return x & BigInt.from(0x7f);
   }
 
-  final List<String> inClass;
-  final List<String> notInClass;
-  final List<String> includeTeacher;
-  final List<String> excludeTeacher;
-  late int length;
-  late final bool isEmpty;
-  late final bool isNotEmpty;
-  late final BigInt forcefulMatrix;
-  late final BigInt spareMatrix;
-  SubjectFilter({
-    this.inClass = const [],
-    this.notInClass = const [],
-    this.includeTeacher = const [],
-    this.excludeTeacher = const [],
-    forcefulStamp = const [],
-    spareStamp = const [],
-  }) {
-    length = 0;
-    List<List> verifyList = [
-      inClass,
-      notInClass,
-      includeTeacher,
-      excludeTeacher,
-      forcefulStamp,
-      spareStamp,
-    ];
-    for (var property in verifyList) {
-      if (property.isNotEmpty) {
-        length++;
-      }
-    }
-    isEmpty = length == 0;
-    isNotEmpty = !isEmpty;
-    forcefulMatrix = _fold(forcefulStamp);
-    spareMatrix = _fold(spareStamp);
-  }
-  BigInt _fold(List<int> org) {
+  static BigInt fold(List<int> org) {
     return org.fold(
       BigInt.zero,
       (p, n) => (p << SPBasics().classTimestamps.length) | BigInt.from(n),
     );
   }
-}
 
-class CompareStamp {
-  final num delta;
-  final SubjectCourse subjectClass;
-  const CompareStamp({
-    required this.delta,
-    required this.subjectClass,
-  });
+  List<String> inClass;
+  List<String> notInClass;
+  List<String> includeTeacher;
+  List<String> excludeTeacher;
+  BigInt forcefulMatrix;
+  BigInt spareMatrix;
+
+  int get length => [inClass, notInClass, includeTeacher, excludeTeacher]
+      .where((l) => l.isNotEmpty)
+      .length;
+
+  bool get isEmpty => length == 0;
+
+  bool get isNotEmpty => !isEmpty;
+
+  SubjectFilter({
+    this.inClass = const [],
+    this.notInClass = const [],
+    this.includeTeacher = const [],
+    this.excludeTeacher = const [],
+    BigInt? forcefulMatrix,
+    BigInt? spareMatrix,
+  })  : forcefulMatrix = forcefulMatrix ?? BigInt.zero,
+        spareMatrix = spareMatrix ?? BigInt.zero;
 }
 
 extension Filter on Subject {
-  Subject filter(SubjectFilter filterLayer) {
-    if (filterLayer.isEmpty) {
-      return this;
-    }
-    List<SubjectCourse> result = [];
+  Subject filter(SubjectFilter? filterLayer) {
+    if (filterLayer == null || filterLayer.isEmpty) return this;
+
+    Iterable<SubjectCourse> result = courses.values;
+
     if (filterLayer.inClass.isNotEmpty) {
-      result = courses.values
-          .where((c) => filterLayer.inClass.contains(c.courseID))
-          .toList();
+      result = result.where((c) => filterLayer.inClass.contains(c.courseID));
     }
+
     if (filterLayer.notInClass.isNotEmpty) {
-      result = courses.values
-          .where((c) => !filterLayer.notInClass.contains(c.courseID))
-          .toList();
+      result =
+          result.where((c) => !filterLayer.notInClass.contains(c.courseID));
     }
+
     if (filterLayer.includeTeacher.isNotEmpty) {
-      List<CompareStamp> o = courses.values
-          .map((c) => CompareStamp(
-                delta: c.teachers.isEmpty
-                    ? 0.0
-                    : c.teachers
-                            .where(
-                                (t) => filterLayer.includeTeacher.contains(t))
-                            .length /
-                        c.teachers.length,
-                subjectClass: c,
-              ))
-          .where((c) => c.delta != 0.0)
-          .map((c) => CompareStamp(
-                delta: ((c.delta - 1).abs() * 100),
-                subjectClass: c.subjectClass,
-              ))
-          .toList();
-      o.sort((a, b) => a.delta.compareTo(b.delta).toInt());
-      result = o.map((c) => c.subjectClass).toList();
+      Set<String> includeTeachers = filterLayer.includeTeacher.toSet();
+      num toComparable(SubjectCourse c) =>
+          c.teachers.toSet().intersection(includeTeachers).length /
+          c.teachers.length;
+
+      result = (result.where((c) => c.teachers.isNotEmpty).toList()
+        ..sort((a, b) => toComparable(b).compareTo(toComparable(a))));
     }
+
     if (filterLayer.excludeTeacher.isNotEmpty) {
-      result = courses.values
-          .map((c) => CompareStamp(
-                delta: c.teachers.isEmpty
-                    ? 0.0
-                    : c.teachers
-                            .where(
-                              (t) => filterLayer.excludeTeacher.contains(t),
-                            )
-                            .length /
-                        c.teachers.length,
-                subjectClass: c,
-              ))
-          .where((c) => c.delta == 0.0)
-          .map((c) => c.subjectClass)
-          .toList();
+      result = result
+          .where((c) => !c.teachers.any(filterLayer.excludeTeacher.contains));
     }
+
     if (filterLayer.forcefulMatrix != BigInt.zero) {
-      result = courses.values.where((c) {
-        return c.intCourse & filterLayer.forcefulMatrix == BigInt.zero;
-      }).toList();
+      result = result.where(
+          (c) => c.intCourse & filterLayer.forcefulMatrix == BigInt.zero);
     }
+
     if (filterLayer.spareMatrix != BigInt.zero) {
-      List<CompareStamp> o = courses.values
-          .map((c) => CompareStamp(
-                delta: (c.intCourse & filterLayer.spareMatrix).toDouble(),
-                subjectClass: c,
-              ))
-          .toList();
-      o.sort((a, b) => SubjectFilter.bigPopCount(BigInt.from(a.delta))
-          .compareTo(SubjectFilter.bigPopCount(BigInt.from(b.delta)))
-          .toInt());
-      result = o.map((c) => c.subjectClass).toList();
+      BigInt toComparable(SubjectCourse c) =>
+          SubjectFilter.bigPopCount(c.intCourse & filterLayer.spareMatrix);
+
+      result = (result.toList()
+        ..sort((a, b) => toComparable(a).compareTo(toComparable(b))));
     }
+
     return Subject(
       subjectID: subjectID,
       name: name,
       cred: cred,
       coef: coef,
-      courses: result.asMap().map((_, v) => MapEntry(v.courseID, v)),
+      courses: Map.fromEntries(result.map((v) => MapEntry(v.courseID, v))),
       subjectAltID: subjectID,
       dependencies: [],
     );
   }
 }
 
-class GenTimetable {
+final class GenTimetable {
+  final Map<String, Subject> subjectData;
+
+  const GenTimetable(this.subjectData);
+
+  GenResult generate(Map<String, SubjectFilter?> from) => GenResult([],
+      from.entries.map((e) => subjectData[e.key]!.filter(e.value)).toList());
+}
+
+class GenResult {
+  final List<Subject> genData;
+  final List<SampleTimetable> output;
+  GenResult(List<SampleTimetable> input, this.genData)
+      : output = _init(input, genData);
+
+  int get length => output.length;
+
+  static List<SampleTimetable> _init(
+    List<SampleTimetable> input,
+    List<Subject> genData,
+  ) {
+    if (input.isEmpty) {
+      input.addAll(genData.removeAt(0).courses.values.map((c) {
+        return SampleTimetable(classes: [c]);
+      }));
+    }
+
+    return genData.fold(input, (prevSamples, subject) {
+      List<SampleTimetable> newOutput = [];
+      for (var sample in prevSamples) {
+        for (var target in subject.courses.values) {
+          if (sample.intMatrix & target.intCourse != BigInt.zero) continue;
+          newOutput.add(SampleTimetable(classes: sample.classes..add(target)));
+        }
+      }
+      return newOutput;
+    });
+  }
+
+  GenResult add(List<Subject> subjects) => GenResult(output, subjects);
+}
+
+class _GenTimetable {
   final List<Subject> _tkb;
   late final Map<String, SubjectFilter> _input;
   late List<SampleTimetable> output = [];
   late BigInt intMatrix = BigInt.zero;
   late int length = 0;
-  GenTimetable(this._tkb, this._input) {
+
+  _GenTimetable(this._tkb, this._input) {
     _input.forEach((key, value) => _generate(key, value));
   }
 
@@ -197,7 +192,7 @@ class GenTimetable {
     }
   }
 
-  GenTimetable add(Map<String, SubjectFilter> subj) {
+  _GenTimetable add(Map<String, SubjectFilter> subj) {
     subj.forEach((key, value) {
       _input[key] = value;
       _generate(key, value);
@@ -214,6 +209,7 @@ class GenTimetable {
 
   bool unsave(SampleTimetable sample) => output.remove(sample);
 
-  GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
+  _GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
+
   SubjectFilter? operator -(String key) => remove(key);
 }

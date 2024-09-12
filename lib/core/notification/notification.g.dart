@@ -6,17 +6,17 @@ part of 'notification.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class NotifAdapter extends TypeAdapter<Notif> {
+class NotificationInstanceAdapter extends TypeAdapter<NotificationInstance> {
   @override
   final int typeId = 7;
 
   @override
-  Notif read(BinaryReader reader) {
+  NotificationInstance read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Notif(
+    return NotificationInstance(
       fields[0] as String,
       content: fields[1] as String,
       uploadDate: fields[2] as DateTime?,
@@ -26,12 +26,12 @@ class NotifAdapter extends TypeAdapter<Notif> {
       applySemesterInt: fields[6] as int?,
       override: fields[7] as bool?,
       applied: fields[8] as bool?,
-      read: fields[9] as bool,
+      isRead: fields[9] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Notif obj) {
+  void write(BinaryWriter writer, NotificationInstance obj) {
     writer
       ..writeByte(10)
       ..writeByte(0)
@@ -51,9 +51,9 @@ class NotifAdapter extends TypeAdapter<Notif> {
       ..writeByte(7)
       ..write(obj.override)
       ..writeByte(8)
-      ..write(obj.applied)
+      ..write(obj.isApplied)
       ..writeByte(9)
-      ..write(obj.read);
+      ..write(obj.isRead);
   }
 
   @override
@@ -62,7 +62,7 @@ class NotifAdapter extends TypeAdapter<Notif> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotifAdapter &&
+      other is NotificationInstanceAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

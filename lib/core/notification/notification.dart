@@ -11,7 +11,7 @@ import 'package:student/misc/misc_functions.dart';
 part 'notification.g.dart';
 
 @HiveType(typeId: 7)
-class Notif extends HiveObject {
+class NotificationInstance extends HiveObject {
   @HiveField(0)
   final String title;
   @HiveField(1)
@@ -31,10 +31,11 @@ class Notif extends HiveObject {
   @HiveField(7)
   final bool? override;
   @HiveField(8)
-  bool? applied;
+  bool? isApplied;
   @HiveField(9)
-  bool read;
-  Notif(
+  bool isRead;
+
+  NotificationInstance(
     this.title, {
     required this.content,
     this.uploadDate,
@@ -44,15 +45,15 @@ class Notif extends HiveObject {
     this.applySemesterInt,
     this.override,
     bool? applied,
-    this.read = false,
-  })  : applied = applyEvent != null ? applied ?? false : null,
+    this.isRead = false,
+  })  : isApplied = applyEvent != null ? applied ?? false : null,
         applyGroup =
             applyGroupInt == null ? null : UserGroup.values[applyGroupInt],
         applySemester = applySemesterInt == null
             ? null
             : UserSemester.values[applySemesterInt];
 
-  Notif.fromJson(Map<String, dynamic> map)
+  NotificationInstance.fromJson(Map<String, dynamic> map)
       : this(
           map["title"] as String,
           content: map["content"] as String,
@@ -79,8 +80,8 @@ class Notif extends HiveObject {
           applyGroupInt: map["applyGroup"] as int?,
           applySemesterInt: map["applySemester"] as int?,
           override: map["override"] as bool?,
-          applied: map["applied"] as bool?,
-          read: (map["read"] ?? false) as bool,
+          applied: map["isApplied"] as bool?,
+          isRead: (map["isRead"] ?? false) as bool,
         );
 
   Map<String, dynamic> toJson() => {
@@ -94,16 +95,16 @@ class Notif extends HiveObject {
         'applyGroup': applyGroup?.index,
         'applySemester': applySemester?.index,
         'override': override,
-        'applied': applied,
-        'read': read,
+        'isApplied': isApplied,
+        'isRead': isRead,
       };
 
   Future<void> apply() async {
-    if (applied == true) return await save();
+    if (isApplied == true) return await save();
     if (applyEvent == null ||
         applyGroup != User().group ||
         applySemester != User().semester) {
-      applied = true;
+      isApplied = true;
       return await save();
     }
     await Storage().updateWeekTimetable(
@@ -111,12 +112,19 @@ class Notif extends HiveObject {
       override: override ?? false,
       days: applyDates,
     );
-    applied = true;
+    isApplied = true;
     await save();
   }
 
-  Future<void> readNotif() async {
-    read = true;
+  Future<void> unapply() async {}
+
+  Future<void> read() async {
+    isRead = true;
+    await save();
+  }
+
+  Future<void> unread() async {
+    isRead = false;
     await save();
   }
 }

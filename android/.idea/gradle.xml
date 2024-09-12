@@ -7,9 +7,9 @@
         <compositeConfiguration>
           <compositeBuild compositeDefinitionSource="SCRIPT">
             <builds>
-              <build path="$USER_HOME$/.local/share/flutter/packages/flutter_tools/gradle" name="gradle">
+              <build path="/opt/flutter/packages/flutter_tools/gradle" name="gradle">
                 <projects>
-                  <project path="$USER_HOME$/.local/share/flutter/packages/flutter_tools/gradle" />
+                  <project path="/opt/flutter/packages/flutter_tools/gradle" />
                 </projects>
               </build>
             </builds>
@@ -19,17 +19,17 @@
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/.local/share/flutter/packages/flutter_tools/gradle" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/file_picker-8.0.5/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/file_picker-8.0.6/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_fgbg-0.3.0/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.20/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/mobile_scanner-5.1.1/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.2.5/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.2.6/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/permission_handler_android-12.0.7/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/restart_app-1.2.1/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/system_theme-2.3.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/system_theme-3.0.0/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="/opt/flutter/packages/flutter_tools/gradle" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

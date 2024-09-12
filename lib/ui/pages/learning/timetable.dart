@@ -1,11 +1,10 @@
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 import 'package:student/misc/misc_functions.dart';
-import 'package:student/ui/components/pages/learning/timetable.dart';
-
 import 'package:student/ui/components/navigator/navigator.dart';
+import 'package:student/ui/components/pages/learning/timetable.dart';
 
 class LearningTimetablePage extends StatefulWidget implements TypicalPage {
   const LearningTimetablePage({super.key});
@@ -22,6 +21,8 @@ class LearningTimetablePage extends StatefulWidget implements TypicalPage {
 
 class _LearningTimetablePageState extends State<LearningTimetablePage> {
   WeekTimetable week = Storage().thisWeek;
+  MenuController weekCtl = MenuController();
+  MenuController yearCtl = MenuController();
 
   void changeWeek(DateTime startDate) {
     setState(() {
@@ -59,21 +60,46 @@ class _LearningTimetablePageState extends State<LearningTimetablePage> {
           style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
         ),
         actions: [
-          InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Week ${currentWeekView.timetable.weekNo! + 1} ",
-                    style: textTheme.bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  Icon(
-                    Symbols.arrow_drop_down,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                ],
+          MenuAnchor(
+            controller: weekCtl,
+            menuChildren: Storage().weeks.map((week) {
+              return MenuItemButton(
+                onPressed: () {
+                  changeWeek(week.startDate);
+                  weekCtl.close();
+                },
+                child: Text(
+                  (week.weekNo == null || week.weekNo! < 0)
+                      ? "Gap"
+                      : "Week ${week.weekNo! + 1}",
+                ),
+              );
+            }).toList()
+              ..add(MenuItemButton(
+                onPressed: () {
+                  setState(() => week = Storage().thisWeek);
+                  weekCtl.close();
+                },
+                child: const Text("Current"),
+              )),
+            child: InkWell(
+              onTap: () => weekCtl.isOpen ? weekCtl.close() : weekCtl.open(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Week ${currentWeekView.timetable.weekNo! + 1} ",
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Icon(
+                      Symbols.arrow_drop_down,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -81,11 +107,29 @@ class _LearningTimetablePageState extends State<LearningTimetablePage> {
             width: 8,
             color: Colors.transparent,
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Symbols.date_range,
-              color: colorScheme.onPrimaryContainer,
+          MenuAnchor(
+            controller: yearCtl,
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  weekCtl.close();
+                },
+                child: const Text("Year:"),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  weekCtl.close();
+                },
+                child: const Text("Semester:"),
+              ),
+            ],
+            child: IconButton(
+              onPressed: () =>
+                  yearCtl.isOpen ? yearCtl.close() : yearCtl.open(),
+              icon: Icon(
+                Symbols.date_range,
+                color: colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
           const VerticalDivider(

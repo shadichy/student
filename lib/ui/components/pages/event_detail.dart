@@ -6,12 +6,14 @@ class EventPage extends StatelessWidget {
   final String title;
   final String? subtitle;
   final List<Widget> children;
+  final Map<String, double>? padding;
   const EventPage({
     super.key,
     required this.label,
     required this.title,
     this.subtitle,
     required this.children,
+    this.padding,
   });
 
   @override
@@ -36,11 +38,11 @@ class EventPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(children: [
           Container(
-            padding: const EdgeInsets.only(
-              top: 64,
-              bottom: 32,
-              left: 16,
-              right: 16,
+            padding: EdgeInsets.only(
+              top: padding?["top"] ?? 64,
+              bottom: padding?["bottom"] ?? 32,
+              left: padding?["left"] ?? 16,
+              right: padding?["right"] ?? 16,
             ),
             alignment: Alignment.centerLeft,
             child: Column(

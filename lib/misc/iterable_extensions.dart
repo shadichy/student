@@ -27,4 +27,7 @@ extension IterableExtensions<E> on Iterable<E> {
       return null;
     }
   }
+
+  Iterable<E> separatedBy(E separator) => Iterable.generate(
+      length * 2 - 1, (i) => i % 2 == 0 ? elementAt(i ~/ 2) : separator);
 }

@@ -21,15 +21,9 @@ class SubjectStampPage extends StatefulWidget implements TypicalPage {
     'Fri',
     'Sat'
   ];
-  final String _title;
   final CourseTimestamp stamp;
-  SubjectStampPage(this.stamp, {super.key})
-      : _title =
-            "${stamp.room} \u2022 ${shortDayOfWeek[stamp.dayOfWeek]} C${(() {
-          int classStartsAt = stamp.startStamp;
-          int classLength = stamp.stampLength;
-          return "${classStartsAt + 1}-${classStartsAt + classLength}";
-        })()} ${stamp.courseID}${stamp.courseType == null ? "" : "_${stamp.courseType!.name}"}";
+
+  const SubjectStampPage(this.stamp, {super.key});
 
   @override
   State<SubjectStampPage> createState() => _SubjectStampPageState();
@@ -38,7 +32,8 @@ class SubjectStampPage extends StatefulWidget implements TypicalPage {
   Icon get icon => const Icon(Symbols.event);
 
   @override
-  String get title => _title;
+  String get title =>
+      "${stamp.room} ${stamp.dayOfWeek} ${stamp.intStamp} ${stamp.courseID}";
 }
 
 class _SubjectStampPageState extends State<SubjectStampPage> {
@@ -49,7 +44,7 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
   late String teacher = widget.stamp.teacherID;
   late final eventData = NextupClassView(widget.stamp, subject.name);
 
-  final List<String> dayOfWeek = [
+  late final String dayOfWeek = [
     'Sunday',
     'Monday',
     'Tuesday',
@@ -57,7 +52,8 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
     'Thursday',
     'Friday',
     'Saturday',
-  ];
+  ][widget.stamp.dayOfWeek];
+
   @override
   Widget build(BuildContext context) {
     // ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -65,7 +61,7 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
     return EventPage(
       label: "Thông tin lớp học",
       title: subject.name,
-      subtitle: courseID,
+      subtitle: "$courseID \u2022 $dayOfWeek",
       children: [
         SubPage(
           label: "Subject name",
@@ -87,7 +83,7 @@ class _SubjectStampPageState extends State<SubjectStampPage> {
         ),
         SubPage(
           label: "Week day",
-          desc: dayOfWeek[widget.stamp.dayOfWeek],
+          desc: dayOfWeek,
         ),
         SubPage(
           label: "Instructor/Teacher",

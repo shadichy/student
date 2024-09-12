@@ -43,7 +43,7 @@ class _InitializerState extends State<Initializer> {
   }
 
   void showErr(String errMsg, Object e, StackTrace s) {
-    print(s);
+    // print(s);
     double margSide = MediaQuery.of(context).size.width * .18;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       // width: MediaQuery.of(context).size.width * ,

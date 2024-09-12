@@ -11,10 +11,10 @@ final class ArticleSearchFilter {}
 final class NotifSearchFilter {}
 
 abstract final class SearchFilter {
-  static RoutingSearchFilter route({any}) => RoutingSearchFilter();
-  static SubjectSearchFilter subject({any}) => SubjectSearchFilter();
-  static CourseSearchFilter course({any}) => CourseSearchFilter();
-  static StampSearchFilter stamp({any}) => StampSearchFilter();
-  static ArticleSearchFilter article({any}) => ArticleSearchFilter();
-  static NotifSearchFilter notif({any}) => NotifSearchFilter();
+  static const route = RoutingSearchFilter.new;
+  static const subject = SubjectSearchFilter.new;
+  static const course = CourseSearchFilter.new;
+  static const stamp = StampSearchFilter.new;
+  static const article = ArticleSearchFilter.new;
+  static const notif = NotifSearchFilter.new;
 }

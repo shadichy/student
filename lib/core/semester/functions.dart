@@ -59,6 +59,18 @@ class EventTimestamp {
     return intStamp | other.intStamp;
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (other is! EventTimestamp) {
+      throw Exception("Can only operate with EventTimestamp");
+    }
+    return intStamp == other.intStamp &&
+        eventName == other.eventName &&
+        dayOfWeek == other.dayOfWeek &&
+        location == other.location &&
+        heldBy == other.heldBy;
+  }
+
   int get startStamp {
     if (intStamp == 0) return SPBasics().classTimestamps.length;
     int classStartsAt = 0;
@@ -82,6 +94,10 @@ class EventTimestamp {
 
   @override
   String toString() => jsonEncode(toMap());
+
+  @override
+  int get hashCode =>
+      Object.hash(eventName, intStamp, dayOfWeek, location, heldBy);
 }
 
 @HiveType(typeId: 2)
@@ -203,6 +219,20 @@ class EventTimeline {
     return intEvent | other.intEvent;
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (other is! EventTimeline) {
+      throw ArgumentError("Can only operate with EventTimeline");
+    }
+    if (label != other.label) return false;
+    if (timestamp.length != other.timestamp.length) return false;
+
+    for (var i = 0; i < timestamp.length; i++) {
+      if (timestamp[i] != other.timestamp[i]) return false;
+    }
+    return true;
+  }
+
   Map<String, dynamic> toJson() => toMap();
 
   Map<String, dynamic> toMap() => {
@@ -214,6 +244,9 @@ class EventTimeline {
 
   @override
   String toString() => jsonEncode(toMap());
+
+  @override
+  int get hashCode => Object.hashAll([label, ...timestamp]);
 }
 
 @HiveType(typeId: 4)
@@ -348,18 +381,25 @@ final class Subject extends BaseSubject {
         'dependencies': dependencies,
         'courses': courses,
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Subject) {
+      throw ArgumentError("Can only operate with Subject");
+    }
+    if (subjectID != other.subjectID) return false;
+    if (courses.length != other.courses.length) return false;
+    for (var entry in courses.entries) {
+      if (other.courses[entry.key] != entry.value) return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([subjectID, ...courses.values]);
 }
 
 extension BaseSubjectExtension on BaseSubject {
   Subject toSubject(Map<String, SubjectCourse> courses) =>
       Subject.fromBase(this, courses);
-
-  // @override
-  // String toString() => ({
-  //       'subjectID': subjectID,
-  //       'subjectAltID': subjectAltID,
-  //       'name': name,
-  //       'cred': cred,
-  //       'dependencies': dependencies,
-  //     }).toString();
 }

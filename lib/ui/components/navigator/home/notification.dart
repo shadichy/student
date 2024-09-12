@@ -4,7 +4,7 @@ import 'package:student/core/notification/notification.dart';
 import 'package:student/core/routing.dart';
 
 class NotifExpand extends StatefulWidget {
-  final Notif notification;
+  final NotificationInstance notification;
   const NotifExpand(this.notification, {super.key});
 
   @override
@@ -154,7 +154,7 @@ class _NotifExpandState extends State<NotifExpand> {
 }
 
 class NotifExpandableBox extends StatefulWidget {
-  final List<Notif> notifications;
+  final List<NotificationInstance> notifications;
   const NotifExpandableBox(this.notifications, {super.key});
 
   @override
@@ -162,7 +162,7 @@ class NotifExpandableBox extends StatefulWidget {
 }
 
 class _NotifExpandableBoxState extends State<NotifExpandableBox> {
-  late List<Notif> notifications = widget.notifications;
+  late List<NotificationInstance> notifications = widget.notifications;
   bool isExpanded = false;
 
   // void add(Notif value) {
@@ -191,7 +191,7 @@ class _NotifExpandableBoxState extends State<NotifExpandableBox> {
         .apply(bodyColor: colorScheme.onPrimaryContainer);
     // notifications = widget.notifications;
     // print(widget.notifications);
-    Widget titlePreview(Notif notif) {
+    Widget titlePreview(NotificationInstance notif) {
       return Padding(
         padding: const EdgeInsets.only(left: 32, right: 24),
         child: Row(

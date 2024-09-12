@@ -8,4 +8,3 @@ class NotificationPreviewPage extends StatelessWidget {
     return const Placeholder();
   }
 }
-

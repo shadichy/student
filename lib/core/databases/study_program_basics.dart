@@ -1,4 +1,5 @@
 // import 'package:student/core/databases/user.dart';
+import 'package:student/core/databases/user.dart';
 import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_functions.dart';
 import 'package:currency_converter/currency.dart';
@@ -16,8 +17,19 @@ final class SPBasics {
   late final Map<int, int> _creditPrice;
   late final Currency _currency;
 
-  final int currentYear =
+  int get currentYear =>
       1 + DateTime.now().difference(MiscFns.epoch(589446000)).inDays ~/ 365.25;
+
+  bool get isNewSemester =>
+      User().learningCourses[currentYear - User().schoolYear]
+          [User().semester] ==
+      null;
+
+  UserGroup get userGroup {
+    var year = currentYear - User().schoolYear;
+    if (year >= 2) return UserGroup.n1;
+    return UserGroup.values[2 - year];
+  }
 
   List<List<int>> get classTimestamps => _studyTimestamps;
   List<String> get onlineClass => _onlineClassTypes;

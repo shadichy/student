@@ -3,7 +3,7 @@ import 'package:student/core/notification/notification.dart';
 import 'package:student/ui/components/navigator/home/notification.dart';
 
 class HomeNotifWidget extends StatefulWidget {
-  final List<Notif> notifications;
+  final List<NotificationInstance> notifications;
   const HomeNotifWidget(this.notifications, {super.key});
 
   @override

@@ -25,13 +25,14 @@ class HomePage extends StatefulWidget implements TypicalPage {
 }
 
 class _HomePageState extends State<HomePage> {
-  Iterable<Notif> _notif = [];
+  Iterable<NotificationInstance> _notifications = [];
 
-  bool get hasNotif => _notif.isNotEmpty;
+  bool get hasNotifications => _notifications.isNotEmpty;
 
   void setNotifications(_) {
+    if (!mounted) return;
     setState(() {
-      _notif = Storage().notifications.where((e) => !e.read).take(4);
+      _notifications = Storage().notifications.where((e) => !e.isRead).take(4);
     });
   }
 
@@ -60,7 +61,9 @@ class _HomePageState extends State<HomePage> {
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeInOut,
           alignment: Alignment.topCenter,
-          child: hasNotif ? HomeNotifWidget(_notif.toList()) : const SizedBox(),
+          child: hasNotifications
+              ? HomeNotifWidget(_notifications.toList())
+              : const SizedBox(),
         ),
         OptionLabelWidgets(widget.title),
         MWds.divider(16),

@@ -5,14 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e438bcf4-814d-4e0e-ba19-b751efaf8a74" name="Changes" comment="added second activity for alarm">
+      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/.idea/other.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/pages/notification/event.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/AlarmActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/dev/tlu/student/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/databases/hive.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/databases/hive.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/generator/generator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/generator/generator.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/notification/notification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/notification.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/notification/notification.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notification/notification.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/routing.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/routing.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/connect.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/connect.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/home/notification_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/components/navigator/quick_navigators.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/navigator/quick_navigators.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/components/pages/event_detail.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/components/pages/event_detail.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/navigator/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/navigator/home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/navigator/school.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/navigator/school.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/navigator/student.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/navigator/student.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/navigator/timetable.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/navigator/timetable.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/pages/init/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/init/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/stamp_intent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/stamp_intent.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/learning/timetable.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/learning/timetable.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/notification/detail.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/notification/detail.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/notification/notification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/notification/notification.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/settings/quick_action.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/settings/quick_action.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/course.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/course.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/stamp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/stamp.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/subject.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/subject.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/pages/subject/upcoming_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/pages/subject/upcoming_event.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,24 +85,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flutter.main.dart.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "async",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/shadichy/Documents/student",
-    "settings.editor.selected.configurable": "flutter.settings",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;async&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/shadichy/Documents/student/android&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="dev.tlu.student" />

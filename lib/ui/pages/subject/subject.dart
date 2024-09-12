@@ -32,6 +32,7 @@ class _SubjectPageState extends State<SubjectPage> {
     return EventPage(
       label: "Thông tin môn học",
       title: widget.title,
+      subtitle: widget.subject.subjectID,
       children: [
         SubPage(
           label: "Subject code",

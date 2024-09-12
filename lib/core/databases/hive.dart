@@ -47,11 +47,8 @@ final class _Vars {
 
 final class Storage {
   Storage._();
-
   static final _storage = Storage._();
-  factory Storage() {
-    return _storage;
-  }
+  factory Storage() => _storage;
 
   static final _boxes = _Boxes();
   static final _vars = _Vars();
@@ -66,7 +63,7 @@ final class Storage {
   late final Box<WeekTimetable> _week;
   late final Box<AlarmSettings> _alarms;
   late final Box<Reminder> _reminders;
-  late final Box<Notif> _notifications;
+  late final Box<NotificationInstance> _notifications;
 
   bool _notificationInitialized = false;
   late final String _domain;
@@ -80,11 +77,6 @@ final class Storage {
   late final int _weekStartInt;
   late final List<List<int>> _cList;
   late final Iterable<EventTimestamp> _tList;
-
-  // late final dynamic defaultAlarmSound;
-  // late final dynamic defaultRingtoneSound;
-  // late final dynamic defaultNotificationSound;
-  // late final RootIsolateToken token;
 
   static const platform = StudentApp.methodChannel;
   bool _initialized = false;
@@ -124,7 +116,6 @@ final class Storage {
   }
 
   Future<void> register() async {
-    // this.token = token;
     await Hive.initFlutter();
     Hive.registerAdapter(BaseSubjectAdapter());
     Hive.registerAdapter(EventTimestampAdapter());
@@ -137,7 +128,7 @@ final class Storage {
     Hive.registerAdapter(WeekTimetableAdapter());
     Hive.registerAdapter(AlarmSettingsAdapter());
     Hive.registerAdapter(ReminderAdapter());
-    Hive.registerAdapter(NotifAdapter());
+    Hive.registerAdapter(NotificationInstanceAdapter());
 
     _generic = await Hive.openBox(_boxes.base);
     if (_generic.isEmpty) await _generic.putAll(conf.defaultConfig);
@@ -187,7 +178,8 @@ final class Storage {
     await initializeMinimal();
 
     _reminders = await Hive.openBox<Reminder>(_boxes.reminders);
-    _notifications = await Hive.openBox<Notif>(_boxes.notifications);
+    _notifications =
+        await Hive.openBox<NotificationInstance>(_boxes.notifications);
 
     await _initReminders();
     _initNotifications().then((_) => _notificationInitialized = true);
@@ -218,6 +210,7 @@ final class Storage {
         "Failed to fetch from $_domain/$endpoint! ",
       );
     }
+
     try {
       return jsonDecode(res.body) as T;
     } catch (e) {
@@ -225,17 +218,14 @@ final class Storage {
         "Failed to parse body from ${uri.toString()}: $e",
       );
     }
-    if (retries <= 0) {
-      throw exception;
-    } else {
-      return await Future.delayed(
-        Duration(
-          seconds: fetch<int>(conf.Config.misc.dlRetryInterval) ?? 120,
-        ),
-        () async => await download(uri, headers: headers, retry: retries - 1),
-      );
-      // return await download(uri, headers: headers, retry: retries - 1);
-    }
+
+    if (retries <= 0) throw exception;
+
+    await Future.delayed(Duration(
+      seconds: fetch<int>(conf.Config.misc.dlRetryInterval) ?? 120,
+    ));
+
+    return await download(uri, headers: headers, retry: retries - 1);
   }
 
   Future<T> endpoint<T>(String endpoint) async =>
@@ -336,14 +326,10 @@ final class Storage {
         await _learning.put(
           k,
           Subject.fromBase(
-            base,
-            (v as Map<String, dynamic>).map(
-              (c, t) => MapEntry(
-                c,
-                SubjectCourse.fromList(t as List, c, base.subjectID),
-              ),
-            ),
-          ),
+              base,
+              (v as Map<String, dynamic>).map((c, t) {
+                return MapEntry(c, SubjectCourse.fromList(t as List, c, k));
+              })),
         );
       } catch (e) {
         // database is not correctly set up
@@ -363,7 +349,8 @@ final class Storage {
     List<SubjectCourse> registeredCourses = [];
     for (var id
         in User().learningCourses[SPBasics().currentYear - User().schoolYear]
-            [User().semester]!) {
+                [User().semester] ??
+            []) {
       try {
         registeredCourses.add(getCourse(id)!);
       } catch (e) {
@@ -508,7 +495,7 @@ final class Storage {
         (await endpoint<List>("notifications/$n"))
             .cast<Map<String, dynamic>>()
             .forEach((e) async {
-          Notif notif = Notif.fromJson(e);
+          NotificationInstance notif = NotificationInstance.fromJson(e);
           if (notif.applyEvent != null) await notif.apply();
           _notifications.add(notif);
         });
@@ -563,6 +550,8 @@ final class Storage {
   DateTime get planStartDate => fetch(_vars.planStartDate);
 
   DateTime get semesterStartDate => fetch(_vars.weekStartDate);
+
+  Iterable<WeekTimetable> get weeks => _week.values;
 
   WeekTimetable getWeek(DateTime startDate) {
     int daysDiff = startDate.difference(semesterStartDate).inDays.abs();
@@ -717,7 +706,7 @@ final class Storage {
       'You killed the app. Please reopen so your alarms can be rescheduled.';
 
   int get notificationLastUpdated => fetch(_vars.notificationsLastUpdated) ?? 0;
-  Iterable<Notif> get notifications => _notifications.values;
+  Iterable<NotificationInstance> get notifications => _notifications.values;
   Future<void> clearNotifications() async => await _notifications.clear();
 }
 

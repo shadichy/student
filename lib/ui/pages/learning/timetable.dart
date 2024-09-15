@@ -42,9 +42,8 @@ class _LearningTimetablePageState extends State<LearningTimetablePage> {
     DateTime firstDoW = currentWeekView.firstWeekday;
     DateTime lastDoW = currentWeekView.lastWeekday;
 
-    String dateFormat(DateTime date) {
-      return MiscFns.timeFormat(date, format: "dd/MM");
-    }
+    String dateFormat(DateTime date) =>
+        MiscFns.timeFormat(date, format: "dd/MM");
 
     return Scaffold(
       appBar: AppBar(
@@ -68,11 +67,9 @@ class _LearningTimetablePageState extends State<LearningTimetablePage> {
                   changeWeek(week.startDate);
                   weekCtl.close();
                 },
-                child: Text(
-                  (week.weekNo == null || week.weekNo! < 0)
-                      ? "Gap"
-                      : "Week ${week.weekNo! + 1}",
-                ),
+                child: Text((week.weekNo == null || week.weekNo! < 0)
+                    ? "Gap"
+                    : "Week ${week.weekNo! + 1}"),
               );
             }).toList()
               ..add(MenuItemButton(

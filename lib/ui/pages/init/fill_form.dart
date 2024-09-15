@@ -3,7 +3,6 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/user.dart';
-import 'package:student/core/default_configs.dart';
 import 'package:student/misc/misc_widget.dart';
 import 'package:student/ui/components/pages/settings/components.dart';
 
@@ -25,9 +24,7 @@ class _FillFormState extends State<FillForm> {
   }
 
   void lCOCSRemove(String r) {
-    setState(() {
-      inLearningCourses.remove(r);
-    });
+    setState(() => inLearningCourses.remove(r));
   }
 
   String? id;
@@ -454,15 +451,15 @@ class _FillFormState extends State<FillForm> {
                     inLearningCourses;
                 await Storage().clear();
                 if (dataUrl.isEmpty) return;
-                try {
-                  Uri uri = Uri.parse(dataUrl);
-                  for (var entry in ({
-                    Config.env.fetchDomain: uri.authority,
-                    Config.env.apiPrefix: uri.path,
-                  }).entries) {
-                    await Storage().setEnv(entry.key, entry.value);
-                  }
-                } catch (_) {}
+                // try {
+                //   Uri uri = Uri.parse(dataUrl);
+                //   for (var entry in ({
+                //     Config.env.fetchDomain: uri.authority,
+                //     Config.env.apiPrefix: uri.path,
+                //   }).entries) {
+                //     await Storage().setEnv(entry.key, entry.value);
+                //   }
+                // } catch (_) {}
                 await Storage().setUser({
                   "id": id,
                   "name": name,

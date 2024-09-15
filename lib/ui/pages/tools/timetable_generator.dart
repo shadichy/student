@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:student/core/databases/hive.dart';
@@ -111,14 +110,16 @@ class _ToolsTimetableGeneratorPageState
             ),
           ),
           onChanged: (query) => setState(() {
-            query = query.trim();
+            query = query.trim().toLowerCase();
             if (query.isEmpty) {
               searchResult = filterData.keys.toList();
               return;
             }
+            bool checkQuery(String? s) =>
+                s?.toLowerCase().contains(query) ?? false;
             searchResult = generator.subjectData.values.where((subject) {
-              return subject.subjectID.contains(query) ||
-                  (subject.subjectAltID?.contains(query) ?? false);
+              return checkQuery(subject.subjectID) ||
+                  checkQuery(subject.subjectAltID);
             }).map((subject) {
               return subject.subjectID;
             }).toList();
@@ -145,9 +146,11 @@ class _ToolsTimetableGeneratorPageState
                           ? true
                           : null;
                 })(filterData[searchResult[i]]),
-                onChanged: (value) => setState(() => value == false
-                    ? filterData[searchResult[i]] = SubjectFilter()
-                    : filterData.remove(searchResult[i])),
+                onChanged: (value) => setState(() {
+                  value == true
+                      ? filterData[searchResult[i]] = SubjectFilter()
+                      : filterData.remove(searchResult[i]);
+                }),
               ),
               trailing: IconButton(
                 onPressed: () => showDialog<SubjectFilter>(
@@ -160,7 +163,7 @@ class _ToolsTimetableGeneratorPageState
                   filterData[searchResult[i]] = value;
                   if (context.mounted) setState(() {});
                 }),
-                icon: const Icon(Symbols.filter_1),
+                icon: const Icon(Symbols.filter_alt),
               ),
             ),
           ),
@@ -251,6 +254,7 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
     );
     return TableRow(children: [
       Text(label),
+      MWds.vDivider(16),
       Column(mainAxisSize: MainAxisSize.min, children: [
         Wrap(
           children: items
@@ -263,12 +267,15 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
               .separatedBy(MWds.vDivider(8))
               .toList(),
         ),
-        SizedBox(
-          width: 120,
+        Container(
+          // width: 120,
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(children: [
-            TextFormField(
-              controller: ctl,
-              decoration: InputDecoration(border: outlineInputBorder),
+            Expanded(
+              child: TextFormField(
+                controller: ctl,
+                decoration: InputDecoration(border: outlineInputBorder),
+              ),
             ),
             IconButton(
               onPressed: () => setState(() => onAdd(ctl.text)),
@@ -292,7 +299,11 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
           SizedBox(
             width: 600,
             child: Table(
-              columnWidths: const {0: IntrinsicColumnWidth()},
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+                1: FixedColumnWidth(16),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
                 entryRow(
                   label: "Included classes",
@@ -329,7 +340,7 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
             width: 600,
             child: Table(
               columnWidths: const {0: IntrinsicColumnWidth()},
-              children: [],
+              children: const [],
             ),
           ),
         ],
@@ -337,7 +348,8 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(16),
+            minimumSize: const Size(82, 32),
+            padding: const EdgeInsets.all(12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
               side: BorderSide(color: c.outline),
@@ -354,7 +366,8 @@ class _SubjectFilterDialogState extends State<SubjectFilterDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context, filter),
           style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(16),
+            minimumSize: const Size(82, 32),
+            padding: const EdgeInsets.all(12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
             ),

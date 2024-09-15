@@ -106,11 +106,11 @@ class _InitializerState extends State<Initializer> {
     if (Storage().initialized) await Storage().clear();
 
     await Storage().setUser(parsed["user"]);
-    if (parsed["env"] != null) {
-      for (var entry in (parsed["env"] as Map<String, dynamic>).entries) {
-        await Storage().setEnv(entry.key, entry.value);
-      }
-    }
+    // if (parsed["env"] != null) {
+    //   for (var entry in (parsed["env"] as Map<String, dynamic>).entries) {
+    //     await Storage().setEnv(entry.key, entry.value);
+    //   }
+    // }
     await Restart.restartApp();
   }
 

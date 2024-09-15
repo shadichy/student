@@ -37,7 +37,7 @@ class _ToolsCourseSelectorPageState extends State<ToolsCourseSelectorPage> {
           maxLines: 3,
         ),
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             // Container(

@@ -55,8 +55,9 @@ class _TimetableWidgetState extends State<TimetableWidget> {
         children: [
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_left),
-            onPressed: () =>
-                changeWeek(week.startDate.subtract(const Duration(days: 7))),
+            onPressed: () => changeWeek(
+              week.startDate.subtract(const Duration(days: 7)),
+            ),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,
@@ -75,8 +76,9 @@ class _TimetableWidgetState extends State<TimetableWidget> {
           ),
           IconButton(
             icon: const Icon(Symbols.keyboard_arrow_right),
-            onPressed: () =>
-                changeWeek(week.startDate.add(const Duration(days: 7))),
+            onPressed: () => changeWeek(
+              week.startDate.add(const Duration(days: 7)),
+            ),
             iconSize: 28,
             padding: const EdgeInsets.all(4),
             // backgroundColor: colorScheme.primaryContainer,

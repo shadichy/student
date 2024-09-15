@@ -1,13 +1,24 @@
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
+import 'package:student/core/timetable/semester_timetable.dart';
 
 class SampleTimetable {
-  final List<SubjectCourse> classes;
+  final List<SubjectCourse> courses;
   final BigInt intMatrix;
-  int get length => classes.length;
+  int get length => courses.length;
 
-  SampleTimetable({required this.classes})
-      : intMatrix = classes.fold(BigInt.zero, (f, i) => f = i.intCourse);
+  SampleTimetable(this.courses)
+      : intMatrix = courses.fold(BigInt.zero, (f, i) => f | i.intCourse);
+
+  @override
+  String toString() => courses.toString();
+
+  WeekTimetable get timetable {
+    return WeekTimetable(
+      courses.fold([], (p, n) => [...p, ...n.timestamp]),
+      startDate: DateTime(0),
+    );
+  }
 }
 
 class SubjectFilter {
@@ -54,13 +65,17 @@ class SubjectFilter {
   bool get isNotEmpty => !isEmpty;
 
   SubjectFilter({
-    this.inClass = const [],
-    this.notInClass = const [],
-    this.includeTeacher = const [],
-    this.excludeTeacher = const [],
+    List<String>? inClass,
+    List<String>? notInClass,
+    List<String>? includeTeacher,
+    List<String>? excludeTeacher,
     BigInt? forcefulMatrix,
     BigInt? spareMatrix,
-  })  : forcefulMatrix = forcefulMatrix ?? BigInt.zero,
+  })  : inClass = [],
+        notInClass = [],
+        includeTeacher = [],
+        excludeTeacher = [],
+        forcefulMatrix = forcefulMatrix ?? BigInt.zero,
         spareMatrix = spareMatrix ?? BigInt.zero;
 }
 
@@ -142,16 +157,16 @@ class GenResult {
   ) {
     if (input.isEmpty) {
       input.addAll(genData.removeAt(0).courses.values.map((c) {
-        return SampleTimetable(classes: [c]);
+        return SampleTimetable([c]);
       }));
     }
 
-    return genData.fold(input, (prevSamples, subject) {
+    return genData.fold(input, (samples, subject) {
       List<SampleTimetable> newOutput = [];
-      for (var sample in prevSamples) {
+      for (var sample in samples) {
         for (var target in subject.courses.values) {
           if (sample.intMatrix & target.intCourse != BigInt.zero) continue;
-          newOutput.add(SampleTimetable(classes: sample.classes..add(target)));
+          newOutput.add(SampleTimetable(sample.courses + [target]));
         }
       }
       return newOutput;
@@ -176,8 +191,8 @@ class _GenTimetable {
     Subject filteredSubject =
         _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
     if (output.isEmpty) {
-      output.addAll(filteredSubject.courses.values
-          .map((c) => SampleTimetable(classes: [c])));
+      output.addAll(
+          filteredSubject.courses.values.map((c) => SampleTimetable([c])));
     } else {
       List<SampleTimetable> newOutput = [];
       for (var sample in output) {
@@ -185,7 +200,7 @@ class _GenTimetable {
           BigInt tmpDint = BigInt.zero;
           tmpDint = sample.intMatrix & target.intCourse;
           if (tmpDint != BigInt.zero) continue;
-          newOutput.add(SampleTimetable(classes: sample.classes + [target]));
+          newOutput.add(SampleTimetable(sample.courses + [target]));
         }
       }
       output = newOutput;

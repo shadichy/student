@@ -34,6 +34,7 @@ import 'package:student/ui/pages/subject/stamp.dart';
 import 'package:student/ui/pages/subject/subject.dart';
 import 'package:student/ui/pages/subject/upcoming_event.dart';
 import 'package:student/ui/pages/tools/course_selector.dart';
+import 'package:student/ui/pages/tools/generated_timetable_preview.dart';
 import 'package:student/ui/pages/tools/generator_instance.dart';
 import 'package:student/ui/pages/tools/timetable_generator.dart';
 
@@ -145,4 +146,5 @@ abstract final class Routing {
   static const article = SchoolArticlePage.new;
   static const quick_action_edit = SettingsQuickActionPage.new;
   static const generator_instance = ToolsGeneratorInstancePage.new;
+  static const generated_timetable_preview = ToolsGeneratedTimetablePreview.new;
 }

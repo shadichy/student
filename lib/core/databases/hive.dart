@@ -53,7 +53,6 @@ final class Storage {
   static final _boxes = _Boxes();
   static final _vars = _Vars();
 
-  late final Box _env;
   late final Box _generic;
   late final Box _intent;
   late final Box<BaseSubject> _subjects;
@@ -132,8 +131,6 @@ final class Storage {
 
     _generic = await Hive.openBox(_boxes.base);
     if (_generic.isEmpty) await _generic.putAll(conf.defaultConfig);
-    _env = await Hive.openBox(_boxes.env);
-    if (_env.isEmpty) await _env.putAll(conf.env);
     _intent = await Hive.openBox(_boxes.intent);
   }
 
@@ -172,8 +169,8 @@ final class Storage {
   }
 
   Future<void> initialize() async {
-    _domain = _env.get(conf.Config.env.fetchDomain)!;
-    _prefix = _env.get(conf.Config.env.apiPrefix) ?? "";
+    _domain = conf.Config.getEnv[conf.Config.env.fetchDomain]!;
+    _prefix = conf.Config.getEnv[conf.Config.env.apiPrefix]!;
 
     await initializeMinimal();
 
@@ -222,15 +219,16 @@ final class Storage {
     if (retries <= 0) throw exception;
 
     await Future.delayed(Duration(
-      seconds: fetch<int>(conf.Config.misc.dlRetryInterval) ?? 120,
+      seconds: fetch<int>(conf.Config.misc.dlRetryInterval) ?? 30,
     ));
 
     return await download(uri, headers: headers, retry: retries - 1);
   }
 
-  Future<T> endpoint<T>(String endpoint) async =>
-      await download<T>(Uri.https(_domain, "$_prefix/$endpoint.json"),
-          headers: _env.get(conf.Config.env.headers));
+  Future<T> endpoint<T>(String endpoint) async => await download<T>(
+        Uri.https(_domain, "$_prefix/$endpoint.json"),
+        headers: conf.Config.getEnv[conf.Config.env.headers],
+      );
 
   T? fetch<T>(String key) => _generic.get(key) as T?;
 
@@ -242,9 +240,6 @@ final class Storage {
 
   Map<String, dynamic>? getUser() => fetch<Map<dynamic, dynamic>>(_vars.user)
       ?.map((key, value) => MapEntry(key.toString(), value));
-
-  Future<void> setEnv<T>(String key, T value) async =>
-      await _env.put(key, value);
 
   Future<void> _initBasics() async {
     Map<String, dynamic>? basics = fetch<Map<dynamic, dynamic>>(_vars.basics)
@@ -514,7 +509,6 @@ final class Storage {
   }
 
   Future<void> clear() async {
-    await _env.clear();
     await _generic.clear();
     await _subjects.clear();
     await _teachers.clear();
@@ -528,8 +522,7 @@ final class Storage {
     await Restart.restartApp();
   }
 
-  Map<String, dynamic> get env =>
-      _env.toMap().map((key, value) => MapEntry(key.toString(), value));
+  Map<String, dynamic> get env => conf.env;
 
   String _getCourseID(String id) => RegExp(r'([^.]+)').firstMatch(id)![0]!;
 
@@ -562,22 +555,19 @@ final class Storage {
       timestamps.addAll(startDay == 0
           ? _week.getAt(week)!.timestamps
           : [
-              ..._week
-                  .getAt(week)!
-                  .timestamps
-                  .where((t) => t.dayOfWeek >= startDay),
+              ..._week.getAt(week)!.timestamps.where((t) {
+                return t.dayOfWeek >= startDay;
+              }),
               if (week + 1 < _week.length)
-                ..._week
-                    .getAt(week + 1)!
-                    .timestamps
-                    .where((t) => t.dayOfWeek < startDay)
+                ..._week.getAt(week + 1)!.timestamps.where((t) {
+                  return t.dayOfWeek < startDay;
+                })
             ]);
     }
-    if (currentPlan.studyWeeks.contains(week)) {
-      week = currentPlan.studyWeeks.indexOf(week);
-    } else {
-      week = -1;
-    }
+    week = currentPlan.studyWeeks.contains(week)
+        ? currentPlan.studyWeeks.indexOf(week)
+        : -1;
+
     return WeekTimetable(
       timestamps,
       startDate: startDate,
@@ -648,7 +638,6 @@ final class Storage {
           _addAll(event.timestamp);
         }
       }
-      // else add for everyday
     } else if (event is SchoolEvent) {
       days ??= event.days;
       (override ? _overwrite : _addByDays)(event.timestamp, days);
@@ -709,28 +698,3 @@ final class Storage {
   Iterable<NotificationInstance> get notifications => _notifications.values;
   Future<void> clearNotifications() async => await _notifications.clear();
 }
-
-// Future<void> _pendingAlarm(RootIsolateToken token) async {
-//   BackgroundIsolateBinaryMessenger.ensureInitialized(token);
-//   Hive.init((await getApplicationDocumentsDirectory()).path);
-//   Hive.registerAdapter(AlarmSettingsAdapter());
-//   await Storage().initializeAlarm();
-//   var now = DateTime.now();
-//   var alarms = Storage().alarms.where((a) => a.dateTime.isAfter(now)).toList();
-//   if (alarms.isEmpty) {
-//     Isolate.current.kill(priority: Isolate.immediate);
-//     return;
-//   }
-//   alarms.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-//   var first = alarms.first;
-//   // await Alarm.stopAll();
-//   await Alarm.set(first, alarms);
-//   await Storage().removeAlarm(first.id);
-//   await Future.delayed(
-//     first.dateTime.add(Duration(minutes: 1)).difference(DateTime.now()),
-//     () async {
-//       Isolate.spawn((t) => _pendingAlarm(t), token);
-//     },
-//   );
-//   Isolate.current.kill(priority: Isolate.beforeNextEvent);
-// }

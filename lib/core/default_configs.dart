@@ -76,7 +76,7 @@ abstract final class Config {
     misc.startWeekday: DateTime.monday,
     misc.currency: Currency.vnd.name,
     misc.maxDlRetries: 5,
-    misc.dlRetryInterval: 120,
+    misc.dlRetryInterval: 30,
     misc.maxUEventItems: 3,
     opts.Home: [
       Routing.names.settings,
@@ -102,13 +102,13 @@ abstract final class Config {
     ],
   };
 
-  static final getEnv = {
+  static final getEnv = <String, dynamic>{
     env.fetchDomain: 'raw.githubusercontent.com',
-    env.apiPrefix: 'shadichydev/student/async/test/sample_db',
+    env.apiPrefix: 'shadichy/student-sample-data/main/sample_db',
     env.headers: null
   };
 }
 
 Map<String, dynamic> defaultConfig = Config.getDefaultConfig;
 
-Map<String, String?> env = Config.getEnv;
+Map<String, dynamic> env = Config.getEnv;

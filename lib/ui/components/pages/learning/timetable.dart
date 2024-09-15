@@ -86,7 +86,7 @@ class TimetableBox extends StatelessWidget {
     }
 
     List<Widget> headRow = [
-      headRowBuilder("Week", "${timetable.weekNo! + 1}"),
+      headRowBuilder("Week", "${timetable.weekNo ?? 0 + 1}"),
       ...shortDayOfWeek.asMap().map((i, d) {
         Widget content = headRowBuilder(
           shortDayOfWeek[i],

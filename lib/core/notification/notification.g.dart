@@ -25,7 +25,7 @@ class NotificationInstanceAdapter extends TypeAdapter<NotificationInstance> {
       applyGroupInt: fields[5] as int?,
       applySemesterInt: fields[6] as int?,
       override: fields[7] as bool?,
-      applied: fields[8] as bool?,
+      isApplied: fields[8] as bool?,
       isRead: fields[9] as bool,
     );
   }

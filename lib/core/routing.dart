@@ -33,7 +33,7 @@ import 'package:student/ui/pages/subject/course.dart';
 import 'package:student/ui/pages/subject/stamp.dart';
 import 'package:student/ui/pages/subject/subject.dart';
 import 'package:student/ui/pages/subject/upcoming_event.dart';
-import 'package:student/ui/pages/tools/course_selector.dart';
+import 'package:student/ui/pages/tools/bookmarked_samples.dart';
 import 'package:student/ui/pages/tools/generated_timetable_preview.dart';
 import 'package:student/ui/pages/tools/generator_instance.dart';
 import 'package:student/ui/pages/tools/timetable_generator.dart';
@@ -59,7 +59,7 @@ final class _RouteNames {
   final upcoming = "upcoming";
   final generator = "generator";
   final generator_instance = "generator_instance";
-  final course_selector = "course_selector";
+  final bookmarked_samples = "bookmarked_samples";
   final help = "help";
 }
 
@@ -110,8 +110,7 @@ abstract final class Routing {
     names.settings: settings,
     names.themes: themes,
     names.upcoming: upcoming,
-    names.generator: generator,
-    names.course_selector: course_selector,
+    names.bookmarked_samples: bookmarked_samples,
     names.help: help,
   };
 
@@ -133,8 +132,7 @@ abstract final class Routing {
   static const settings = SettingsPage();
   static const themes = SettingsThemesPage();
   static const upcoming = SubjectUpcomingEventPage();
-  static const generator = ToolsTimetableGeneratorPage();
-  static const course_selector = ToolsCourseSelectorPage();
+  static const bookmarked_samples = ToolsBookmarkedSamplesPage();
   static const help = HelpMDViewerPage();
 
   static const course = SubjectCoursePage.new;
@@ -145,6 +143,7 @@ abstract final class Routing {
   static const notification_detail = NotificationDetailPage.new;
   static const article = SchoolArticlePage.new;
   static const quick_action_edit = SettingsQuickActionPage.new;
+  static const generator = ToolsTimetableGeneratorPage.new;
   static const generator_instance = ToolsGeneratorInstancePage.new;
   static const generated_timetable_preview = ToolsGeneratedTimetablePreview.new;
 }

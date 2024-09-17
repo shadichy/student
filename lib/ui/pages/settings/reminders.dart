@@ -53,16 +53,6 @@ class _SettingsRemindersPageState extends State<SettingsRemindersPage> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    List<MapEntry<IconData, void Function()>> actions = ({
-      Symbols.alarm_add: () => showTimePicker(
-            context: context,
-            initialTime: const TimeOfDay(hour: 0, minute: 0),
-          ).then((time) {
-            if (time == null) return;
-            int scheduleDuration = time.hour * 60 + time.minute;
-            reminderAdd(Reminder(scheduleDuration));
-          }),
-    }).entries.toList();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -75,21 +65,26 @@ class _SettingsRemindersPageState extends State<SettingsRemindersPage> {
           style: textTheme.titleLarge,
         ),
         backgroundColor: Colors.transparent,
-        actions: List.generate(actions.length, (i) {
-          return [
-            IconButton(
-              onPressed: actions[i].value,
-              icon: Icon(
-                actions[i].key,
-                color: colorScheme.onPrimaryContainer,
-              ),
+        actions: [
+          IconButton(
+            onPressed: () => showTimePicker(
+              context: context,
+              initialTime: const TimeOfDay(hour: 0, minute: 0),
+            ).then((time) {
+              if (time == null) return;
+              int scheduleDuration = time.hour * 60 + time.minute;
+              reminderAdd(Reminder(scheduleDuration));
+            }),
+            icon: Icon(
+              Symbols.alarm_add,
+              color: colorScheme.onPrimaryContainer,
             ),
-            const VerticalDivider(
-              width: 8,
-              color: Colors.transparent,
-            ),
-          ];
-        }).fold<List<Widget>>([], (p, n) => p + n),
+          ),
+          const VerticalDivider(
+            width: 8,
+            color: Colors.transparent,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -108,24 +103,15 @@ class _SettingsRemindersPageState extends State<SettingsRemindersPage> {
               : List.generate(
                   reminders.length * 2,
                   (index) {
-                    if ((index % 2 == 0)) {
-                      int i = index ~/ 2;
-                      return ReminderCard(
-                        reminders[i],
-                        action: ((actionType, value) {
-                          switch (actionType) {
-                            case ActionType.change:
-                              reminderChange(i, value!);
-                              break;
-                            case ActionType.delete:
-                              reminderDelete(i);
-                              break;
-                          }
-                        }),
-                      );
-                    } else {
-                      return MWds.divider();
-                    }
+                    if (index % 2 != 0) return MWds.divider();
+                    int i = index ~/ 2;
+                    return ReminderCard(
+                      reminders[i],
+                      action: (type, value) => switch (type) {
+                        ActionType.change => reminderChange(i, value!),
+                        ActionType.delete => reminderDelete(i),
+                      },
+                    );
                   },
                 ),
         ),

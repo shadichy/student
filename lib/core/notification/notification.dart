@@ -44,9 +44,9 @@ class NotificationInstance extends HiveObject {
     this.applyGroupInt,
     this.applySemesterInt,
     this.override,
-    bool? applied,
+    bool? isApplied,
     this.isRead = false,
-  })  : isApplied = applyEvent != null ? applied ?? false : null,
+  })  : isApplied = applyEvent != null ? isApplied ?? false : null,
         applyGroup =
             applyGroupInt == null ? null : UserGroup.values[applyGroupInt],
         applySemester = applySemesterInt == null
@@ -80,7 +80,7 @@ class NotificationInstance extends HiveObject {
           applyGroupInt: map["applyGroup"] as int?,
           applySemesterInt: map["applySemester"] as int?,
           override: map["override"] as bool?,
-          applied: map["isApplied"] as bool?,
+          isApplied: map["isApplied"] as bool?,
           isRead: (map["isRead"] ?? false) as bool,
         );
 

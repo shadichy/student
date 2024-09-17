@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:student/misc/misc_functions.dart';
 
-part 'alarm_settings.g.dart';
+part 'alarm_settings.g.reserved.dart';
 
 /// [AlarmSettings] is a model that contains all the settings to customize
 /// and set an alarm.

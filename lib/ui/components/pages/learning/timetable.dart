@@ -29,7 +29,7 @@ class TimetableBox extends StatelessWidget {
         lastWeekday = timetable.startDate.add(const Duration(days: 6)),
         currentWeek = timetable.weekNo ?? 0;
 
-  Iterable<T> _remapDiff<T>(Iterable<T> input, [int diff = 0]) {
+  static Iterable<T> _remapDiff<T>(Iterable<T> input, [int diff = 0]) {
     if (diff == 0) return input;
     return [...input.skip(diff), ...input.take(diff)];
   }
@@ -130,6 +130,30 @@ class TimetableBox extends StatelessWidget {
       );
     }
 
+    num indicator() {
+      final stamps = SPBasics().classTimestamps;
+      int current = now.difference(date).inSeconds;
+      if (current > stamps[stamps.length - 1][1]) return stamps.length;
+
+      int startAt = 0;
+      while (current > stamps[startAt][0]) {
+        startAt++;
+        if (startAt == stamps.length) break;
+      }
+      if (startAt > 0) startAt--;
+
+      try {
+        if ((current > stamps[startAt][1] &&
+            current < stamps[startAt + 1][0])) {
+          return startAt + 1;
+        }
+      } catch (_) {}
+
+      return startAt +
+          (current - stamps[startAt][0]) /
+              (stamps[startAt][1] - stamps[startAt][0]);
+    }
+
     TableViewCell inColBuilder(Iterable<Widget> children, int index) {
       Widget content = Stack(
         children: [
@@ -149,35 +173,7 @@ class TimetableBox extends StatelessWidget {
           ),
           if (index == weekday)
             Positioned(
-              top: _cellSize *
-                      (() {
-                        int current = now.difference(date).inSeconds;
-                        if (current >
-                            SPBasics().classTimestamps[
-                                SPBasics().classTimestamps.length - 1][1]) {
-                          return SPBasics().classTimestamps.length;
-                        }
-                        int startAt = 0;
-                        while (
-                            current > SPBasics().classTimestamps[startAt][0]) {
-                          startAt++;
-                          if (startAt == SPBasics().classTimestamps.length) {
-                            break;
-                          }
-                        }
-                        if (startAt > 0) startAt--;
-                        double diff = (current >
-                                    SPBasics().classTimestamps[startAt][1] &&
-                                current <
-                                    SPBasics().classTimestamps[startAt][0])
-                            ? 1
-                            : ((current -
-                                    SPBasics().classTimestamps[startAt][0]) /
-                                (SPBasics().classTimestamps[startAt][1] -
-                                    SPBasics().classTimestamps[startAt][0]));
-                        return diff + startAt;
-                      })() -
-                  2,
+              top: _cellSize * indicator() - 2,
               height: 4,
               width: _cellSize,
               child: Divider(
@@ -194,7 +190,6 @@ class TimetableBox extends StatelessWidget {
             : Container(
                 color: colorScheme.primary.withOpacity(0.05),
                 width: _cellSize,
-                // height: _cellSize * SPBasics().classTimestamps.length,
                 child: content,
               ),
       );
@@ -204,8 +199,6 @@ class TimetableBox extends StatelessWidget {
       List.generate(SPBasics().classTimestamps.length, firstColBuilder),
       7,
     );
-    // print(
-    // "$_cellSize,${SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]},${now.difference(date).inSeconds},${now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]}, ${((now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]) / (SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]))},${_cellSize * SPBasics().classTimestamps.length * ((now.difference(date).inSeconds - SPBasics().classTimestamps[0][0]) / (SPBasics().classTimestamps[SPBasics().classTimestamps.length - 1][1] - SPBasics().classTimestamps[0][0]))}");
 
     List<List<Widget>> timetableMap = List.generate(7, (index) => []);
 
@@ -226,10 +219,11 @@ class TimetableBox extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () async => await showEventPreview(
-                context: context,
-                eventData: s is CourseTimestamp
-                    ? NextupClassView(s)
-                    : UpcomingEvent.fromTimestamp(s)),
+              context: context,
+              eventData: s is CourseTimestamp
+                  ? NextupClassView(s)
+                  : UpcomingEvent.fromTimestamp(s),
+            ),
             radius: 12,
             child: Padding(
               padding: const EdgeInsets.all(16),

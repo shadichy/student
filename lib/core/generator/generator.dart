@@ -1,10 +1,18 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/core/timetable/semester_timetable.dart';
 
+part 'generator.g.dart';
+
+@HiveType(typeId: 12)
 class SampleTimetable {
+  @HiveField(0)
   final List<SubjectCourse> courses;
+
+  @HiveField(1)
   final BigInt intMatrix;
+
   int get length => courses.length;
 
   SampleTimetable(this.courses)
@@ -18,6 +26,12 @@ class SampleTimetable {
       courses.fold([], (p, n) => [...p, ...n.timestamp]),
       startDate: DateTime(0),
     );
+  }
+
+  Map<String, SubjectFilter> get filterData {
+    return Map.fromEntries(courses.map((c) {
+      return MapEntry(c.subjectID, SubjectFilter(inClass: [c.courseID]));
+    }));
   }
 }
 
@@ -71,10 +85,10 @@ class SubjectFilter {
     List<String>? excludeTeacher,
     BigInt? forcefulMatrix,
     BigInt? spareMatrix,
-  })  : inClass = [],
-        notInClass = [],
-        includeTeacher = [],
-        excludeTeacher = [],
+  })  : inClass = inClass ?? [],
+        notInClass = notInClass ?? [],
+        includeTeacher = includeTeacher ?? [],
+        excludeTeacher = excludeTeacher ?? [],
         forcefulMatrix = forcefulMatrix ?? BigInt.zero,
         spareMatrix = spareMatrix ?? BigInt.zero;
 }
@@ -144,10 +158,11 @@ final class GenTimetable {
 }
 
 class GenResult {
-  final List<Subject> genData;
   final List<SampleTimetable> output;
-  GenResult(List<SampleTimetable> input, this.genData)
+  GenResult(List<SampleTimetable> input, List<Subject> genData)
       : output = _init(input, genData);
+
+  const GenResult.virtual(List<SampleTimetable> timetable) : output = timetable;
 
   int get length => output.length;
 
@@ -176,55 +191,55 @@ class GenResult {
   GenResult add(List<Subject> subjects) => GenResult(output, subjects);
 }
 
-class _GenTimetable {
-  final List<Subject> _tkb;
-  late final Map<String, SubjectFilter> _input;
-  late List<SampleTimetable> output = [];
-  late BigInt intMatrix = BigInt.zero;
-  late int length = 0;
+// class _GenTimetable {
+//   final List<Subject> _tkb;
+//   late final Map<String, SubjectFilter> _input;
+//   late List<SampleTimetable> output = [];
+//   late BigInt intMatrix = BigInt.zero;
+//   late int length = 0;
 
-  _GenTimetable(this._tkb, this._input) {
-    _input.forEach((key, value) => _generate(key, value));
-  }
+//   _GenTimetable(this._tkb, this._input) {
+//     _input.forEach((key, value) => _generate(key, value));
+//   }
 
-  void _generate(String key, SubjectFilter filterLayer) {
-    Subject filteredSubject =
-        _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
-    if (output.isEmpty) {
-      output.addAll(
-          filteredSubject.courses.values.map((c) => SampleTimetable([c])));
-    } else {
-      List<SampleTimetable> newOutput = [];
-      for (var sample in output) {
-        for (var target in filteredSubject.courses.values) {
-          BigInt tmpDint = BigInt.zero;
-          tmpDint = sample.intMatrix & target.intCourse;
-          if (tmpDint != BigInt.zero) continue;
-          newOutput.add(SampleTimetable(sample.courses + [target]));
-        }
-      }
-      output = newOutput;
-    }
-  }
+//   void _generate(String key, SubjectFilter filterLayer) {
+//     Subject filteredSubject =
+//         _tkb.firstWhere((subj) => subj.subjectID == key).filter(filterLayer);
+//     if (output.isEmpty) {
+//       output.addAll(
+//           filteredSubject.courses.values.map((c) => SampleTimetable([c])));
+//     } else {
+//       List<SampleTimetable> newOutput = [];
+//       for (var sample in output) {
+//         for (var target in filteredSubject.courses.values) {
+//           BigInt tmpDint = BigInt.zero;
+//           tmpDint = sample.intMatrix & target.intCourse;
+//           if (tmpDint != BigInt.zero) continue;
+//           newOutput.add(SampleTimetable(sample.courses + [target]));
+//         }
+//       }
+//       output = newOutput;
+//     }
+//   }
 
-  _GenTimetable add(Map<String, SubjectFilter> subj) {
-    subj.forEach((key, value) {
-      _input[key] = value;
-      _generate(key, value);
-    });
-    return this;
-  }
+//   _GenTimetable add(Map<String, SubjectFilter> subj) {
+//     subj.forEach((key, value) {
+//       _input[key] = value;
+//       _generate(key, value);
+//     });
+//     return this;
+//   }
 
-  SubjectFilter? remove(String key) {
-    SubjectFilter? value = _input.remove(key);
-    output = [];
-    _input.forEach((key, value) => _generate(key, value));
-    return value;
-  }
+//   SubjectFilter? remove(String key) {
+//     SubjectFilter? value = _input.remove(key);
+//     output = [];
+//     _input.forEach((key, value) => _generate(key, value));
+//     return value;
+//   }
 
-  bool unsave(SampleTimetable sample) => output.remove(sample);
+//   bool unsave(SampleTimetable sample) => output.remove(sample);
 
-  _GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
+//   _GenTimetable operator +(Map<String, SubjectFilter> subj) => add(subj);
 
-  SubjectFilter? operator -(String key) => remove(key);
-}
+//   SubjectFilter? operator -(String key) => remove(key);
+// }

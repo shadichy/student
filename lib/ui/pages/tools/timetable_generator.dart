@@ -4,6 +4,7 @@ import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
 import 'package:student/core/databases/subject.dart';
 import 'package:student/core/databases/user.dart';
+import 'package:student/core/generator/db.dart';
 import 'package:student/core/generator/generator.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/core/semester/functions.dart';
@@ -15,7 +16,8 @@ import 'package:student/ui/components/navigator/navigator.dart';
 
 class ToolsTimetableGeneratorPage extends StatefulWidget
     implements TypicalPage {
-  const ToolsTimetableGeneratorPage({super.key});
+  final Map<String, SubjectFilter>? filterData;
+  const ToolsTimetableGeneratorPage({super.key, this.filterData});
 
   @override
   State<ToolsTimetableGeneratorPage> createState() =>
@@ -31,7 +33,7 @@ class ToolsTimetableGeneratorPage extends StatefulWidget
 class _ToolsTimetableGeneratorPageState
     extends State<ToolsTimetableGeneratorPage> {
   // List<WeekTimetable> savedTimetables = [];
-  Map<String, SubjectFilter> filterData = {};
+  late Map<String, SubjectFilter> filterData = widget.filterData ?? {};
 
   late final GenTimetable generator;
 
@@ -40,7 +42,9 @@ class _ToolsTimetableGeneratorPageState
   @override
   void initState() {
     super.initState();
+    GenDB().init();
     initGenerator();
+    onSearch("");
   }
 
   Future<void> initGenerator() async {
@@ -79,10 +83,26 @@ class _ToolsTimetableGeneratorPageState
 
     generator = GenTimetable(subjects);
     setState(() => initialized = true);
-    // WidgetsBinding.instance.addPostFrameCallback((_) => searchCourse());
   }
 
   List<String> searchResult = [];
+
+  void onSearch(String query) {
+    query = query.trim().toLowerCase();
+    if (query.isEmpty) {
+      searchResult = filterData.keys.toList();
+      return;
+    }
+    searchResult = generator.subjectData.values.where((subject) {
+      return [
+        subject.name,
+        subject.subjectID,
+        if (subject.subjectAltID != null) subject.subjectAltID!,
+      ].any((String s) => s.toLowerCase().contains(query));
+    }).map((subject) {
+      return subject.subjectID;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +119,7 @@ class _ToolsTimetableGeneratorPageState
           decoration: InputDecoration(
             contentPadding: EdgeInsets.zero,
             prefixIcon: const Icon(Symbols.search),
-            hintText: "widget.hintText",
+            hintText: "Search courses...",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(32),
               borderSide: BorderSide(color: c.outlineVariant),
@@ -109,21 +129,7 @@ class _ToolsTimetableGeneratorPageState
               borderSide: BorderSide(color: c.outline),
             ),
           ),
-          onChanged: (query) => setState(() {
-            query = query.trim().toLowerCase();
-            if (query.isEmpty) {
-              searchResult = filterData.keys.toList();
-              return;
-            }
-            bool checkQuery(String? s) =>
-                s?.toLowerCase().contains(query) ?? false;
-            searchResult = generator.subjectData.values.where((subject) {
-              return checkQuery(subject.subjectID) ||
-                  checkQuery(subject.subjectAltID);
-            }).map((subject) {
-              return subject.subjectID;
-            }).toList();
-          }),
+          onChanged: (query) => setState(() => onSearch(query)),
         ),
       ),
       Expanded(
@@ -175,9 +181,7 @@ class _ToolsTimetableGeneratorPageState
         child: TextButton(
           onPressed: () => Routing.goto(
             context,
-            Routing.generator_instance(
-              generator.generate(filterData),
-            ),
+            Routing.generator_instance(generator.generate(filterData)),
           ),
           style: TextButton.styleFrom(
             backgroundColor: c.primary,
@@ -210,6 +214,15 @@ class _ToolsTimetableGeneratorPageState
           style: Theme.of(context).textTheme.headlineSmall,
           maxLines: 3,
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Routing.goto(
+              context,
+              Routing.bookmarked_samples,
+            ),
+            icon: const Icon(Symbols.bookmark),
+          ),
+        ],
       ),
       body: SafeArea(
         child: initialized ? content : const Center(child: Text("Loading")),

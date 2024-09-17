@@ -16,7 +16,6 @@ class SettingsQuickActionPage extends StatefulWidget implements TypicalPage {
       _SettingsQuickActionPageState();
 
   @override
-  //
   Icon get icon => throw UnimplementedError();
 
   @override

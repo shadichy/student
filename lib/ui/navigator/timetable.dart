@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:student/core/databases/hive.dart';
 import 'package:student/core/databases/study_program_basics.dart';
+import 'package:student/core/generator/db.dart';
 import 'package:student/core/routing.dart';
 import 'package:student/core/semester/functions.dart';
 import 'package:student/misc/misc_widget.dart';
@@ -31,12 +32,12 @@ class _TimetablePageState extends State<TimetablePage> {
   @override
   void initState() {
     super.initState();
-    if (_isNewSemester) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => gotoGenerator());
-    }
+    if (!_isNewSemester) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) => gotoGenerator());
   }
 
-  void gotoGenerator() => Routing.goto(context, Routing.generator);
+  void gotoGenerator() =>
+      Routing.goto(context, Routing.generator()).then((_) => GenDB().deinit());
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +56,12 @@ class _TimetablePageState extends State<TimetablePage> {
             child: TextButton(
               onPressed: gotoGenerator,
               style: TextButton.styleFrom(
-                backgroundColor: colorScheme.primary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(16)
-              ),
+                  backgroundColor: colorScheme.primary,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  padding: const EdgeInsets.all(16)),
               child: Text(
                 "Go to Generator for new semester",
                 style: textTheme.labelLarge?.apply(

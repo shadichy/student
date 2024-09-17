@@ -8,7 +8,16 @@ import 'package:student/ui/components/pages/learning/timetable.dart';
 
 class TimetablePreview extends StatefulWidget {
   final SampleTimetable data;
-  const TimetablePreview(this.data, {super.key});
+  final void Function(int index) scrollFunction;
+  final Widget Function(SampleTimetable data) action;
+  final int index;
+  const TimetablePreview(
+    this.data, {
+    super.key,
+    required this.scrollFunction,
+    required this.index,
+    required this.action,
+  });
 
   @override
   State<TimetablePreview> createState() => _TimetablePreviewState();
@@ -68,13 +77,13 @@ class _TimetablePreviewState extends State<TimetablePreview> {
                 ),
               ),
               Column(children: [
-                iconButton(
-                  onPressed: () {},
-                  icon: const Icon(Symbols.bookmark),
-                ),
+                widget.action(data),
                 MWds.divider(16),
                 iconButton(
-                  onPressed: () {},
+                  onPressed: () => Routing.goto(
+                    context,
+                    Routing.generator(filterData: data.filterData),
+                  ),
                   icon: const Icon(Symbols.edit),
                 ),
               ])
@@ -84,11 +93,11 @@ class _TimetablePreviewState extends State<TimetablePreview> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 iconButton(
-                  onPressed: () {},
+                  onPressed: () => widget.scrollFunction(widget.index - 1),
                   icon: const Icon(Symbols.arrow_back_ios),
                 ),
                 iconButton(
-                  onPressed: () {},
+                  onPressed: () => widget.scrollFunction(widget.index + 1),
                   icon: const Icon(Symbols.arrow_forward_ios),
                 )
               ],
